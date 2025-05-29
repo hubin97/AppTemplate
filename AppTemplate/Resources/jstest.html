@@ -1,0 +1,103 @@
+<html>
+    <title>Js测试</title>
+    <script language="javascript">
+
+        function nullParamCall() {
+            let message = {
+                method: 'nullParamCall',
+            };
+
+            window.location.href = 'LUTE_NATIVE://' + JSON.stringify(message);
+            window.webkit.messageHandlers.LUTE_NATIVE.postMessage(message)
+        }
+
+        function haveParamCall1() {
+            let message = {
+                method: 'haveParamCall1',
+                params: '测试分享的内容'
+            };
+
+            window.location.href = 'LUTE_NATIVE://' + JSON.stringify(message);
+            window.webkit.messageHandlers.LUTE_NATIVE.postMessage(message);
+        }
+
+        function haveParamCall2() {
+            let message = {
+                method: 'haveParamCall2',
+                params: {
+                    title: '测试分享的标题',
+                    content: '测试分享的内容',
+                    url: 'http://www.baidu.com',
+                    img: 'http://www.baidu.com/img.jpg'
+                }
+            };
+
+            window.location.href = 'LUTE_NATIVE://' + JSON.stringify(message);
+            window.webkit.messageHandlers.LUTE_NATIVE.postMessage(message);
+        }
+
+        function haveParamCall3() {
+            let message = {
+                method: 'haveParamCall3',
+                params: [1, 2, 3, 4, 5]
+            };
+
+            window.location.href = 'LUTE_NATIVE://' + JSON.stringify(message);
+            window.webkit.messageHandlers.LUTE_NATIVE.postMessage(message);
+        }
+
+        // 定义一个接受字符串参数并显示在 textarea 中的函数
+        function receiveNativeMessage(result) {
+            // 获取 textarea 元素
+            var textarea = document.getElementById("returnValue");
+            // 将传入的字符串设置为 textarea 的值
+            textarea.value = result;
+        }
+
+        function asyncAlert(content) {
+            setTimeout(function(){
+                       alert(content);
+                       },1);
+        }
+
+    </script>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0", maximum-scale=1.0, user-scalable=no, http-equiv="Content-Type" content="text/html; charset=utf8">
+            </head>
+    
+    <body>
+        <style>
+            .custom-button {
+                width: 100px; /* 设置宽度 */
+                height: 40px; /* 设置高度 */
+                font-size: auto; /* 设置字体大小 */
+                background-color: #666666; /* 设置背景颜色 */
+                color: white; /* 设置字体颜色 */
+                border: none; /* 去掉边框 */
+                border-radius: 5px; /* 设置圆角 */
+                margin: 10px; /* 设置外边距 */
+                /*cursor: pointer; /* 鼠标悬停时显示为手型 */
+            }
+
+            .custom-button:hover {
+                background-color: #45a049; /* 悬停时改变背景颜色 */
+            }
+        </style>
+        <h3>这是按钮调用</h3>
+        <input class="custom-button" type="button" value="无参调用(null)" onclick="nullParamCall()" />
+        <input class="custom-button" type="button" value="带参调用(string)" onclick="haveParamCall1()" />
+        <input class="custom-button" type="button" value="带参调用(dict)" onclick="haveParamCall2()" />
+        <input class="custom-button" type="button" value="带参调用(array)" onclick="haveParamCall3()" />
+        <input class="custom-button" type="button" value="打开链接" onclick="window.location='https://apps.apple.com/app/id736536022'" />
+
+        <h3>这是文件上传</h3>
+
+        <input type="file" />
+        
+        <h3>这是回调结果展示区</h3>
+        <textarea id ="returnValue" type="value" rows="5" cols="40">
+        
+        </textarea>
+        
+    </body>
+</html>
