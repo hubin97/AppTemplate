@@ -31,21 +31,25 @@ target 'AppTemplate' do
   pod 'Router', :path => './PodsRepo'
 end
 
+# 导入 base_config_setup.rb 文件
+require_relative './AppTemplate/Scripts/base_config_setup.rb'
+
 # 修改依赖库的配置
 post_install do |installer|
-    installer.pods_project.targets.each do |target|
-        # Enable tracing resources
-        if target.name == 'RxSwift'
-          target.build_configurations.each do |config|
-            if config.name == 'Debug'
-              config.build_settings['OTHER_SWIFT_FLAGS'] ||= ['-D', 'TRACE_RESOURCES']
-            end
+  base_config_setup(installer)
+  installer.pods_project.targets.each do |target|
+      # Enable tracing resources
+      if target.name == 'RxSwift'
+        target.build_configurations.each do |config|
+          if config.name == 'Debug'
+            config.build_settings['OTHER_SWIFT_FLAGS'] ||= ['-D', 'TRACE_RESOURCES']
           end
         end
-        #
-        target.build_configurations.each do |config|
-            config.build_settings['SWIFT_VERSION'] = '5.0'
-            config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
-        end
-    end
+      end
+      #
+      target.build_configurations.each do |config|
+          config.build_settings['SWIFT_VERSION'] = '5.0'
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+      end
+  end
 end
