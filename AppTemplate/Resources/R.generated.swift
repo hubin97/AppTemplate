@@ -284,15 +284,24 @@ struct _R {
     }
   }
 
-  /// This `_R.file` struct is generated, and contains static references to 2 resource files.
+  /// This `_R.file` struct is generated, and contains static references to 5 resource files.
   struct file {
     let bundle: Foundation.Bundle
+
+    /// Resource file `.swiftlint.yml`.
+    var swiftlintYml: RswiftResources.FileResource { .init(name: ".swiftlint", pathExtension: "yml", bundle: bundle, locale: LocaleReference.none) }
 
     /// Resource file `PrivacyInfo.xcprivacy`.
     var privacyInfoXcprivacy: RswiftResources.FileResource { .init(name: "PrivacyInfo", pathExtension: "xcprivacy", bundle: bundle, locale: LocaleReference.none) }
 
+    /// Resource file `base_config_setup.rb`.
+    var base_config_setupRb: RswiftResources.FileResource { .init(name: "base_config_setup", pathExtension: "rb", bundle: bundle, locale: LocaleReference.none) }
+
     /// Resource file `jstest.html`.
     var jstestHtml: RswiftResources.FileResource { .init(name: "jstest", pathExtension: "html", bundle: bundle, locale: LocaleReference.none) }
+
+    /// Resource file `privacy_manifest_utils.rb`.
+    var privacy_manifest_utilsRb: RswiftResources.FileResource { .init(name: "privacy_manifest_utils", pathExtension: "rb", bundle: bundle, locale: LocaleReference.none) }
   }
 
   /// This `_R.storyboard` struct is generated, and contains static references to 2 storyboards.

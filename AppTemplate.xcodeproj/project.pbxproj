@@ -7,11 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		183888552E15410200D43886 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 183888542E15410200D43886 /* .swiftlint.yml */; };
 		CE1CB8549C2631B75F53E7EE /* Pods_AppTemplate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84BA00577EC116A8DF696F14 /* Pods_AppTemplate.framework */; };
 		F3461682AD7102924B563BC9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8F75E60E15297D1B98711553 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		183888542E15410200D43886 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		18D6FA6A2DE815B300BB780D /* AppTemplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppTemplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6B4E286160EC7F16588C03C6 /* Pods-AppTemplate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTemplate.release.xcconfig"; path = "Target Support Files/Pods-AppTemplate/Pods-AppTemplate.release.xcconfig"; sourceTree = "<group>"; };
 		84BA00577EC116A8DF696F14 /* Pods_AppTemplate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AppTemplate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,6 +62,7 @@
 				AF02F65427257A6443DC7156 /* Pods */,
 				9607BA4AF3E12EBC647ECD15 /* Frameworks */,
 				8F75E60E15297D1B98711553 /* PrivacyInfo.xcprivacy */,
+				183888542E15410200D43886 /* .swiftlint.yml */,
 			);
 			sourceTree = "<group>";
 		};
@@ -156,6 +159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F3461682AD7102924B563BC9 /* PrivacyInfo.xcprivacy in Resources */,
+				183888552E15410200D43886 /* .swiftlint.yml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,7 +204,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/usr/local/Homebrew/bin:$PATH\"\nfi\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		9D4543A9D4B577E2E229F1D4 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
