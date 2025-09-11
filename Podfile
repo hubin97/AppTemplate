@@ -18,10 +18,11 @@ target 'AppTemplate' do
   pod 'MMKV'
   pod 'IQKeyboardManagerSwift'
   pod 'SnapKit'
-  pod 'Kingfisher'
   pod 'MJRefresh'
   pod 'DZNEmptyDataSet'
-  
+  pod 'Kingfisher'
+  pod 'KingfisherWebP'
+
   pod 'R.swift'
   pod 'SwiftLint', :configurations => ['Debug']
   pod 'Bugly'

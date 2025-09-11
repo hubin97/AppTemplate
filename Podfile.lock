@@ -121,6 +121,21 @@ PODS:
   - IQTextView (1.0.5):
     - IQKeyboardToolbar/Placeholderable
   - Kingfisher (8.3.2)
+  - KingfisherWebP (1.7.0):
+    - Kingfisher (~> 8.0)
+    - libwebp (>= 1.1.0)
+  - libwebp (1.5.0):
+    - libwebp/demux (= 1.5.0)
+    - libwebp/mux (= 1.5.0)
+    - libwebp/sharpyuv (= 1.5.0)
+    - libwebp/webp (= 1.5.0)
+  - libwebp/demux (1.5.0):
+    - libwebp/webp
+  - libwebp/mux (1.5.0):
+    - libwebp/demux
+  - libwebp/sharpyuv (1.5.0)
+  - libwebp/webp (1.5.0):
+    - libwebp/sharpyuv
   - MJRefresh (3.7.9)
   - MMKV (2.2.2):
     - MMKVCore (~> 2.2.2)
@@ -164,6 +179,7 @@ DEPENDENCIES:
   - DZNEmptyDataSet
   - IQKeyboardManagerSwift
   - Kingfisher
+  - KingfisherWebP
   - MJRefresh
   - MMKV
   - "NSObject+Rx"
@@ -190,6 +206,8 @@ SPEC REPOS:
     - IQKeyboardToolbarManager
     - IQTextInputViewNotification
     - IQTextView
+    - KingfisherWebP
+    - libwebp
     - MJRefresh
     - MMKV
     - MMKVCore
@@ -228,6 +246,8 @@ SPEC CHECKSUMS:
   IQTextInputViewNotification: f5e954d8881fd9808b744e49e024cc0d4bcfe572
   IQTextView: ae13b4922f22e6f027f62c557d9f4f236b19d5c7
   Kingfisher: 0621d0ac0c78fecb19f6dc5303bde2b52abaf2f5
+  KingfisherWebP: 42d393b312344f6f7a43f7cef6088b9c20249b64
+  libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
   MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
   MMKV: b4802ebd5a7c68fc0c4a5ccb4926fbdfb62d68e0
   MMKVCore: a255341a3746955f50da2ad9121b18cb2b346e61
@@ -246,6 +266,6 @@ SPEC CHECKSUMS:
   SwiftLint: 3d48e2fb2a3468fdaccf049e5e755df22fb40c2c
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 1a9078d25caa2dd3260a6b63962a3203ebf06aad
+PODFILE CHECKSUM: 3ad47de0771d1558cbb499a8ccaacd42d87ddb7f
 
 COCOAPODS: 1.16.2
