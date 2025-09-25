@@ -15,6 +15,7 @@ enum AppScene: SceneProvider {
     case videoPlayController(url: String, autoPlay: Bool = true)
     case tabs(viewModel: TabBarViewModel)
     case imageDecoder
+    case jsWeb(path: String, title: String?, symbol: String?)
     
     // MARK: -
     var getSegue: UIViewController? {
@@ -38,6 +39,11 @@ enum AppScene: SceneProvider {
             return tabBarVc
         case .imageDecoder:
             return ImageDecoderController(viewModel: nil)
+        case .jsWeb(let path, let title, let symbol):
+            let vc = JSWebController(viewModel: JSWebViewModel(symbol: symbol))
+            vc.setTitle(title)
+            vc.loadWeb(urlPath: path)
+            return vc
         }
     }
 }

@@ -24,7 +24,7 @@ target 'AppTemplate' do
   pod 'KingfisherWebP'
   #pod 'KingfisherSVG'
   #pod 'SVGKit'
-  pod 'Macaw', '~> 0.9.0'
+  #pod 'Macaw', '~> 0.9.0'
 
   pod 'R.swift'
   pod 'SwiftLint', :configurations => ['Debug']

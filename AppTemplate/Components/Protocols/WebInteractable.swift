@@ -11,9 +11,6 @@ import Foundation
 // LUTE_NATIVE : js调用native方法
 // LUTE_JS : native调用js方法
 
-//private let LUTE_NATIVE = "LUTE_NATIVE"
-//private let LUTE_JS = "lute_js"
-
 // MARK: - main class
 public protocol WebInteractable where Self: WKWebController {  
     /// 注册监听Js方法调用, 交互标识
@@ -64,7 +61,7 @@ extension WebInteractable {
         }
     }
     
-    /// native调用js方法
+    /// native调用js方法 `临时测试`
     public func nativeCallJs(with jsonString: String?) {
         print("native调用js方法")
         if let jsonString = jsonString {

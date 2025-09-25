@@ -72,6 +72,9 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = vm.items[indexPath.row]
         switch item {
+        case .test:
+            let path = "https://iot-dev.luteos.com/app/pageActivityManagement/void" + "?openSource=App"
+            navigator.show(provider: AppScene.jsWeb(path: path, title: nil, symbol: "LUTE_NATIVE"), sender: self)
         case .mediaList:
             //navigator.show(provider: AppScene.mediaList, sender: self)
             iToast.makeToast(">> mediaList")

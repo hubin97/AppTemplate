@@ -137,8 +137,6 @@ PODS:
   - libwebp/sharpyuv (1.5.0)
   - libwebp/webp (1.5.0):
     - libwebp/sharpyuv
-  - Macaw (0.9.10):
-    - SWXMLHash
   - MJRefresh (3.7.9)
   - MMKV (2.2.3):
     - MMKVCore (~> 2.2.3)
@@ -174,7 +172,6 @@ PODS:
   - RxSwift (6.9.0)
   - SnapKit (5.7.1)
   - SwiftLint (0.61.0)
-  - SWXMLHash (7.0.2)
   - Toast-Swift (5.1.1)
 
 DEPENDENCIES:
@@ -185,7 +182,6 @@ DEPENDENCIES:
   - IQKeyboardManagerSwift
   - Kingfisher (~> 8.0)
   - KingfisherWebP
-  - Macaw (~> 0.9.0)
   - MJRefresh
   - MMKV
   - "NSObject+Rx"
@@ -215,7 +211,6 @@ SPEC REPOS:
     - Kingfisher
     - KingfisherWebP
     - libwebp
-    - Macaw
     - MJRefresh
     - MMKV
     - MMKVCore
@@ -231,7 +226,6 @@ SPEC REPOS:
     - RxSwift
     - SnapKit
     - SwiftLint
-    - SWXMLHash
     - Toast-Swift
 
 EXTERNAL SOURCES:
@@ -258,7 +252,6 @@ SPEC CHECKSUMS:
   Kingfisher: ff0d31a1f07bdff6a1ebb3ba08b8e6e567b6500c
   KingfisherWebP: 42d393b312344f6f7a43f7cef6088b9c20249b64
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
-  Macaw: 7af8ea57aa2cab35b4a52a45e6f85eea753ea9ae
   MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
   MMKV: 941e8774da0e6fdf12c6b3fcc833ca687ae5a42d
   MMKVCore: 6d5cc1bacce539f4c974985dfe646fb65a5d27d2
@@ -275,9 +268,8 @@ SPEC CHECKSUMS:
   RxSwift: 31649ace6aceeb422e16ff71c60804f9c3281ed9
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
-  SWXMLHash: dd733a457e9c4fe93b1538654057aefae4acb382
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 7f89c13a4531c9da8bc4c3ad91e1d96049232509
+PODFILE CHECKSUM: 10d95505fd7dfe8450571e996fad3e43723358d7
 
 COCOAPODS: 1.16.2

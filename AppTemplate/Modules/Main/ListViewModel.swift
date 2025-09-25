@@ -12,6 +12,7 @@ import Foundation
 class ListViewModel: ViewModel {
     
     enum RowType: Int, CaseIterable {
+        case test
         case mediaList
         case routeTest
         case demoTest
@@ -19,6 +20,8 @@ class ListViewModel: ViewModel {
         
         var title: String {
             switch self {
+            case .test:
+                return "临时测试"
             case .mediaList:
                 return "媒体列表"
             case .routeTest:
