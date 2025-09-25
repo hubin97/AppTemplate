@@ -284,7 +284,7 @@ struct _R {
     }
   }
 
-  /// This `_R.file` struct is generated, and contains static references to 5 resource files.
+  /// This `_R.file` struct is generated, and contains static references to 7 resource files.
   struct file {
     let bundle: Foundation.Bundle
 
@@ -296,6 +296,12 @@ struct _R {
 
     /// Resource file `base_config_setup.rb`.
     var base_config_setupRb: RswiftResources.FileResource { .init(name: "base_config_setup", pathExtension: "rb", bundle: bundle, locale: LocaleReference.none) }
+
+    /// Resource file `icon_svg_ogc_logo.svg`.
+    var icon_svg_ogc_logoSvg: RswiftResources.FileResource { .init(name: "icon_svg_ogc_logo", pathExtension: "svg", bundle: bundle, locale: LocaleReference.none) }
+
+    /// Resource file `icon_webp_gift_popup.webp`.
+    var icon_webp_gift_popupWebp: RswiftResources.FileResource { .init(name: "icon_webp_gift_popup", pathExtension: "webp", bundle: bundle, locale: LocaleReference.none) }
 
     /// Resource file `jstest.html`.
     var jstestHtml: RswiftResources.FileResource { .init(name: "jstest", pathExtension: "html", bundle: bundle, locale: LocaleReference.none) }

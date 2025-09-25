@@ -10,7 +10,7 @@ import AVKit
 import AppStart
 
 // MARK: - global var and methods
-public enum TestScene: SceneProvider {
+public enum RouteScene: SceneProvider {
  
     case safari(URL)
     case videoPlayController(url: String, autoPlay: Bool = true)

@@ -14,7 +14,8 @@ enum AppScene: SceneProvider {
     case safari(URL)
     case videoPlayController(url: String, autoPlay: Bool = true)
     case tabs(viewModel: TabBarViewModel)
-
+    case imageDecoder
+    
     // MARK: -
     var getSegue: UIViewController? {
         switch self {
@@ -35,6 +36,8 @@ enum AppScene: SceneProvider {
             let tabBarVc = TabBarController(viewModel: viewModel)
             tabBarVc.setAppearance(normalColor: UIColor.lightGray, selectColor: UIColor.black)
             return tabBarVc
+        case .imageDecoder:
+            return ImageDecoderController(viewModel: nil)
         }
     }
 }

@@ -6,13 +6,13 @@
 
 import Foundation
 import AppStart
-
+import Router
 // MARK: - global var and methods
 
 // MARK: - main class
 class TestListController: ViewController {
     
-    let items = ["Safari", "Modal", "Push", "PopRoot"]
+    let items = ["Safari"]
     
     lazy var tableView: UITableView = {
         let _tableView = UITableView(frame: .zero, style: .plain)
@@ -26,7 +26,7 @@ class TestListController: ViewController {
     
     override func setupLayout() {
         super.setupLayout()
-        self.naviBar.title = "Route--"
+        self.naviBar.title = "Demo--"
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { (make) in
@@ -65,13 +65,7 @@ extension TestListController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            navigator.show(provider: RouteScene.safari(URL(string: "https://www.apple.com")!), sender: self)
-        case 1:
-            navigator.show(provider: RouteScene.videoPlayController(url: "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"), sender: self)
-        case 2:
-            navigator.show(provider: RouteScene.webController(url: "https://www.apple.com", title: ""), sender: self, transition: .modal(type: .fullScreen))
-        case 3:
-            navigator.pop(sender: self, toRoot: true)
+            navigator.show(provider: RouteScene.safari(URL(string: "https://www.baidu.com")!), sender: self)
         default:
             break
         }

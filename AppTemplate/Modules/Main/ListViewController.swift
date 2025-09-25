@@ -7,6 +7,7 @@
 
 import UIKit
 import Router
+import Demo
 //import GDPerformanceView_Swift
 
 // MARK: - main class
@@ -74,8 +75,12 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
         case .mediaList:
             //navigator.show(provider: AppScene.mediaList, sender: self)
             iToast.makeToast(">> mediaList")
-        case .routerTest:
-            navigator.show(provider: TestScene.testList, sender: self)
+        case .routeTest:
+            navigator.show(provider: RouteScene.testList, sender: self)
+        case .demoTest:
+            navigator.show(provider: DemoScene.testList, sender: self)
+        case .imageDecoder:
+            navigator.show(provider: AppScene.imageDecoder, sender: self)
         }
     }
 }

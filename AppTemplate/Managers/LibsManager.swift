@@ -13,6 +13,8 @@ import Kingfisher
 import CocoaLumberjack
 import Bugly
 import MMKV
+import KingfisherWebP
+//import KingfisherSVG
 //import Firebase
 
 // MARK: - global var and methods
@@ -82,6 +84,17 @@ extension LibsManager {
         ImageCache.default.diskStorage.config.expiration = .days(7)
         // 设置默认图像下载器的超时时间。 默认值为 15 秒。
         ImageDownloader.default.downloadTimeout = 15.0
+        
+        // 全局注册 WebP 解码器
+        KingfisherManager.shared.defaultOptions += [
+          .processor(WebPProcessor.default),
+          .cacheSerializer(WebPSerializer.default)
+        ]
+        
+//        KingfisherManager.shared.defaultOptions += [
+//            .processor(SVGProcessor.default),
+//            .cacheSerializer(SVGCacheSerializer.default)
+//        ]
     }
 
     func setupCocoaLumberjack() {

@@ -20,8 +20,11 @@ target 'AppTemplate' do
   pod 'SnapKit'
   pod 'MJRefresh'
   pod 'DZNEmptyDataSet'
-  pod 'Kingfisher'
+  pod 'Kingfisher', '~> 8.0'
   pod 'KingfisherWebP'
+  #pod 'KingfisherSVG'
+  #pod 'SVGKit'
+  pod 'Macaw', '~> 0.9.0'
 
   pod 'R.swift'
   pod 'SwiftLint', :configurations => ['Debug']
@@ -30,6 +33,8 @@ target 'AppTemplate' do
   # Pods for AppStart
   pod 'AppStart'#, :path => './PodsRepo'
   pod 'Router', :path => './PodsRepo'
+  pod 'Demo', :path => './PodsRepo'
+
 end
 
 # 导入 base_config_setup.rb 文件
