@@ -25,5 +25,7 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIDesignRequiresCompatibility</key>
+	<false/>
 </dict>
 </plist>

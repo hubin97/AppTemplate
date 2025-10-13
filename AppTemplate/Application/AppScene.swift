@@ -12,6 +12,7 @@ import AVKit
 enum AppScene: SceneProvider {
  
     case safari(URL)
+    // 仅支持 alert 推出,使用其它方式, 可能会导致无法返回或者UI显示异常
     case videoPlayController(url: String, autoPlay: Bool = true)
     case tabs(viewModel: TabBarViewModel)
     case imageDecoder

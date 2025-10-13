@@ -77,7 +77,9 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
             navigator.show(provider: AppScene.jsWeb(path: path, title: nil, symbol: "LUTE_NATIVE"), sender: self)
         case .mediaList:
             //navigator.show(provider: AppScene.mediaList, sender: self)
-            iToast.makeToast(">> mediaList")
+            //iToast.makeToast(">> mediaList")
+            let url = "https://cozy-static-dev.cozyinnov.com/public/970040/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%B8%93%E5%AE%B6%E7%9B%B4%E6%92%AD%E5%BD%95%E5%B1%8F25.8.19.mp4"
+            navigator.show(provider: AppScene.videoPlayController(url: url, autoPlay: true), sender: self, transition: .alert)
         case .routeTest:
             navigator.show(provider: RouteScene.testList, sender: self)
         case .demoTest:

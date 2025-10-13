@@ -105,15 +105,17 @@ extension LibsManager {
         DDLog.add(fileLogger)
     }
     
-    // 开启日志管理
+    /// 开启日志管理
+    /// 注意 `网络接口调用, release模式下默认不写入日志文件`
     func setupLogger() {
         let logLevel = DDLogLevel.verbose
 #if DEBUG
-        //LogM.shared.launch(logLevel).entrance(R.image.lanuch_logo())
-        LogM.shared.launch(logLevel).entrance()
+        //LogM.shared.launch(logLevel, logMode: .detail).entrance(R.image.lanuch_logo())
+        LogM.shared.setup(level: logLevel, consoleMode: .easy, fileMode: .detail).entrance()
         NetworkPrintlnPlugin.shared.loglevel = logLevel
 #else
-        LogM.shared.launch(logLevel)
+        //LogM.shared.level(logLevel).file(.detail).launch()
+        LogM.shared.setup(level: logLevel).launch()
 #endif
     }
 }

@@ -11,16 +11,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    // 初始化阶段; Scene（窗口）刚被创建、连接到系统时。
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard (scene as? UIWindowScene) != nil else { return }
-        
-        LibsManager.shared.setupLibs()
-//        APNsManager.shared.setupFirebase(application)
         Application.shared.launch(in: window)
-        BGTaskManager.shared.setupBackgroundTask()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -30,9 +27,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // The scene may re-connect later, as its session was not necessarily discarded (see `application:didDiscardSceneSessions` instead).
     }
 
+    // 可交互阶段; Scene 已经显示并激活（进入前台、可交互状态）。
     func sceneDidBecomeActive(_ scene: UIScene) {
         // Called when the scene has moved from an inactive state to an active state.
         // Use this method to restart any tasks that were paused (or not yet started) when the scene was inactive.
+        
+        /// 添加日志入口
+        LibsManager.shared.setupLogger()
     }
 
     func sceneWillResignActive(_ scene: UIScene) {

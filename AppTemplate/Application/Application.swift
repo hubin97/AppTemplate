@@ -81,17 +81,14 @@ extension Application {
         window.rootViewController = UIViewController()
         window.makeKeyAndVisible()
         
+        LogM.debug("app launch")
+        
         // 自定义启动页
         self.initialScreen(in: window)
     }
     
     func initialScreen(in window: UIWindow?) {
         guard let window = window else { return }
-        
-        /// 添加日志入口
-        defer {
-            LibsManager.shared.setupLogger()
-        }
         
 //        /// 登录状态是否有效
 //        guard AuthManager.shared.hasValidToken else {
