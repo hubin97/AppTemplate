@@ -38,6 +38,18 @@ class TestListController: ViewController {
     override func bindViewModel() {
         super.bindViewModel()
     }
+    
+    override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .allButUpsideDown
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .landscapeLeft
+    }
 }
 
 // MARK: - private mothods
@@ -67,7 +79,7 @@ extension TestListController: UITableViewDataSource, UITableViewDelegate {
         case 0:
             navigator.show(provider: RouteScene.safari(URL(string: "https://www.apple.com")!), sender: self)
         case 1:
-            navigator.show(provider: RouteScene.videoPlayController(url: "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"), sender: self, transition: .alert)
+            navigator.show(provider: RouteScene.videoPlayController(url: "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"), sender: self, transition: .alert(type: .overFullScreen))
         case 2:
             navigator.show(provider: RouteScene.webController(url: "https://www.apple.com", title: ""), sender: self)
         case 3:

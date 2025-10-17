@@ -43,12 +43,25 @@ class ListViewController: ViewController, ViewModelProvider {
         listView.backgroundColor = SFColor.FlatUI.clouds
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("viewWillDisappear-")
+    }
+    
     override var preferredStatusBarStyle: UIStatusBarStyle {
         if #available(iOS 13.0, *) {
             return .darkContent
         } else {
             return .default
         }
+    }
+    
+    override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return .allButUpsideDown
     }
 }
 
@@ -79,7 +92,7 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
             //navigator.show(provider: AppScene.mediaList, sender: self)
             //iToast.makeToast(">> mediaList")
             let url = "https://cozy-static-dev.cozyinnov.com/public/970040/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%B8%93%E5%AE%B6%E7%9B%B4%E6%92%AD%E5%BD%95%E5%B1%8F25.8.19.mp4"
-            navigator.show(provider: AppScene.videoPlayController(url: url, autoPlay: true), sender: self, transition: .alert)
+            navigator.show(provider: AppScene.videoPlayController(url: url, autoPlay: true, isWrap: true), sender: self, transition: .alert(type: .fullScreen))
         case .routeTest:
             navigator.show(provider: RouteScene.testList, sender: self)
         case .demoTest:

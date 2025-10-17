@@ -1,42 +1,45 @@
 PODS:
   - Alamofire (5.10.2)
-  - AppStart (0.1.0):
-    - AppStart/Base (= 0.1.0)
-    - AppStart/BLE (= 0.1.0)
-    - AppStart/Network (= 0.1.0)
-    - AppStart/Utils (= 0.1.0)
-  - AppStart/Base (0.1.0):
-    - AppStart/Base/Core (= 0.1.0)
-    - AppStart/Base/UI (= 0.1.0)
+  - AppStart (0.1.1):
+    - AppStart/Base (= 0.1.1)
+    - AppStart/BLE (= 0.1.1)
+    - AppStart/Network (= 0.1.1)
+    - AppStart/Utils (= 0.1.1)
+  - AppStart/Base (0.1.1):
+    - AppStart/Base/Core (= 0.1.1)
+    - AppStart/Base/UI (= 0.1.1)
     - Kingfisher
     - ProgressHUD
+    - PromiseKit
     - SnapKit
     - Toast-Swift
-  - AppStart/Base/Core (0.1.0):
+  - AppStart/Base/Core (0.1.1):
     - Kingfisher
     - ProgressHUD
+    - PromiseKit
     - SnapKit
     - Toast-Swift
-  - AppStart/Base/UI (0.1.0):
+  - AppStart/Base/UI (0.1.1):
     - AppStart/Base/Core
     - Kingfisher
     - ProgressHUD
+    - PromiseKit
     - SnapKit
     - Toast-Swift
-  - AppStart/BLE (0.1.0):
+  - AppStart/BLE (0.1.1):
     - "NSObject+Rx"
     - RxCocoa
     - RxSwift
-  - AppStart/Network (0.1.0):
-    - AppStart/Network/Core (= 0.1.0)
-    - AppStart/Network/Utils (= 0.1.0)
+  - AppStart/Network (0.1.1):
+    - AppStart/Network/Core (= 0.1.1)
+    - AppStart/Network/Utils (= 0.1.1)
     - Moya
     - ObjectMapper
     - ProgressHUD
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Network/Core (0.1.0):
+  - AppStart/Network/Core (0.1.1):
     - AppStart/Utils
     - Moya
     - ObjectMapper
@@ -44,31 +47,31 @@ PODS:
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Network/Utils (0.1.0):
+  - AppStart/Network/Utils (0.1.1):
     - Moya
     - ObjectMapper
     - ProgressHUD
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Utils (0.1.0):
-    - AppStart/Utils/AuthStatus (= 0.1.0)
-    - AppStart/Utils/Helpers (= 0.1.0)
-    - AppStart/Utils/LoggerManager (= 0.1.0)
+  - AppStart/Utils (0.1.1):
+    - AppStart/Utils/AuthStatus (= 0.1.1)
+    - AppStart/Utils/Helpers (= 0.1.1)
+    - AppStart/Utils/LoggerManager (= 0.1.1)
     - CocoaLumberjack
     - Kingfisher
     - Toast-Swift
-  - AppStart/Utils/AuthStatus (0.1.0):
+  - AppStart/Utils/AuthStatus (0.1.1):
     - AppStart/Base/Core
     - CocoaLumberjack
     - Kingfisher
     - Toast-Swift
-  - AppStart/Utils/Helpers (0.1.0):
+  - AppStart/Utils/Helpers (0.1.1):
     - AppStart/Base/Core
     - CocoaLumberjack
     - Kingfisher
     - Toast-Swift
-  - AppStart/Utils/LoggerManager (0.1.0):
+  - AppStart/Utils/LoggerManager (0.1.1):
     - AppStart/Base
     - AppStart/Utils/Helpers
     - CocoaLumberjack
@@ -175,7 +178,7 @@ PODS:
   - Toast-Swift (5.1.1)
 
 DEPENDENCIES:
-  - AppStart
+  - AppStart (from `../AppStart`)
   - Bugly
   - Demo (from `./PodsRepo`)
   - DZNEmptyDataSet
@@ -196,7 +199,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
-    - AppStart
     - Bugly
     - CocoaLumberjack
     - DZNEmptyDataSet
@@ -229,6 +231,8 @@ SPEC REPOS:
     - Toast-Swift
 
 EXTERNAL SOURCES:
+  AppStart:
+    :path: "../AppStart"
   Demo:
     :path: "./PodsRepo"
   Router:
@@ -236,7 +240,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AppStart: 481716c8ad215d486610ca77a537c053511df11a
+  AppStart: 06d541d3caf2491cbca39af2f970ae08b170533e
   Bugly: 217ac2ce5f0f2626d43dbaa4f70764c953a26a31
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
   Demo: 3ca622efbb9cc312a91f578e496207fe11a3010e
@@ -270,6 +274,6 @@ SPEC CHECKSUMS:
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 10d95505fd7dfe8450571e996fad3e43723358d7
+PODFILE CHECKSUM: 7ab65058a9c4464949e1062e15ad2600709c2f8f
 
 COCOAPODS: 1.16.2

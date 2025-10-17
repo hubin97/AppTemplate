@@ -26,6 +26,6 @@
 		</dict>
 	</dict>
 	<key>UIDesignRequiresCompatibility</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

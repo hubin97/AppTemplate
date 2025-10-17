@@ -31,7 +31,9 @@ target 'AppTemplate' do
   pod 'Bugly'
   
   # Pods for AppStart
-  pod 'AppStart'#, :path => './PodsRepo'
+  pod 'AppStart', :path => '../AppStart'
+
+#  pod 'AppStart'#, :path => './PodsRepo'
   pod 'Router', :path => './PodsRepo'
   pod 'Demo', :path => './PodsRepo'
 
