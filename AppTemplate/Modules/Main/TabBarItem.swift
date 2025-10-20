@@ -6,6 +6,9 @@
 //  Copyright © 2025 Hubin_Huang. All rights reserved.
 
 import Foundation
+import AppStart
+
+private let LUTE_NATIVE = "LUTE_NATIVE"
 
 // 枚举定义了 TabBar 中的各个选项
 enum TabBarItem: TabBarItemDataProvider {
@@ -42,12 +45,8 @@ enum TabBarItem: TabBarItemDataProvider {
         switch self {
         case .home:
             return ListViewModel()
-//        case .test:
-//            return UIKitTestViewModel()
-//        case .web:
-//            return WebPreviewViewModel()
-        default:
-            return ViewModel()
+        case .me:
+            return JSWebViewModel(symbol: LUTE_NATIVE)
         }
     }
 
@@ -57,7 +56,11 @@ enum TabBarItem: TabBarItemDataProvider {
         case .home:
             return NavigationController(rootVc: ListViewController(viewModel: viewModel, navigator: navigator))
         case .me:
-            return NavigationController(rootVc: WebPreviewController(viewModel: viewModel, navigator: navigator))
+            //return NavigationController(rootVc: WebPreviewController(viewModel: viewModel, navigator: navigator))
+            let vc = JSWebController(viewModel: viewModel, navigator: navigator)
+            vc.isHideLeftView = true
+            vc.loadWeb(urlPath: "jstest.html", isLocal: true)
+            return NavigationController(rootVc: vc)
         }
     }
 }

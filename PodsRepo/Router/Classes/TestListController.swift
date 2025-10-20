@@ -77,11 +77,11 @@ extension TestListController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            navigator.show(provider: RouteScene.safari(URL(string: "https://www.apple.com")!), sender: self)
+            navigator.show(provider: BaseScene.safari(URL(string: "https://www.apple.com")!), sender: self)
         case 1:
-            navigator.show(provider: RouteScene.videoPlayController(url: "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"), sender: self, transition: .alert(type: .overFullScreen))
+            navigator.show(provider: BaseScene.videoPlayController(url: "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"), sender: self, transition: .modal(type: .overFullScreen))
         case 2:
-            navigator.show(provider: RouteScene.webController(url: "https://www.apple.com", title: ""), sender: self)
+            navigator.show(provider: BaseScene.webController(path: "https://www.apple.com", title: ""), sender: self)
         case 3:
             navigator.pop(sender: self, toRoot: true)
         default:

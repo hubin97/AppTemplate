@@ -12,7 +12,7 @@ import Router
 // MARK: - main class
 class TestListController: ViewController {
     
-    let items = ["Safari"]
+    let items = ["Safari", "SafariController"]
     
     lazy var tableView: UITableView = {
         let _tableView = UITableView(frame: .zero, style: .plain)
@@ -65,7 +65,9 @@ extension TestListController: UITableViewDataSource, UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
         switch indexPath.row {
         case 0:
-            navigator.show(provider: RouteScene.safari(URL(string: "https://www.baidu.com")!), sender: self)
+            navigator.show(provider: BaseScene.safari(URL(string: "https://www.baidu.com")!), sender: self)
+        case 1:
+            navigator.show(provider: BaseScene.safariController(URL(string: "https://www.baidu.com")!), sender: self, transition: .alert(type: .fullScreen))
         default:
             break
         }

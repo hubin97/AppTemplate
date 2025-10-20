@@ -10,11 +10,15 @@ import PromiseKit
 import MJRefresh
 import RxRelay
 
-// MARK: -
-extension MJRefreshComponent {
-    
+// MARK: - MJRefreshLocalizedProvider
+protocol MJRefreshLocalizedProvider {
     /// 多语言设置
-    func setupLocalizedStrings() {
+    func setupLocalizedStrings()
+}
+
+extension MJRefreshLocalizedProvider {
+    /// 多语言设置
+    public func setupLocalizedStrings() {
         if let header = self as? MJRefreshNormalHeader {
             header.setTitle(RLocalizable.mj_header_refresh.key.localized, for: .idle)
             header.setTitle(RLocalizable.mj_header_release.key.localized, for: .pulling)
@@ -48,6 +52,10 @@ extension MJRefreshComponent {
     }
 }
 
+// MARK: - MJRefreshComponent
+extension MJRefreshComponent: MJRefreshLocalizedProvider {}
+
+// MARK: - Custom
 public class LTRefreshHeader: MJRefreshNormalHeader {
 
     public var headerRefresh = PublishRelay<Void>()
@@ -74,7 +82,7 @@ public class LTRefreshFooter: MJRefreshAutoNormalFooter {
 
 // MARK: -
 /// 下拉刷新
-protocol LTPullRefreshDataProvider: AnyObject {
+public protocol LTPullRefreshDataProvider: AnyObject {
     associatedtype Element
     
     var mjHeaderView: LTRefreshHeader { get }
@@ -84,11 +92,11 @@ protocol LTPullRefreshDataProvider: AnyObject {
 }
 
 extension LTPullRefreshDataProvider {
-    func pullRefresh() {}
+    public func pullRefresh() {}
 }
 
 /// 上拉加载更多
-protocol LTLoadMoreDataProvider: AnyObject {
+public protocol LTLoadMoreDataProvider: AnyObject {
     associatedtype Element
     
     var mjFooterView: LTRefreshFooter { get }
@@ -100,5 +108,5 @@ protocol LTLoadMoreDataProvider: AnyObject {
 }
 
 extension LTLoadMoreDataProvider {
-    func loadMoreData() {}
+    public func loadMoreData() {}
 }

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import AppStart
 import Router
 import Demo
 //import GDPerformanceView_Swift
@@ -17,7 +18,7 @@ class ListViewController: ViewController, ViewModelProvider {
     lazy var listView: UITableView = {
         let listView = UITableView(frame: CGRect.zero, style: .plain)
         listView.backgroundColor = .white
-        listView.register(UITableViewCell.self, forCellReuseIdentifier: NSStringFromClass(UITableViewCell.self))
+        listView.registerCell(TableViewCell.self)
         listView.tableFooterView = UIView.init(frame: CGRect.zero)
         listView.dataSource = self
         listView.delegate = self
@@ -74,8 +75,7 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = vm.items[indexPath.row]
-        let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(UITableViewCell.self), for: indexPath)
-        cell.contentView.backgroundColor = .white
+        let cell = tableView.getReusableCell(TableViewCell.self)
         cell.textLabel?.text = model.title
         cell.textLabel?.textColor = .black
         return cell
@@ -87,12 +87,10 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
         switch item {
         case .test:
             let path = "https://iot-dev.luteos.com/app/pageActivityManagement/void" + "?openSource=App"
-            navigator.show(provider: AppScene.jsWeb(path: path, title: nil, symbol: "LUTE_NATIVE"), sender: self)
+            navigator.show(provider: BaseScene.webController(path: path, title: nil, symbol: "LUTE_NATIVE"), sender: self)
         case .mediaList:
-            //navigator.show(provider: AppScene.mediaList, sender: self)
-            //iToast.makeToast(">> mediaList")
-            let url = "https://cozy-static-dev.cozyinnov.com/public/970040/%E7%AC%AC%E4%BA%8C%E6%AC%A1%E4%B8%93%E5%AE%B6%E7%9B%B4%E6%92%AD%E5%BD%95%E5%B1%8F25.8.19.mp4"
-            navigator.show(provider: AppScene.videoPlayController(url: url, autoPlay: true, isWrap: true), sender: self, transition: .alert(type: .fullScreen))
+            let url = "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"
+            navigator.show(provider: BaseScene.videoPlayController(url: url, autoPlay: true, isWrap: true), sender: self, transition: .modal(type: .fullScreen))
         case .routeTest:
             navigator.show(provider: RouteScene.testList, sender: self)
         case .demoTest:

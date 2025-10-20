@@ -19,7 +19,7 @@ let mmkv: MMKV = {
 // MARK: 定义 MMKV 键的枚举
 // TODO: 除AuthManager以外的其他地方数据都将进行迁移(包括 DataManager, CacheManager等 非用户数据的)
 enum MMKVKeys: String {
-    case bundle_id = "com.root.lutego"
+    case bundle_id = "com.xxx.appstart"
     /// 迁移 版本号
     case migrateVersion
     /// 欢迎引导页

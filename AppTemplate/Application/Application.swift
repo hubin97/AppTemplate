@@ -98,7 +98,7 @@ extension Application {
 //        }
                
         /// 主页
-        self.navigator.show(provider: AppScene.tabs(viewModel: TabBarViewModel(tabBarItems: TabBarItem.allCases)), sender: nil, transition: .root(in: window))
+        self.navigator.show(provider: BaseScene.tabs(viewModel: TabBarViewModel(tabBarItems: TabBarItem.allCases)), sender: nil, transition: .root(in: window))
     }
 }
 

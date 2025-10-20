@@ -58,24 +58,46 @@ PODS:
     - AppStart/Utils/AuthStatus (= 0.1.1)
     - AppStart/Utils/Helpers (= 0.1.1)
     - AppStart/Utils/LoggerManager (= 0.1.1)
+    - AppStart/Utils/Rx (= 0.1.1)
+    - AppStart/Utils/UIKit (= 0.1.1)
     - CocoaLumberjack
     - Kingfisher
+    - RxGesture
+    - RxSwift
     - Toast-Swift
   - AppStart/Utils/AuthStatus (0.1.1):
     - AppStart/Base/Core
     - CocoaLumberjack
     - Kingfisher
+    - RxGesture
+    - RxSwift
     - Toast-Swift
   - AppStart/Utils/Helpers (0.1.1):
     - AppStart/Base/Core
     - CocoaLumberjack
     - Kingfisher
+    - RxGesture
+    - RxSwift
     - Toast-Swift
   - AppStart/Utils/LoggerManager (0.1.1):
     - AppStart/Base
     - AppStart/Utils/Helpers
     - CocoaLumberjack
     - Kingfisher
+    - RxGesture
+    - RxSwift
+    - Toast-Swift
+  - AppStart/Utils/Rx (0.1.1):
+    - CocoaLumberjack
+    - Kingfisher
+    - RxGesture
+    - RxSwift
+    - Toast-Swift
+  - AppStart/Utils/UIKit (0.1.1):
+    - AppStart/Base/Core
+    - CocoaLumberjack
+    - Kingfisher
+    - RxGesture
     - RxSwift
     - Toast-Swift
   - Bugly (2.6.1)
@@ -178,7 +200,7 @@ PODS:
   - Toast-Swift (5.1.1)
 
 DEPENDENCIES:
-  - AppStart (from `../AppStart`)
+  - AppStart (= 0.1.1)
   - Bugly
   - Demo (from `./PodsRepo`)
   - DZNEmptyDataSet
@@ -199,6 +221,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
+    - AppStart
     - Bugly
     - CocoaLumberjack
     - DZNEmptyDataSet
@@ -231,8 +254,6 @@ SPEC REPOS:
     - Toast-Swift
 
 EXTERNAL SOURCES:
-  AppStart:
-    :path: "../AppStart"
   Demo:
     :path: "./PodsRepo"
   Router:
@@ -240,7 +261,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AppStart: 06d541d3caf2491cbca39af2f970ae08b170533e
+  AppStart: 5c964bc09642b16d7e0eb865f2a1d0c98ea8c6b5
   Bugly: 217ac2ce5f0f2626d43dbaa4f70764c953a26a31
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
   Demo: 3ca622efbb9cc312a91f578e496207fe11a3010e
@@ -274,6 +295,6 @@ SPEC CHECKSUMS:
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 7ab65058a9c4464949e1062e15ad2600709c2f8f
+PODFILE CHECKSUM: 7f826a13d093f4f1406a00d16f3b9e6139c114e0
 
 COCOAPODS: 1.16.2

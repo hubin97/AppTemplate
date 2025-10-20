@@ -15,8 +15,8 @@ import MJRefresh
 ///
 open class CollectionView: UICollectionView {
     
-    var mjHeaderView = LTRefreshHeader()
-    var mjFooterView = LTRefreshFooter()
+    public var mjHeaderView = LTRefreshHeader()
+    public var mjFooterView = LTRefreshFooter()
 
     /// 点击空页面视图
     public let didTapEmptyView: PublishRelay = PublishRelay<Void>()
@@ -33,18 +33,18 @@ open class CollectionView: UICollectionView {
         self.emptyDataSetDelegate = self
     }
     
-    required public init?(coder: NSCoder) {
+    public required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
     /// 设置段头下拉刷新
-    func setHeaderRefresh(_ block: @escaping (() -> Void)) {
+    public func setHeaderRefresh(_ block: @escaping (() -> Void)) {
         self.mj_header = self.mjHeaderView
         self.mj_header?.refreshingBlock = block
     }
     
     /// 设置段头上拉加载
-    func setFooterRefresh(_ block: @escaping (() -> Void)) {
+    public func setFooterRefresh(_ block: @escaping (() -> Void)) {
         self.mj_footer = self.mjFooterView
         self.mj_footer?.refreshingBlock = block
     }
