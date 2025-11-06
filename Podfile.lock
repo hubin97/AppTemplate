@@ -4,6 +4,8 @@ PODS:
     - AppStart/Base (= 0.1.1)
     - AppStart/BLE (= 0.1.1)
     - AppStart/Network (= 0.1.1)
+    - AppStart/Sources (= 0.1.1)
+    - AppStart/SwiftGen (= 0.1.1)
     - AppStart/Utils (= 0.1.1)
   - AppStart/Base (0.1.1):
     - AppStart/Base/Core (= 0.1.1)
@@ -21,6 +23,7 @@ PODS:
     - Toast-Swift
   - AppStart/Base/UI (0.1.1):
     - AppStart/Base/Core
+    - AppStart/Sources
     - Kingfisher
     - ProgressHUD
     - PromiseKit
@@ -54,6 +57,8 @@ PODS:
     - PromiseKit
     - RxRelay
     - RxSwift
+  - AppStart/Sources (0.1.1)
+  - AppStart/SwiftGen (0.1.1)
   - AppStart/Utils (0.1.1):
     - AppStart/Utils/AuthStatus (= 0.1.1)
     - AppStart/Utils/Helpers (= 0.1.1)
@@ -63,6 +68,7 @@ PODS:
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
+    - RxRelay
     - RxSwift
     - Toast-Swift
   - AppStart/Utils/AuthStatus (0.1.1):
@@ -70,6 +76,7 @@ PODS:
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
+    - RxRelay
     - RxSwift
     - Toast-Swift
   - AppStart/Utils/Helpers (0.1.1):
@@ -77,20 +84,24 @@ PODS:
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
+    - RxRelay
     - RxSwift
     - Toast-Swift
   - AppStart/Utils/LoggerManager (0.1.1):
     - AppStart/Base
+    - AppStart/Sources
     - AppStart/Utils/Helpers
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
+    - RxRelay
     - RxSwift
     - Toast-Swift
   - AppStart/Utils/Rx (0.1.1):
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
+    - RxRelay
     - RxSwift
     - Toast-Swift
   - AppStart/Utils/UIKit (0.1.1):
@@ -98,6 +109,7 @@ PODS:
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
+    - RxRelay
     - RxSwift
     - Toast-Swift
   - Bugly (2.6.1)
@@ -105,6 +117,14 @@ PODS:
     - CocoaLumberjack/Core (= 3.9.0)
   - CocoaLumberjack/Core (3.9.0)
   - Demo (0.0.1):
+    - AppStart
+    - Demo/Sources (= 0.0.1)
+    - Demo/SwiftGen (= 0.0.1)
+    - Router
+  - Demo/Sources (0.0.1):
+    - AppStart
+    - Router
+  - Demo/SwiftGen (0.0.1):
     - AppStart
     - Router
   - DZNEmptyDataSet (1.8.1)
@@ -186,6 +206,12 @@ PODS:
   - R.swift (7.8.0)
   - Router (0.0.1):
     - AppStart
+    - Router/Sources (= 0.0.1)
+    - Router/SwiftGen (= 0.0.1)
+  - Router/Sources (0.0.1):
+    - AppStart
+  - Router/SwiftGen (0.0.1):
+    - AppStart
   - RxCocoa (6.9.0):
     - RxRelay (= 6.9.0)
     - RxSwift (= 6.9.0)
@@ -200,7 +226,7 @@ PODS:
   - Toast-Swift (5.1.1)
 
 DEPENDENCIES:
-  - AppStart (= 0.1.1)
+  - AppStart (from `../AppStart`)
   - Bugly
   - Demo (from `./PodsRepo`)
   - DZNEmptyDataSet
@@ -221,7 +247,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
-    - AppStart
     - Bugly
     - CocoaLumberjack
     - DZNEmptyDataSet
@@ -254,6 +279,8 @@ SPEC REPOS:
     - Toast-Swift
 
 EXTERNAL SOURCES:
+  AppStart:
+    :path: "../AppStart"
   Demo:
     :path: "./PodsRepo"
   Router:
@@ -261,10 +288,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AppStart: 5c964bc09642b16d7e0eb865f2a1d0c98ea8c6b5
+  AppStart: 1bd085f943c33e8fce96f42cb92a356396467e3f
   Bugly: 217ac2ce5f0f2626d43dbaa4f70764c953a26a31
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
-  Demo: 3ca622efbb9cc312a91f578e496207fe11a3010e
+  Demo: 08be35fa7d00086ff249b5dca07f9b2e4cfa3bfb
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   IQKeyboardCore: 8652977ec919cf5351aa2977fedd1a6546476fbc
   IQKeyboardManagerSwift: 835fc9c6e4732398113406d84900ad2e8f141218
@@ -286,7 +313,7 @@ SPEC CHECKSUMS:
   ProgressHUD: abb9136ae23c85204236828562cb9a8ec98efb44
   PromiseKit: 74e6ab5894856b4762fef547055c809bca91d440
   R.swift: f573269ca45b2ab066c082e363dd4c2b297b0d71
-  Router: 8bfc98e65a5be0e37ed70f502f2daa9b8ad6b383
+  Router: c8fcbb813dc44440d1e7f433b327c9dbb474dae2
   RxCocoa: ac16414696ae706516be3e1ab00fcce5bdc9be8a
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 6b0c930e5cef57d5fe2032571e5e65b78e3cbdb1
@@ -295,6 +322,6 @@ SPEC CHECKSUMS:
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 7f826a13d093f4f1406a00d16f3b9e6139c114e0
+PODFILE CHECKSUM: 7ab65058a9c4464949e1062e15ad2600709c2f8f
 
 COCOAPODS: 1.16.2

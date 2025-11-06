@@ -38,7 +38,10 @@ Pod::Spec.new do |s|
     s.source           = { :git => 'https://github.com/xxx.git', :tag => s.version.to_s }
     
     # ――― Source Code ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
-    s.source_files = 'Demo/**/*'
+    #s.source_files = 'Demo/**/*'
+    s.source_files = 'Demo/**/*.{swift,h,m,mm}'
+    #s.resources = ['Demo/Resources/**/*']
+ 
     s.dependency 'AppStart'
     s.dependency 'Router'
 
@@ -48,4 +51,17 @@ Pod::Spec.new do |s|
     # ――― Project Settings ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
     s.requires_arc = true
     
+  # --- SwiftGen began ---
+  s.subspec 'SwiftGen' do |ss|
+      ss.source_files = 'Demo/SwiftGen/*'
+  end
+  s.subspec 'Sources' do |ss|
+      ss.source_files = 'Demo/Sources/Generated/*'
+  end
+  s.resources = [
+    'Demo/Resources/**/*.xcassets',
+    'Demo/Resources/**/*.strings'
+  ]
+  # --- SwiftGen end ---
+
 end

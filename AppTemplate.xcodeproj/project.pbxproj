@@ -8,17 +8,17 @@
 
 /* Begin PBXBuildFile section */
 		183888552E15410200D43886 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 183888542E15410200D43886 /* .swiftlint.yml */; };
-		CE1CB8549C2631B75F53E7EE /* Pods_AppTemplate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84BA00577EC116A8DF696F14 /* Pods_AppTemplate.framework */; };
+		7ACEB75B28515BC59A9BB40A /* Pods_AppTemplate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1D58FE81AE4D63FDB34D4FB6 /* Pods_AppTemplate.framework */; };
 		F3461682AD7102924B563BC9 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 8F75E60E15297D1B98711553 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		183888542E15410200D43886 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		18D6FA6A2DE815B300BB780D /* AppTemplate.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AppTemplate.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		6B4E286160EC7F16588C03C6 /* Pods-AppTemplate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTemplate.release.xcconfig"; path = "Target Support Files/Pods-AppTemplate/Pods-AppTemplate.release.xcconfig"; sourceTree = "<group>"; };
-		84BA00577EC116A8DF696F14 /* Pods_AppTemplate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AppTemplate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		1D58FE81AE4D63FDB34D4FB6 /* Pods_AppTemplate.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AppTemplate.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F75E60E15297D1B98711553 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		FB6BBF21DB97178DD0820CAC /* Pods-AppTemplate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTemplate.debug.xcconfig"; path = "Target Support Files/Pods-AppTemplate/Pods-AppTemplate.debug.xcconfig"; sourceTree = "<group>"; };
+		DA65B615B5AEDB55AE2A0DC3 /* Pods-AppTemplate.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTemplate.debug.xcconfig"; path = "Target Support Files/Pods-AppTemplate/Pods-AppTemplate.debug.xcconfig"; sourceTree = "<group>"; };
+		F770584B1FEC83EE704C6504 /* Pods-AppTemplate.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppTemplate.release.xcconfig"; path = "Target Support Files/Pods-AppTemplate/Pods-AppTemplate.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -47,7 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CE1CB8549C2631B75F53E7EE /* Pods_AppTemplate.framework in Frameworks */,
+				7ACEB75B28515BC59A9BB40A /* Pods_AppTemplate.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -60,9 +60,9 @@
 				18D6FA6C2DE815B300BB780D /* AppTemplate */,
 				18D6FA6B2DE815B300BB780D /* Products */,
 				AF02F65427257A6443DC7156 /* Pods */,
-				9607BA4AF3E12EBC647ECD15 /* Frameworks */,
 				8F75E60E15297D1B98711553 /* PrivacyInfo.xcprivacy */,
 				183888542E15410200D43886 /* .swiftlint.yml */,
+				BB9C16F409A6019F5D588371 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -74,21 +74,21 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		9607BA4AF3E12EBC647ECD15 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				84BA00577EC116A8DF696F14 /* Pods_AppTemplate.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		AF02F65427257A6443DC7156 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FB6BBF21DB97178DD0820CAC /* Pods-AppTemplate.debug.xcconfig */,
-				6B4E286160EC7F16588C03C6 /* Pods-AppTemplate.release.xcconfig */,
+				DA65B615B5AEDB55AE2A0DC3 /* Pods-AppTemplate.debug.xcconfig */,
+				F770584B1FEC83EE704C6504 /* Pods-AppTemplate.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		BB9C16F409A6019F5D588371 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				1D58FE81AE4D63FDB34D4FB6 /* Pods_AppTemplate.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -98,13 +98,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 18D6FA7D2DE815B400BB780D /* Build configuration list for PBXNativeTarget "AppTemplate" */;
 			buildPhases = (
-				E6A6A7B9D17AE16D8A7AC28A /* [CP] Check Pods Manifest.lock */,
+				E52E35AFB312F2B0B85FF1DA /* [CP] Check Pods Manifest.lock */,
 				18D6FAFE2DE8169F00BB780D /* R.swift Script */,
 				18D6FA662DE815B300BB780D /* Sources */,
 				18D6FA672DE815B300BB780D /* Frameworks */,
 				18D6FAFF2DE816D700BB780D /* SwiftLint Script */,
 				18D6FA682DE815B300BB780D /* Resources */,
-				9D4543A9D4B577E2E229F1D4 /* [CP] Embed Pods Frameworks */,
+				5A891CD4863B5B7B45138B68 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -206,7 +206,7 @@
 			shellPath = /bin/sh;
 			shellScript = "if [[ \"$(uname -m)\" == arm64 ]]; then\n    export PATH=\"/usr/local/Homebrew/bin:$PATH\"\nfi\n\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		9D4543A9D4B577E2E229F1D4 /* [CP] Embed Pods Frameworks */ = {
+		5A891CD4863B5B7B45138B68 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -214,16 +214,20 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AppTemplate/Pods-AppTemplate-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AppTemplate/Pods-AppTemplate-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AppTemplate/Pods-AppTemplate-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		E6A6A7B9D17AE16D8A7AC28A /* [CP] Check Pods Manifest.lock */ = {
+		E52E35AFB312F2B0B85FF1DA /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -260,13 +264,13 @@
 /* Begin XCBuildConfiguration section */
 		18D6FA7E2DE815B400BB780D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FB6BBF21DB97178DD0820CAC /* Pods-AppTemplate.debug.xcconfig */;
+			baseConfigurationReference = DA65B615B5AEDB55AE2A0DC3 /* Pods-AppTemplate.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YTPNCWF278;
+				DEVELOPMENT_TEAM = YP9F4937J4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AppTemplate/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -291,13 +295,13 @@
 		};
 		18D6FA7F2DE815B400BB780D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6B4E286160EC7F16588C03C6 /* Pods-AppTemplate.release.xcconfig */;
+			baseConfigurationReference = F770584B1FEC83EE704C6504 /* Pods-AppTemplate.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = YTPNCWF278;
+				DEVELOPMENT_TEAM = YP9F4937J4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AppTemplate/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

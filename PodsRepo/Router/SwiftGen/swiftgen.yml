@@ -1,0 +1,17 @@
+## For more info, see SwiftGen documentation
+##
+## 常用指令
+## brew install swiftgen
+## cd Router"/SwiftGen
+## swiftgen config run --config swiftgen.yml
+
+# ---
+strings:
+  inputs:
+    - ../Resources/en.lproj/Localizable.strings
+  outputs:
+    - templateName: structured-swift5
+      output: ../Sources/Generated/Strings.swift
+      bundle: BundleToken.bundle
+
+# ---

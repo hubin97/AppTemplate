@@ -17,7 +17,7 @@ class TestListController: ViewController {
     lazy var tableView: UITableView = {
         let _tableView = UITableView(frame: .zero, style: .plain)
         _tableView.backgroundColor = .white
-        _tableView.registerCell(UITableViewCell.self)
+        _tableView.registerCell(TableViewCell.self)
         _tableView.dataSource = self
         _tableView.delegate = self
         _tableView.rowHeight = 50
@@ -26,7 +26,7 @@ class TestListController: ViewController {
     
     override func setupLayout() {
         super.setupLayout()
-        self.naviBar.title = "Demo--"
+        self.naviBar.title = L10n.stringDemoList
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { (make) in
@@ -56,7 +56,7 @@ extension TestListController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.getReusableCell(UITableViewCell.self)
+        let cell = tableView.getReusableCell(TableViewCell.self)
         cell.textLabel?.text = items[indexPath.row]
         return cell
     }
