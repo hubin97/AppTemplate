@@ -12,6 +12,8 @@ import Foundation
 internal enum L10n {
   /// Demo
   internal static let stringDemo = L10n.tr("Localizable", "string_demo", fallback: "Demo")
+  /// Route List
+  internal static let stringRouteList = L10n.tr("Localizable", "string_route_list", fallback: "Route List")
 }
 // swiftlint:enable explicit_type_interface function_parameter_count identifier_name line_length
 // swiftlint:enable nesting type_body_length type_name vertical_whitespace_opening_braces

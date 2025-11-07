@@ -284,7 +284,7 @@ struct _R {
     }
   }
 
-  /// This `_R.file` struct is generated, and contains static references to 10 resource files.
+  /// This `_R.file` struct is generated, and contains static references to 8 resource files.
   struct file {
     let bundle: Foundation.Bundle
 
@@ -309,14 +309,8 @@ struct _R {
     /// Resource file `privacy_manifest_utils.rb`.
     var privacy_manifest_utilsRb: RswiftResources.FileResource { .init(name: "privacy_manifest_utils", pathExtension: "rb", bundle: bundle, locale: LocaleReference.none) }
 
-    /// Resource file `setup_swiftgen_pod 2.sh.zip`.
-    var setup_swiftgen_pod2ShZip: RswiftResources.FileResource { .init(name: "setup_swiftgen_pod 2.sh", pathExtension: "zip", bundle: bundle, locale: LocaleReference.none) }
-
-    /// Resource file `setup_swiftgen_pod.sh`.
-    var setup_swiftgen_podSh: RswiftResources.FileResource { .init(name: "setup_swiftgen_pod", pathExtension: "sh", bundle: bundle, locale: LocaleReference.none) }
-
-    /// Resource file `setup_swiftgen_pod.sh.zip`.
-    var setup_swiftgen_podShZip: RswiftResources.FileResource { .init(name: "setup_swiftgen_pod.sh", pathExtension: "zip", bundle: bundle, locale: LocaleReference.none) }
+    /// Resource file `swiftgen_pod_setup.sh`.
+    var swiftgen_pod_setupSh: RswiftResources.FileResource { .init(name: "swiftgen_pod_setup", pathExtension: "sh", bundle: bundle, locale: LocaleReference.none) }
   }
 
   /// This `_R.storyboard` struct is generated, and contains static references to 2 storyboards.

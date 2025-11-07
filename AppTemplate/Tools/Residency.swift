@@ -5,9 +5,13 @@
 //  Created by hubin.h on 2025/8/7.
 //  Copyright © 2025 路特创新. All rights reserved.
 
+/// TikTok 在 iOS 端实现大陆用户登录注册限制的技术方案
+/// https://rcmdkv7gnx.feishu.cn/wiki/TT45woMPzi1ac4kLH2vcm1nYnMi
+///
 import Foundation
 import CoreTelephony
 import PromiseKit
+
 // MARK: - Global Variables & Functions (if necessary)
 
 // MARK: - Main Class

@@ -256,6 +256,7 @@ EXISTS_STRINGS=0
 SWIFTGEN_YML="$SWIFTGEN_DIR/swiftgen.yml"
 {
   echo "## For more info, see SwiftGen documentation"
+  echo "## by hubin.h"
   echo "##"
   echo "## 常用指令"
   echo "## brew install swiftgen"

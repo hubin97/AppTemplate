@@ -26,7 +26,7 @@ class TestListController: ViewController {
     
     override func setupLayout() {
         super.setupLayout()
-        self.naviBar.title = "Route--"
+        self.naviBar.title = L10n.stringRouteList
         view.addSubview(tableView)
         
         tableView.snp.makeConstraints { (make) in
