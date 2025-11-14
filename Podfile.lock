@@ -1,77 +1,75 @@
 PODS:
   - Alamofire (5.10.2)
-  - AppStart (0.1.1):
-    - AppStart/Base (= 0.1.1)
-    - AppStart/BLE (= 0.1.1)
-    - AppStart/Network (= 0.1.1)
-    - AppStart/Sources (= 0.1.1)
-    - AppStart/SwiftGen (= 0.1.1)
-    - AppStart/Utils (= 0.1.1)
-  - AppStart/Base (0.1.1):
-    - AppStart/Base/Core (= 0.1.1)
-    - AppStart/Base/UI (= 0.1.1)
+  - AppStart (0.1.2):
+    - AppStart/Base (= 0.1.2)
+    - AppStart/BLE (= 0.1.2)
+    - AppStart/Network (= 0.1.2)
+    - AppStart/ProgressHUD (= 0.1.2)
+    - AppStart/Sources (= 0.1.2)
+    - AppStart/SwiftGen (= 0.1.2)
+    - AppStart/Utils (= 0.1.2)
+  - AppStart/Base (0.1.2):
+    - AppStart/Base/Core (= 0.1.2)
+    - AppStart/Base/UI (= 0.1.2)
     - Kingfisher
-    - ProgressHUD
     - PromiseKit
     - SnapKit
     - Toast-Swift
-  - AppStart/Base/Core (0.1.1):
+  - AppStart/Base/Core (0.1.2):
+    - AppStart/ProgressHUD
     - Kingfisher
-    - ProgressHUD
     - PromiseKit
     - SnapKit
     - Toast-Swift
-  - AppStart/Base/UI (0.1.1):
+  - AppStart/Base/UI (0.1.2):
     - AppStart/Base/Core
     - AppStart/Sources
     - Kingfisher
-    - ProgressHUD
     - PromiseKit
     - SnapKit
     - Toast-Swift
-  - AppStart/BLE (0.1.1):
+  - AppStart/BLE (0.1.2):
     - "NSObject+Rx"
     - RxCocoa
     - RxSwift
-  - AppStart/Network (0.1.1):
-    - AppStart/Network/Core (= 0.1.1)
-    - AppStart/Network/Utils (= 0.1.1)
+  - AppStart/Network (0.1.2):
+    - AppStart/Network/Core (= 0.1.2)
+    - AppStart/Network/Utils (= 0.1.2)
     - Moya
     - ObjectMapper
-    - ProgressHUD
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Network/Core (0.1.1):
+  - AppStart/Network/Core (0.1.2):
+    - AppStart/Sources
     - AppStart/Utils
     - Moya
     - ObjectMapper
-    - ProgressHUD
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Network/Utils (0.1.1):
+  - AppStart/Network/Utils (0.1.2):
     - Moya
     - ObjectMapper
-    - ProgressHUD
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Sources (0.1.1)
-  - AppStart/SwiftGen (0.1.1)
-  - AppStart/Utils (0.1.1):
-    - AppStart/Utils/AuthStatus (= 0.1.1)
-    - AppStart/Utils/Helpers (= 0.1.1)
-    - AppStart/Utils/LoggerManager (= 0.1.1)
-    - AppStart/Utils/Rx (= 0.1.1)
-    - AppStart/Utils/UIKit (= 0.1.1)
+  - AppStart/ProgressHUD (0.1.2)
+  - AppStart/Sources (0.1.2)
+  - AppStart/SwiftGen (0.1.2)
+  - AppStart/Utils (0.1.2):
+    - AppStart/Utils/AuthStatus (= 0.1.2)
+    - AppStart/Utils/Helpers (= 0.1.2)
+    - AppStart/Utils/LoggerManager (= 0.1.2)
+    - AppStart/Utils/Rx (= 0.1.2)
+    - AppStart/Utils/UIKit (= 0.1.2)
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
     - RxRelay
     - RxSwift
     - Toast-Swift
-  - AppStart/Utils/AuthStatus (0.1.1):
+  - AppStart/Utils/AuthStatus (0.1.2):
     - AppStart/Base/Core
     - CocoaLumberjack
     - Kingfisher
@@ -79,7 +77,7 @@ PODS:
     - RxRelay
     - RxSwift
     - Toast-Swift
-  - AppStart/Utils/Helpers (0.1.1):
+  - AppStart/Utils/Helpers (0.1.2):
     - AppStart/Base/Core
     - CocoaLumberjack
     - Kingfisher
@@ -87,7 +85,7 @@ PODS:
     - RxRelay
     - RxSwift
     - Toast-Swift
-  - AppStart/Utils/LoggerManager (0.1.1):
+  - AppStart/Utils/LoggerManager (0.1.2):
     - AppStart/Base
     - AppStart/Sources
     - AppStart/Utils/Helpers
@@ -97,15 +95,16 @@ PODS:
     - RxRelay
     - RxSwift
     - Toast-Swift
-  - AppStart/Utils/Rx (0.1.1):
+  - AppStart/Utils/Rx (0.1.2):
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
     - RxRelay
     - RxSwift
     - Toast-Swift
-  - AppStart/Utils/UIKit (0.1.1):
+  - AppStart/Utils/UIKit (0.1.2):
     - AppStart/Base/Core
+    - AppStart/Sources
     - CocoaLumberjack
     - Kingfisher
     - RxGesture
@@ -119,12 +118,8 @@ PODS:
   - Demo (0.0.1):
     - AppStart
     - Demo/Sources (= 0.0.1)
-    - Demo/SwiftGen (= 0.0.1)
     - Router
   - Demo/Sources (0.0.1):
-    - AppStart
-    - Router
-  - Demo/SwiftGen (0.0.1):
     - AppStart
     - Router
   - DZNEmptyDataSet (1.8.1)
@@ -193,7 +188,6 @@ PODS:
   - "NSObject+Rx (5.2.2)":
     - RxSwift (~> 6.2)
   - ObjectMapper (4.4.2)
-  - ProgressHUD (14.1.1)
   - PromiseKit (8.2.0):
     - PromiseKit/CorePromise (= 8.2.0)
     - PromiseKit/Foundation (= 8.2.0)
@@ -207,10 +201,7 @@ PODS:
   - Router (0.0.1):
     - AppStart
     - Router/Sources (= 0.0.1)
-    - Router/SwiftGen (= 0.0.1)
   - Router/Sources (0.0.1):
-    - AppStart
-  - Router/SwiftGen (0.0.1):
     - AppStart
   - RxCocoa (6.9.0):
     - RxRelay (= 6.9.0)
@@ -226,7 +217,7 @@ PODS:
   - Toast-Swift (5.1.1)
 
 DEPENDENCIES:
-  - AppStart (from `../AppStart`)
+  - AppStart (= 0.1.2)
   - Bugly
   - Demo (from `./PodsRepo`)
   - DZNEmptyDataSet
@@ -247,6 +238,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
+    - AppStart
     - Bugly
     - CocoaLumberjack
     - DZNEmptyDataSet
@@ -267,7 +259,6 @@ SPEC REPOS:
     - Moya
     - "NSObject+Rx"
     - ObjectMapper
-    - ProgressHUD
     - PromiseKit
     - R.swift
     - RxCocoa
@@ -279,8 +270,6 @@ SPEC REPOS:
     - Toast-Swift
 
 EXTERNAL SOURCES:
-  AppStart:
-    :path: "../AppStart"
   Demo:
     :path: "./PodsRepo"
   Router:
@@ -288,10 +277,10 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AppStart: 1bd085f943c33e8fce96f42cb92a356396467e3f
+  AppStart: f265992e69f13d245740af8b83e7e8d18e0a763d
   Bugly: 217ac2ce5f0f2626d43dbaa4f70764c953a26a31
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
-  Demo: 08be35fa7d00086ff249b5dca07f9b2e4cfa3bfb
+  Demo: fba87876ff7833426e22b0bf158eeb38fbef1b94
   DZNEmptyDataSet: 9525833b9e68ac21c30253e1d3d7076cc828eaa7
   IQKeyboardCore: 8652977ec919cf5351aa2977fedd1a6546476fbc
   IQKeyboardManagerSwift: 835fc9c6e4732398113406d84900ad2e8f141218
@@ -310,10 +299,9 @@ SPEC CHECKSUMS:
   Moya: 138f0573e53411fb3dc17016add0b748dfbd78ee
   "NSObject+Rx": 61cf1f7306a73dcef8b36649198af0813ec18dfd
   ObjectMapper: e6e4d91ff7f2861df7aecc536c92d8363f4c9677
-  ProgressHUD: abb9136ae23c85204236828562cb9a8ec98efb44
   PromiseKit: 74e6ab5894856b4762fef547055c809bca91d440
   R.swift: f573269ca45b2ab066c082e363dd4c2b297b0d71
-  Router: c8fcbb813dc44440d1e7f433b327c9dbb474dae2
+  Router: 8b37437b0426182175537c798242a98efc9b9def
   RxCocoa: ac16414696ae706516be3e1ab00fcce5bdc9be8a
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 6b0c930e5cef57d5fe2032571e5e65b78e3cbdb1
@@ -322,6 +310,6 @@ SPEC CHECKSUMS:
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 7ab65058a9c4464949e1062e15ad2600709c2f8f
+PODFILE CHECKSUM: 328142ca858cf02772906eb1631ec8fe006ecfae
 
 COCOAPODS: 1.16.2

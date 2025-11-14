@@ -48,9 +48,9 @@ Pod::Spec.new do |s|
     s.requires_arc = true
     
   # --- SwiftGen began ---
-  s.subspec 'SwiftGen' do |ss|
-      ss.source_files = 'Router/SwiftGen/*'
-  end
+#  s.subspec 'SwiftGen' do |ss|
+#      ss.source_files = 'Router/SwiftGen/*'
+#  end
   s.subspec 'Sources' do |ss|
       ss.source_files = 'Router/Sources/Generated/*'
   end

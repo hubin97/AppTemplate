@@ -8,7 +8,6 @@
 import Foundation
 import IQKeyboardManagerSwift
 import Toast_Swift
-import ProgressHUD
 import Kingfisher
 import CocoaLumberjack
 import Bugly
