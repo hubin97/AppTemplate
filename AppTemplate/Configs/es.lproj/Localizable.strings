@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  LuteGo
+
+  Created by hubin.h on 2025/5/9.
+  
+*/
+
+"app_no_internet_tips" = "No se puede conectar a Internet";
+"app_use_mobile_data_tips" = "Actualmente estás usando datos móviles. Por favor, cuida tu consumo de datos.";

@@ -1,0 +1,10 @@
+/* 
+  Localizable.strings
+  LuteGo
+
+  Created by hubin.h on 2025/5/9.
+  
+*/
+
+"app_no_internet_tips" = "يتعذّر الاتصال بالإنترنت.";
+"app_use_mobile_data_tips" = "أنت تستخدم بيانات الهاتف حالياً. يرجى الانتباه لاستهلاكك.";

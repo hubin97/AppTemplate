@@ -8,14 +8,3 @@
 
 "app_no_internet_tips" = "似乎已断开与互联网的连接";
 "app_use_mobile_data_tips" = "当前使用移动网络,请注意流量消耗";
-
-"mj_header_refresh" = "下拉可以刷新";
-"mj_header_release" = "松开立即刷新";
-"mj_header_loading" = "正在刷新数据中...";
-"mj_header_lastupdate" = "最后更新";
-"mj_header_today" = "今天";
-"mj_header_norecord" = "无记录";
-"mj_footer_refresh" = "点击或上拉加载更多";
-"mj_footer_loading" = "正在加载更多的数据...";
-"mj_footer_nodata" = "已经全部加载完毕";
-"string_not_record_yet_tips" = "暂无记录";

@@ -41,9 +41,9 @@ final class Application: NSObject {
 extension Application {
     
     /// 更新配置项
+    /// `注意:注意:注意: 主工程Project-> Localization里面必须包含所有需要适配的语言, 才能正常切换到目标语言下; 否则展示fallback`
     func setupConfig() {
         self.setupLocalized()
-
     }
     
     func setupLocalized() {
@@ -53,6 +53,26 @@ extension Application {
 //    func setupPluginsConfig() {
 //        NetworkPrintlnPlugin.showLoggers = showNetworkLogs
 //    }
+    
+    /// RTL全局适配
+    /// 务必放在 setupLocalized 后面, makeKeyAndVisible前面
+    private func setSemanticLayout() {
+        let isRTL = LocalizedUtils.isRTL()
+        // 仅针对 RTL 修改
+        guard isRTL else { return }
+        let attribute: UISemanticContentAttribute = isRTL ? .forceRightToLeft : .forceLeftToRight
+        // 全局 appearance，仅需设置 UIView 即可
+        UIView.appearance().semanticContentAttribute = attribute
+        // UIWindow 也要设置（否则容器初始化后不继承）
+        window?.semanticContentAttribute = attribute
+        
+        // 以下控件不会自动继承 UIView.appearance() (不同版本可能不稳定)
+        [UINavigationBar.self, UITabBar.self, UITableView.self, UICollectionView.self,
+         UILabel.self, UIButton.self, UIImageView.self,
+         UITextField.self, UITextView.self].forEach {
+            $0.appearance().semanticContentAttribute = attribute
+        }
+    }
 }
 
 // MARK: -
@@ -73,7 +93,8 @@ extension Application {
         guard let window = window else { return }
         self.window = window
         self.setupConfig()
-        
+        self.setSemanticLayout()
+
         // 禁用夜间模式
         if #available(iOS 13.0, *) {
             window.overrideUserInterfaceStyle = .light

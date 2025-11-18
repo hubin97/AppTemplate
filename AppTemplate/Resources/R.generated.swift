@@ -75,32 +75,32 @@ struct _R {
       ///
       /// Key: CFBundleDisplayName
       ///
-      /// Locales: en, zh-Hans
+      /// Locales: ar, de, en, es, fr, it, zh-Hans
       var cfBundleDisplayName: RswiftResources.StringResource { .init(key: "CFBundleDisplayName", tableName: "InfoPlist", source: source, developmentValue: "AppTemplate", comment: nil) }
 
       /// en translation: Used for taking photos, uploading images for profile pictures and feedback, as well as scanning QR codes to connect devices.
       ///
       /// Key: NSCameraUsageDescription
       ///
-      /// Locales: en, zh-Hans
+      /// Locales: ar, de, en, es, fr, it, zh-Hans
       var nsCameraUsageDescription: RswiftResources.StringResource { .init(key: "NSCameraUsageDescription", tableName: "InfoPlist", source: source, developmentValue: "Used for taking photos, uploading images for profile pictures and feedback, as well as scanning QR codes to connect devices.", comment: nil) }
 
       /// en translation: Used to access photos, upload images from your gallery for profile pictures, and provide feedback.
       ///
       /// Key: NSPhotoLibraryAddUsageDescription
       ///
-      /// Locales: en, zh-Hans
+      /// Locales: ar, de, en, es, fr, it, zh-Hans
       var nsPhotoLibraryAddUsageDescription: RswiftResources.StringResource { .init(key: "NSPhotoLibraryAddUsageDescription", tableName: "InfoPlist", source: source, developmentValue: "Used to access photos, upload images from your gallery for profile pictures, and provide feedback.", comment: nil) }
 
       /// en translation: Used to access photos, upload images from your gallery for profile pictures, and provide feedback.
       ///
       /// Key: NSPhotoLibraryUsageDescription
       ///
-      /// Locales: en, zh-Hans
+      /// Locales: ar, de, en, es, fr, it, zh-Hans
       var nsPhotoLibraryUsageDescription: RswiftResources.StringResource { .init(key: "NSPhotoLibraryUsageDescription", tableName: "InfoPlist", source: source, developmentValue: "Used to access photos, upload images from your gallery for profile pictures, and provide feedback.", comment: nil) }
     }
 
-    /// This `_R.string.localizable` struct is generated, and contains static references to 12 localization keys.
+    /// This `_R.string.localizable` struct is generated, and contains static references to 2 localization keys.
     struct localizable {
       let source: RswiftResources.StringResource.Source
 
@@ -108,85 +108,15 @@ struct _R {
       ///
       /// Key: app_no_internet_tips
       ///
-      /// Locales: en, zh-Hans
+      /// Locales: ar, de, en, es, fr, it, zh-Hans
       var app_no_internet_tips: RswiftResources.StringResource { .init(key: "app_no_internet_tips", tableName: "Localizable", source: source, developmentValue: "Unable to connect to the Internet", comment: nil) }
 
       /// en translation: You are currently on mobile data. Please be mindful of your data usage.
       ///
       /// Key: app_use_mobile_data_tips
       ///
-      /// Locales: en, zh-Hans
+      /// Locales: ar, de, en, es, fr, it, zh-Hans
       var app_use_mobile_data_tips: RswiftResources.StringResource { .init(key: "app_use_mobile_data_tips", tableName: "Localizable", source: source, developmentValue: "You are currently on mobile data. Please be mindful of your data usage.", comment: nil) }
-
-      /// en translation: Loading…
-      ///
-      /// Key: mj_footer_loading
-      ///
-      /// Locales: en, zh-Hans
-      var mj_footer_loading: RswiftResources.StringResource { .init(key: "mj_footer_loading", tableName: "Localizable", source: source, developmentValue: "Loading…", comment: nil) }
-
-      /// en translation: No more data
-      ///
-      /// Key: mj_footer_nodata
-      ///
-      /// Locales: en, zh-Hans
-      var mj_footer_nodata: RswiftResources.StringResource { .init(key: "mj_footer_nodata", tableName: "Localizable", source: source, developmentValue: "No more data", comment: nil) }
-
-      /// en translation: Tap or pull up to load more
-      ///
-      /// Key: mj_footer_refresh
-      ///
-      /// Locales: en, zh-Hans
-      var mj_footer_refresh: RswiftResources.StringResource { .init(key: "mj_footer_refresh", tableName: "Localizable", source: source, developmentValue: "Tap or pull up to load more", comment: nil) }
-
-      /// en translation: Last update
-      ///
-      /// Key: mj_header_lastupdate
-      ///
-      /// Locales: en, zh-Hans
-      var mj_header_lastupdate: RswiftResources.StringResource { .init(key: "mj_header_lastupdate", tableName: "Localizable", source: source, developmentValue: "Last update", comment: nil) }
-
-      /// en translation: Loading…
-      ///
-      /// Key: mj_header_loading
-      ///
-      /// Locales: en, zh-Hans
-      var mj_header_loading: RswiftResources.StringResource { .init(key: "mj_header_loading", tableName: "Localizable", source: source, developmentValue: "Loading…", comment: nil) }
-
-      /// en translation: No record
-      ///
-      /// Key: mj_header_norecord
-      ///
-      /// Locales: en, zh-Hans
-      var mj_header_norecord: RswiftResources.StringResource { .init(key: "mj_header_norecord", tableName: "Localizable", source: source, developmentValue: "No record", comment: nil) }
-
-      /// en translation: Pull down to refresh
-      ///
-      /// Key: mj_header_refresh
-      ///
-      /// Locales: en, zh-Hans
-      var mj_header_refresh: RswiftResources.StringResource { .init(key: "mj_header_refresh", tableName: "Localizable", source: source, developmentValue: "Pull down to refresh", comment: nil) }
-
-      /// en translation: Release to refresh
-      ///
-      /// Key: mj_header_release
-      ///
-      /// Locales: en, zh-Hans
-      var mj_header_release: RswiftResources.StringResource { .init(key: "mj_header_release", tableName: "Localizable", source: source, developmentValue: "Release to refresh", comment: nil) }
-
-      /// en translation: Today
-      ///
-      /// Key: mj_header_today
-      ///
-      /// Locales: en, zh-Hans
-      var mj_header_today: RswiftResources.StringResource { .init(key: "mj_header_today", tableName: "Localizable", source: source, developmentValue: "Today", comment: nil) }
-
-      /// en translation: No Records Available
-      ///
-      /// Key: string_not_record_yet_tips
-      ///
-      /// Locales: en, zh-Hans
-      var string_not_record_yet_tips: RswiftResources.StringResource { .init(key: "string_not_record_yet_tips", tableName: "Localizable", source: source, developmentValue: "No Records Available", comment: nil) }
     }
   }
 

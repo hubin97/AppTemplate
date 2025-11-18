@@ -1,0 +1,12 @@
+/* 
+  InfoPlist.strings
+  LuteGo
+
+  Created by hubin.h on 2025/5/9.
+  
+*/
+
+"CFBundleDisplayName" = "AppTemplate";
+"NSCameraUsageDescription" = "Wird verwendet, um Fotos aufzunehmen, Bilder für Profilbilder und Feedback hochzuladen sowie QR-Codes zum Verbinden von Geräten zu scannen.";
+"NSPhotoLibraryAddUsageDescription" = "Wird verwendet, um auf Fotos zuzugreifen, Bilder aus Ihrer Galerie für Profilbilder hochzuladen und Feedback zu geben.";
+"NSPhotoLibraryUsageDescription" = "Wird verwendet, um auf Fotos zuzugreifen, Bilder aus Ihrer Galerie für Profilbilder hochzuladen und Feedback zu geben.";

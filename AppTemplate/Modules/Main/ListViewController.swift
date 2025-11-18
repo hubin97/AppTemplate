@@ -9,20 +9,26 @@ import UIKit
 import AppStart
 import Router
 import Demo
+import MJRefresh
 //import GDPerformanceView_Swift
 
 // MARK: - main class
 class ListViewController: ViewController, ViewModelProvider {
     typealias ViewModelType = ListViewModel
     
-    lazy var listView: UITableView = {
-        let listView = UITableView(frame: CGRect.zero, style: .plain)
+    lazy var listView: TableView = {
+        let listView = TableView(frame: CGRect.zero, style: .plain)
         listView.backgroundColor = .white
         listView.registerCell(TableViewCell.self)
         listView.tableFooterView = UIView.init(frame: CGRect.zero)
         listView.dataSource = self
         listView.delegate = self
         listView.rowHeight = 50
+        listView.mj_header = RefreshHeader(refreshingBlock: {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+                listView.mj_header?.endRefreshing()
+            }
+        })
         return listView
     }()
 
