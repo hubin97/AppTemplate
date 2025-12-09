@@ -92,8 +92,9 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
         let item = vm.items[indexPath.row]
         switch item {
         case .test:
-            let path = "https://iot-dev.luteos.com/app/pageActivityManagement/void" + "?openSource=App"
-            navigator.show(provider: BaseScene.webController(path: path, title: nil, symbol: "LUTE_NATIVE"), sender: self)
+//            let path = "https://iot-dev.luteos.com/app/pageActivityManagement/void" + "?openSource=App"
+//            navigator.show(provider: BaseScene.webController(path: path, title: nil, symbol: "LUTE_NATIVE"), sender: self)
+            alertTest()
         case .mediaList:
             let url = "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"
             navigator.show(provider: BaseScene.videoPlayController(url: url, autoPlay: true, isWrap: true), sender: self, transition: .modal(type: .fullScreen))
@@ -104,5 +105,159 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
         case .imageDecoder:
             navigator.show(provider: AppScene.imageDecoder, sender: self)
         }
+    }
+}
+
+extension ListViewController {
+    
+    func alertTest() {
+        
+//        // 1️⃣ 普通弹窗
+//        let normalAlert = PriorityBaseAlertView(priority: .normal, icon: nil, title: "普通", message: "普通消息")
+//        normalAlert.onStateChange = { state in
+//            print("NormalAlert state: \(state)")
+//        }
+//        normalAlert.addPrimaryAction(title: "确认") {
+//            print("NormalAlert primary tapped")
+//        }
+//        
+//        // 2️⃣ 更高优先级弹窗
+//        let higherAlert = PriorityBaseAlertView(priority: .higher, icon: nil, title: "更高", message: "高优先级消息")
+//        higherAlert.onStateChange = { state in
+//            print("HigherAlert state: \(state)")
+//        }
+//        higherAlert.addPrimaryAction(title: "确认") {
+//            print("HigherAlert primary tapped")
+//        }
+//
+//        // 3️⃣ 强制弹窗
+//        let forceAlert = PriorityBaseAlertView(priority: .force, icon: nil, title: "强制", message: "强制打断消息")
+//        forceAlert.onStateChange = { state in
+//            print("ForceAlert state: \(state)")
+//        }
+//        forceAlert.addPrimaryAction(title: "确认") {
+//            print("forceAlert primary tapped")
+//        }
+//
+//        // 4️⃣ 依次展示
+//        normalAlert.show()
+//        
+//        // 模拟稍后更高优先级弹窗入队
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+//            higherAlert.show()
+//        }
+//        
+//        // 模拟稍后强制弹窗入队
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 6) {
+//            forceAlert.show()
+//        }
+        
+        Array(0...3).forEach { idx in
+            self.normalAlert(with: idx)
+        }
+        
+        // 模拟稍后较高优先级弹窗入队
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            Array(0...3).forEach { idx in
+                self.highAlert(with: idx)
+            }
+        }
+        
+        // 模拟稍后更高优先级弹窗入队
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            Array(0...3).forEach { idx in
+                self.higherAlert(with: idx)
+            }
+        }
+        
+        // 强制的
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+            Array(0...3).forEach { idx in
+                self.forceAlert(with: idx)
+            }
+        }
+        
+        // 致命的
+        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+            Array(0...3).forEach { idx in
+                self.fatalAlert(with: idx)
+            }
+        }
+        
+        // 强制的
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+            Array(0...3).forEach { idx in
+                self.forceAlert(with: idx)
+            }
+        }
+        
+        // 模拟稍后更高优先级弹窗入队
+        DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+            Array(0...3).forEach { idx in
+                self.higherAlert(with: idx)
+            }
+        }
+        
+        // 强制的
+        DispatchQueue.main.asyncAfter(deadline: .now() + 23) {
+            Array(0...3).forEach { idx in
+                self.forceAlert(with: idx)
+            }
+        }
+    }
+    
+    func normalAlert(with idx: Int) {
+        let normalAlert = PriorityBaseAlertView(priority: .normal, icon: nil, title: "普通: \(idx)", message: "普通消息")
+        normalAlert.onStateChange = { state in
+            print("NormalAlert state: \(state)")
+        }
+        normalAlert.addPrimaryAction(title: "确认") {
+            print("NormalAlert primary tapped")
+        }
+        normalAlert.show()
+    }
+    
+    func highAlert(with idx: Int) {
+        let highAlert = PriorityBaseAlertView(priority: .high, icon: nil, title: "较高: \(idx)", message: "高优先级消息")
+        highAlert.onStateChange = { state in
+            print("highAlert state: \(state)")
+        }
+        highAlert.addPrimaryAction(title: "确认") {
+            print("highAlert primary tapped")
+        }
+        highAlert.show()
+    }
+    
+    func higherAlert(with idx: Int) {
+        let higherAlert = PriorityBaseAlertView(priority: .higher, icon: nil, title: "更高: \(idx)", message: "更高优先级消息")
+        higherAlert.onStateChange = { state in
+            print("HigherAlert state: \(state)")
+        }
+        higherAlert.addPrimaryAction(title: "确认") {
+            print("HigherAlert primary tapped")
+        }
+        higherAlert.show()
+    }
+    
+    func forceAlert(with idx: Int) {
+        let forceAlert = PriorityBaseAlertView(priority: .force, icon: nil, title: "强制: \(idx)", message: "强制打断消息")
+        forceAlert.onStateChange = { state in
+            print("ForceAlert state: \(state)")
+        }
+        forceAlert.addPrimaryAction(title: "确认") {
+            print("forceAlert primary tapped")
+        }
+        forceAlert.show()
+    }
+    
+    func fatalAlert(with idx: Int) {
+        let fatalAlert = PriorityBaseAlertView(priority: .fatal, icon: nil, title: "致命: \(idx)", message: "致命的消息")
+        fatalAlert.onStateChange = { state in
+            print("fatalAlert state: \(state)")
+        }
+        fatalAlert.addPrimaryAction(title: "确认") {
+            print("fatalAlert primary tapped")
+        }
+        fatalAlert.show()
     }
 }
