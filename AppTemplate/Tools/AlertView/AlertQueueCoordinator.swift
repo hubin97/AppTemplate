@@ -22,14 +22,20 @@ final class AlertQueueCoordinator {
     /// 当前展示弹窗
     private weak var presenting: (AlertContainable & AlertQueueable & UIView)?
 
+    /// 当前是否有正在展示或等待展示的 fatal alert
+    private var hasFatalPending: Bool {
+        return presenting?.priority == .fatal || queue.contains(where: { $0.priority == .fatal })
+    }
+    
     /// 入队
     func enqueue(_ alert: (AlertContainable & AlertQueueable & UIView)) {
 
         switch alert.priority {
 
         case .fatal:
-            if presenting?.priority == .fatal {
+            if hasFatalPending {
                 // 当前就是 fatal，新的 fatal 直接入队
+                queue.removeAll(where: { $0.priority != .fatal })
                 queue.append(alert)
                 return
             }
@@ -42,7 +48,7 @@ final class AlertQueueCoordinator {
             queue.append(alert)
 
             // 3) 打断当前正在展示的（可能是 normal/high/force），并触发下一步展示
-            presenting?.hide()
+            presenting?.removeFromSuperview()
             presenting = nil
             
             // 4) 尝试展示（show 逻辑在 tryShowNext / showAlert 中）
@@ -50,7 +56,7 @@ final class AlertQueueCoordinator {
 
         case .force:
             // 如果当前是 fatal，force 不能打断，直接丢弃
-            if presenting?.priority == .fatal {
+            if hasFatalPending {
                 print("⚠️ force ignored: fatal is presenting")
                 return
             }
@@ -59,7 +65,7 @@ final class AlertQueueCoordinator {
             if let p = presenting, p.priority < .force {
                 queue.insert(p, at: 0)
                 queue.sort { $0.priority.rawValue > $1.priority.rawValue }
-                presenting?.hide()
+                presenting?.removeFromSuperview()
                 presenting = nil
             }
      
@@ -74,7 +80,7 @@ final class AlertQueueCoordinator {
             
         default:
             // 如果当前有 fatal 在展示，所有非 fatal 直接忽略
-            if presenting?.priority == .fatal {
+            if hasFatalPending {
                 print("⚠️ normal/high ignored: fatal is presenting")
                 return
             }
@@ -90,17 +96,25 @@ final class AlertQueueCoordinator {
 // MARK: - Private Methods
 extension AlertQueueCoordinator {
     
+    /**
+     // 延迟0.3是为了规避多个force/fatal弹出情况, 稳定性可以进一步优化 ?
+     并非多个弹出问题, 而是因为调用了下面的 hide()方法, 触发了onStateChange回调, 而回调里面又调用了 tryShowNext 方法, 导致了重叠
+     所以前面入队时的
+     presenting?.hide()
+     presenting = nil
+     改为
+     presenting?.removeFromSuperview()
+     presenting = nil
+     */
     private func tryShowNext() {
-        // FIXME: 延迟0.3是为了规避多个force/fatal弹出情况, 稳定性可以进一步优化 ?
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
-            guard let self else { return }
-            guard self.presenting == nil else { return }
-            guard let next = self.queue.first else { return }
-            self.queue.removeFirst()
-            self.presenting = next
-            
-            self.showAlert(next)
-        }
+        if presenting != nil { return }
+        
+        guard let next = self.queue.first else { return }
+        
+        self.queue.removeFirst()
+        self.presenting = next
+        
+        self.showAlert(next)
     }
 
     private func showAlert(_ alert: (AlertContainable & AlertQueueable & UIView)) {

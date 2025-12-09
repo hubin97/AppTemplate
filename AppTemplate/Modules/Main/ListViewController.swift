@@ -178,28 +178,28 @@ extension ListViewController {
         }
         
         // 致命的
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             Array(0...3).forEach { idx in
                 self.fatalAlert(with: idx)
             }
         }
         
         // 强制的
-        DispatchQueue.main.asyncAfter(deadline: .now() + 5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
             Array(0...3).forEach { idx in
                 self.forceAlert(with: idx)
             }
         }
         
         // 模拟稍后更高优先级弹窗入队
-        DispatchQueue.main.asyncAfter(deadline: .now() + 20) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
             Array(0...3).forEach { idx in
                 self.higherAlert(with: idx)
             }
         }
         
         // 强制的
-        DispatchQueue.main.asyncAfter(deadline: .now() + 23) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 10) {
             Array(0...3).forEach { idx in
                 self.forceAlert(with: idx)
             }

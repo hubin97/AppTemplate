@@ -10,10 +10,10 @@ import Foundation
 // MARK: - Global Variables & Functions (if necessary)
 public enum AlertPriority: Int, Comparable {
     case normal      = 0     // 普通优先级
-    case high        = 1     // 高优先级
+    case high        = 1     // 较高优先级
     case higher      = 2     // 更高优先级
-    case force       = 3     // 强制打断, 插队显示, 但不清空队列
-    case fatal       = 9999  // 强制打断, 插队显示, 清空队列（< fatal级别的）
+    case force       = 3     // 强制优先级, 插队显示, 但不清空队列
+    case fatal       = 9999  // 致命优先级, 插队显示, 清空队列(< fatal级别的), 仅推荐在用户态丢失, 或者其它具有破坏性等场景下使用
     
     // Comparable 协议实现
     public static func < (lhs: AlertPriority, rhs: AlertPriority) -> Bool {
@@ -33,6 +33,7 @@ extension AlertContainable where Self: AlertQueueable & UIView {
         AlertQueueCoordinator.shared.enqueue(self)
     }
  
+    // FIXME: 后续把 AlertContainable的 show 动画部分抽离复用
     public func _presentInWindow() {
         guard let window = kAppKeyWindow else { return }
         // 布局基础视图

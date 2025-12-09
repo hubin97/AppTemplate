@@ -189,10 +189,14 @@ final class PriorityBaseAlertView: UIView, AlertContainable, AlertQueueable {
     private var primaryTapAction: (() -> Void)?
     private var secondaryTapAction: (() -> Void)?
     
+    // 临时测试使用
+    var title: String?
+    
     // MARK: - Init
     required init(priority: AlertPriority = .normal, icon: UIImage?, title: String?, message: String?) {
         super.init(frame: .zero)
         self.priority = priority
+        self.title = title
         setupUI()
         configure(icon: icon, title: title, message: message)
     }
