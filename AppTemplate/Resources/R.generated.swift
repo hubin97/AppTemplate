@@ -147,9 +147,15 @@ struct _R {
     }
 
 
-    /// This `_R.image.tabBar` struct is generated, and contains static references to 4 tabBars.
+    /// This `_R.image.tabBar` struct is generated, and contains static references to 6 tabBars.
     struct tabBar {
       let bundle: Foundation.Bundle
+
+      /// Image `tabBar/icon_func_h`.
+      var icon_func_h: RswiftResources.ImageResource { .init(name: "tabBar/icon_func_h", path: ["tabBar"], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
+
+      /// Image `tabBar/icon_func_n`.
+      var icon_func_n: RswiftResources.ImageResource { .init(name: "tabBar/icon_func_n", path: ["tabBar"], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
 
       /// Image `tabBar/icon_home_h`.
       var icon_home_h: RswiftResources.ImageResource { .init(name: "tabBar/icon_home_h", path: ["tabBar"], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
@@ -157,11 +163,11 @@ struct _R {
       /// Image `tabBar/icon_home_n`.
       var icon_home_n: RswiftResources.ImageResource { .init(name: "tabBar/icon_home_n", path: ["tabBar"], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
 
-      /// Image `tabBar/icon_me_h`.
-      var icon_me_h: RswiftResources.ImageResource { .init(name: "tabBar/icon_me_h", path: ["tabBar"], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
+      /// Image `tabBar/icon_mine_h`.
+      var icon_mine_h: RswiftResources.ImageResource { .init(name: "tabBar/icon_mine_h", path: ["tabBar"], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
 
-      /// Image `tabBar/icon_me_n`.
-      var icon_me_n: RswiftResources.ImageResource { .init(name: "tabBar/icon_me_n", path: ["tabBar"], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
+      /// Image `tabBar/icon_mine_n`.
+      var icon_mine_n: RswiftResources.ImageResource { .init(name: "tabBar/icon_mine_n", path: ["tabBar"], bundle: bundle, locale: nil, onDemandResourceTags: nil) }
     }
   }
 

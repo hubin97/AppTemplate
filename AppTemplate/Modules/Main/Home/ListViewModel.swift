@@ -13,23 +13,11 @@ class ListViewModel: ViewModel {
     
     enum RowType: Int, CaseIterable {
         case test
-        case mediaList
-        case routeTest
-        case demoTest
-        case imageDecoder
         
         var title: String {
             switch self {
             case .test:
                 return "临时测试"
-            case .mediaList:
-                return "媒体列表"
-            case .routeTest:
-                return "路由测试"
-            case .demoTest:
-                return "示例演示"
-            case .imageDecoder:
-                return "图片解码"
             }
         }
     }

@@ -20,7 +20,7 @@ class ListViewController: ViewController, ViewModelProvider {
         let listView = TableView(frame: CGRect.zero, style: .plain)
         listView.backgroundColor = .white
         listView.registerCell(TableViewCell.self)
-        listView.tableFooterView = UIView.init(frame: CGRect.zero)
+        listView.tableFooterView = UIView(frame: CGRect.zero)
         listView.dataSource = self
         listView.delegate = self
         listView.rowHeight = 50
@@ -95,15 +95,6 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
 //            let path = "https://iot-dev.luteos.com/app/pageActivityManagement/void" + "?openSource=App"
 //            navigator.show(provider: BaseScene.webController(path: path, title: nil, symbol: "LUTE_NATIVE"), sender: self)
             alertTest()
-        case .mediaList:
-            let url = "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"
-            navigator.show(provider: BaseScene.videoPlayController(url: url, autoPlay: true, isWrap: true), sender: self, transition: .modal(type: .fullScreen))
-        case .routeTest:
-            navigator.show(provider: RouteScene.testList, sender: self)
-        case .demoTest:
-            navigator.show(provider: DemoScene.testList, sender: self)
-        case .imageDecoder:
-            navigator.show(provider: AppScene.imageDecoder, sender: self)
         }
     }
 }
