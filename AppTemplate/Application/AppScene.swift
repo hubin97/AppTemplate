@@ -11,14 +11,21 @@ import AVKit
 // MARK: - global var and methods
 enum AppScene: SceneProvider {
  
+    case tabs(viewModel: TabBarViewModel)
     case jsTest
     case imageDecoder
     
     // MARK: -
     var getSegue: UIViewController? {
         switch self {
+        case .tabs(let viewModel):
+            let normalColor = viewModel.tabBarItems.first?.textColor_n ?? .lightGray
+            let selectColor = viewModel.tabBarItems.first?.textColor_h ?? .black
+            let tabBarVc = DefaultTabBarController(viewModel: viewModel)
+            tabBarVc.setAppearance(normalColor: normalColor, selectColor: selectColor)
+            return tabBarVc
         case .jsTest:
-            let vc = JSWebController(viewModel: JSWebViewModel(symbol: "LUTE_NATIVE"))
+            let vc = DefaultWebController(viewModel: JSWebViewModel(symbol: "LUTE_NATIVE"))
             //vc.isHideLeftView = true
             vc.loadWeb(urlPath: "jstest.html", isLocal: true)
             return vc

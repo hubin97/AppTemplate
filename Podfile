@@ -10,11 +10,12 @@ target 'AppTemplate' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
   
+  pod 'NSObject+Rx'
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'RxGesture'
-  pod 'NSObject+Rx'
-
+  pod 'RxViewController'
+  
   pod 'MMKV'
   pod 'IQKeyboardManagerSwift'
   pod 'SnapKit'

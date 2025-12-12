@@ -6,4 +6,5 @@
 
 #import <RxSwift/RxSwift-Swift.h>
 #import <RxCocoa/RxCocoa-Swift.h>
+#import <RxViewController/RxViewController-Swift.h>
 #import <NSObject_Rx/NSObject_Rx-Swift.h>

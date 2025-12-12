@@ -12,13 +12,13 @@ import Demo
 // MARK: - Global Variables & Functions (if necessary)
 
 // MARK: - Main Class
-class FuncViewController: ViewController, ViewModelProvider {
+class FuncViewController: DefaultViewController, ViewModelProvider {
     typealias ViewModelType = FuncViewModel
   
-    lazy var listView: TableView = {
+    lazy var tableView: TableView = {
         let listView = TableView(frame: CGRect.zero, style: .plain)
         listView.backgroundColor = .white
-        listView.registerCell(TableViewCell.self)
+        listView.registerCell(DefaultTableViewCell.self)
         listView.tableFooterView = UIView(frame: CGRect.zero)
         listView.dataSource = self
         listView.delegate = self
@@ -28,42 +28,39 @@ class FuncViewController: ViewController, ViewModelProvider {
  
     override func setupLayout() {
         super.setupLayout()
-        view.addSubview(listView)
+        view.addSubview(tableView)
         naviBar.title = "Functions"
         naviBar.leftView?.isHidden = true
         
-        listView.snp.makeConstraints { (make) in
+        tableView.snp.makeConstraints { (make) in
             make.top.equalTo(naviBar.snp.bottom)
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        //PerformanceMonitor.shared().start()
-        listView.backgroundColor = SFColor.FlatUI.clouds
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        print("viewWillDisappear-")
-    }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        if #available(iOS 13.0, *) {
-            return .darkContent
-        } else {
-            return .default
+    override func bindViewModel() {
+        super.bindViewModel()
+        withThemeUpdates {[weak self] theme in
+            guard let self else { return }
+            self.tableView.backgroundColor = theme.tableViewColor
         }
     }
     
-    override var shouldAutorotate: Bool {
-        return true
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        if #available(iOS 13.0, *) {
+//            return .darkContent
+//        } else {
+//            return .default
+//        }
+//    }
     
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .allButUpsideDown
-    }
+//    override var shouldAutorotate: Bool {
+//        return true
+//    }
+//    
+//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+//        return .allButUpsideDown
+//    }
 }
 
 // MARK: - Private Methods
@@ -87,9 +84,8 @@ extension FuncViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = vm.items[indexPath.row]
-        let cell = tableView.getReusableCell(TableViewCell.self)
-        cell.textLabel?.text = item.rawValue
-        cell.textLabel?.textColor = .black
+        let cell = tableView.getReusableCell(DefaultTableViewCell.self)
+        cell.titleLabel.text = item.rawValue
         return cell
     }
 

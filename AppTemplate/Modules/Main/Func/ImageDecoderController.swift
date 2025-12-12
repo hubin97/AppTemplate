@@ -12,7 +12,7 @@ import AppStart
 // MARK: - Global Variables & Functions (if necessary)
 
 // MARK: - Main Class
-class ImageDecoderController: ViewController {
+class ImageDecoderController: DefaultViewController {
     
     lazy var webPView: AnimatedImageView = {
         let view = AnimatedImageView(image: UIImage.webp(named: "icon_webp_gift_popup"))

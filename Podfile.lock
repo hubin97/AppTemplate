@@ -192,6 +192,9 @@ PODS:
   - RxRelay (6.9.0):
     - RxSwift (= 6.9.0)
   - RxSwift (6.9.0)
+  - RxViewController (2.0.0):
+    - RxCocoa (~> 6.0)
+    - RxSwift (~> 6.0)
   - SnapKit (5.7.1)
   - SwiftLint (0.61.0)
   - Toast-Swift (5.1.1)
@@ -212,6 +215,7 @@ DEPENDENCIES:
   - RxCocoa
   - RxGesture
   - RxSwift
+  - RxViewController
   - SnapKit
   - SwiftLint
 
@@ -245,6 +249,7 @@ SPEC REPOS:
     - RxGesture
     - RxRelay
     - RxSwift
+    - RxViewController
     - SnapKit
     - SwiftLint
     - Toast-Swift
@@ -286,10 +291,11 @@ SPEC CHECKSUMS:
   RxGesture: f3efb47ed2d26a8082f7b660d4a59970e275a7f8
   RxRelay: 6b0c930e5cef57d5fe2032571e5e65b78e3cbdb1
   RxSwift: 31649ace6aceeb422e16ff71c60804f9c3281ed9
+  RxViewController: 56486fa0afd629a1d6b5ba077f3b8cd9dc31b5d2
   SnapKit: d612e99e678a2d3b95bf60b0705ed0a35c03484a
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 332440cbbc529cf527eb79b19c9621a4516b8331
+PODFILE CHECKSUM: f4f0a6c48f3ca88559e37403197af74fa68221c9
 
 COCOAPODS: 1.16.2
