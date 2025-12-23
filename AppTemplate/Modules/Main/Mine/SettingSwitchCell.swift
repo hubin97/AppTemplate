@@ -26,8 +26,7 @@ class SettingSwitchCell: DefaultTableViewCell {
             make.centerY.equalToSuperview()
         }
         
-        self.withThemeUpdates {[weak self] theme in
-            guard let self else { return }
+        withThemeUpdates { (self, theme) in
             // print("withThemeUpdates...\(theme)")
 //            self.backgroundColor = theme.backgroundColor
 //            self.textLabel?.textColor = theme.textColor

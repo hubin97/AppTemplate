@@ -47,8 +47,7 @@ class ListViewController: DefaultViewController, ViewModelProvider {
     override func bindViewModel() {
         super.bindViewModel()
         
-        self.withThemeUpdates {[weak self] theme in
-            guard let self else { return }
+        withThemeUpdates { (self, theme) in
             self.tableView.backgroundColor = theme.tableViewColor
         }
     }

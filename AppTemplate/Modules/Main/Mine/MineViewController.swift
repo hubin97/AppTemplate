@@ -45,8 +45,7 @@ class MineViewController: DefaultViewController, ViewModelProvider {
     
     override func bindViewModel() {
         super.bindViewModel()
-        withThemeUpdates {[weak self] theme in
-            guard let self else { return }
+        withThemeUpdates { (self, theme) in
             print("MineViewController-withThemeUpdates")
 //            self.view.backgroundColor = theme.backgroundColor
 //            self.naviBar.backgroundColor = theme.backgroundColor

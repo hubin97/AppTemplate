@@ -14,8 +14,7 @@ class DefaultWebController: JSWebController, Themeable {
     
     override func bindViewModel() {
         super.bindViewModel()
-        withThemeUpdates {[weak self] theme in
-            guard let self else { return }
+        withThemeUpdates { (self, theme) in
             self.view.backgroundColor = theme.backgroundColor
             self.naviBar.backgroundColor = theme.backgroundColor
             self.naviBar.textColor = theme.textColor

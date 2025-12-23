@@ -6,23 +6,34 @@
 //  Copyright © 2025 hubin.h. All rights reserved.
 
 import Foundation
+import RxSwift
+import RxCocoa
 
 // MARK: - Global Variables & Functions (if necessary)
 
 // MARK: - Main Class
 protocol Themeable: NSObject {
-    func withThemeUpdates(_ handler: @escaping (AppTheme) -> Void)
+    // Swift 协议里的 Self 只能用于 final 类 / struct / enum，或者只在返回值/泛型约束里出现;
+    // UI 层组件 + 逃逸闭包 + 可继承类 → 不要在协议 requirement 中用 Self
+    //func withThemeUpdates(_ handler: @escaping (Self, AppTheme) -> Void)
 }
 
 extension Themeable {
     
     /// 使用主题，并在主题变化时自动更新。
-    func withThemeUpdates(_ handler: @escaping (AppTheme) -> Void) {
-        ThemeService.shared.theme
-            .subscribe(onNext: { theme in
-                handler(theme)
-            }).disposed(by: rx.disposeBag)
+    /// 注意：会立即应用当前主题，然后订阅后续的主题变化
+    /// 自动处理 weak self，无需手动添加 [weak self] 和 guard let self
+    func withThemeUpdates(_ handler: @escaping (Self, AppTheme) -> Void) {
+        // 立即应用当前主题
+        handler(self, ThemeService.shared.current)
         
+        // 订阅主题变化，自动处理 weak self
+        ThemeService.shared.theme
+            .skip(1) // 跳过当前值，因为已经立即应用了
+            .subscribe(onNext: {[weak self] theme in
+                guard let strongSelf = self else { return }
+                handler(strongSelf, theme)
+            }).disposed(by: rx.disposeBag)
     }
 }
 

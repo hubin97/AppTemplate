@@ -14,13 +14,12 @@ class DefaultViewController: ViewController, Themeable {
     
     override func bindViewModel() {
         super.bindViewModel()
-        withThemeUpdates {[weak self] theme in
-            guard let self else { return }
+        withThemeUpdates { (self, theme) in
             print("DefaultViewController-withThemeUpdates")
             self.view.backgroundColor = theme.backgroundColor
             self.naviBar.backgroundColor = theme.backgroundColor
             self.naviBar.textColor = theme.textColor
-            setNeedsStatusBarAppearanceUpdate()
+            self.setNeedsStatusBarAppearanceUpdate()
         }
     }
     

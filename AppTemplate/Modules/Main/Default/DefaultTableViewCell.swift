@@ -48,14 +48,13 @@ class DefaultTableViewCell: TableViewCell, Themeable {
         
         stackView.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: inset/2, left: inset, bottom: inset/2, right: 0))
-            make.height.greaterThanOrEqualTo(44)
+            //make.height.greaterThanOrEqualTo(44)
         })
         
-        self.withThemeUpdates {[weak self] theme in
-            guard let self else { return }
+        withThemeUpdates { (self, theme) in
             // print("withThemeUpdates...\(theme)")
             self.backgroundColor = theme.backgroundColor
-            //self.arrowView.image = theme is LightTheme ? Asset.iconRightBlack.image.adaptRTL: Asset.iconRightWhite.image.adaptRTL
+            //self.arrowView.image = theme.type == .light ? Asset.iconRightBlack.image.adaptRTL: Asset.iconRightWhite.image.adaptRTL
             self.titleLabel.textColor = theme.textColor
             self.detailLabel.textColor = theme.textColor
         }
