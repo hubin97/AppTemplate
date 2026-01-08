@@ -21,16 +21,14 @@ protocol Themeable: NSObject {
 extension Themeable {
     
     /// 使用主题，并在主题变化时自动更新。
-    /// 注意：会立即应用当前主题，然后订阅后续的主题变化
     /// 自动处理 weak self，无需手动添加 [weak self] 和 guard let self
     func withThemeUpdates(_ handler: @escaping (Self, AppTheme) -> Void) {
-        // 立即应用当前主题
-        handler(self, ThemeService.shared.current)
-        
-        // 订阅主题变化，自动处理 weak self
+        // 每次使用前，尝试从存储中同步一次主题（保证冷启动时也能拿到最新持久化主题）
+        ThemeService.shared.loadSavedTheme()
+
+        // 直接订阅主题变化，BehaviorRelay 会立即推送当前主题
         ThemeService.shared.theme
-            .skip(1) // 跳过当前值，因为已经立即应用了
-            .subscribe(onNext: {[weak self] theme in
+            .subscribe(onNext: { [weak self] theme in
                 guard let strongSelf = self else { return }
                 handler(strongSelf, theme)
             }).disposed(by: rx.disposeBag)

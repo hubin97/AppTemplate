@@ -19,6 +19,8 @@ class DefaultViewController: ViewController, Themeable {
             self.view.backgroundColor = theme.backgroundColor
             self.naviBar.backgroundColor = theme.backgroundColor
             self.naviBar.textColor = theme.textColor
+            // 更新导航栏按钮图标以适配主题
+            self.naviBar.updateIcons(isDark: theme.type == .dark, textColor: theme.textColor)
             self.setNeedsStatusBarAppearanceUpdate()
         }
     }

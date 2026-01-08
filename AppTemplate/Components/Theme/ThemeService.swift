@@ -67,7 +67,9 @@ extension ThemeService {
     }
     
     /// 从持久化存储中加载主题
-    private func loadSavedTheme() {
+    /// 说明：
+    /// - 可能在 App 启动早期 MMKV 还未完成初始化，因此允许多次调用，始终以存储值为准
+    func loadSavedTheme() {
         if let savedTypeString = mmkv.string(forKey: ThemeStorageKey),
            let savedType = ThemeType(rawValue: savedTypeString) {
             let theme: AppTheme = (savedType == .light) ? LightTheme() : DarkTheme()
