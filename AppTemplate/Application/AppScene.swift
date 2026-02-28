@@ -14,6 +14,7 @@ enum AppScene: SceneProvider {
     case tabs(viewModel: TabBarViewModel)
     case jsTest
     case imageDecoder
+    case iap
     
     // MARK: -
     var getSegue: UIViewController? {
@@ -31,6 +32,8 @@ enum AppScene: SceneProvider {
             return vc
         case .imageDecoder:
             return ImageDecoderController(viewModel: nil)
+        case .iap:
+            return IAPViewController(viewModel: nil)
         }
     }
 }

@@ -17,7 +17,8 @@ class FuncViewModel: ViewModel {
         case webP   = "webP解析"
         case route  = "模块路由"
         case safari = "Safari场景"
-        case AVPlayerViewController 
+        case AVPlayerViewController
+        case IAP
     }
     
     let items = ItemType.allCases
