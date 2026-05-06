@@ -1,0 +1,68 @@
+{
+  "schemaVersion": 1,
+  "panelId": "business.settings.demo",
+  "sections": [
+    {
+      "id": "biz_main_a1",
+      "title": "业务模块 A1",
+      "items": [
+        {
+          "id": "biz.toggle.a1",
+          "type": "toggle",
+          "title": "业务开关",
+          "subtitle": "panel.json 与本目录控制器同级",
+          "detail": null,
+          "enabled": true,
+          "payload": {
+            "boolValue": false
+          }
+        },
+        {
+          "id": "biz.nav.a1",
+          "type": "navigation",
+          "title": "业务路由",
+          "subtitle": null,
+          "detail": null,
+          "enabled": true,
+          "payload": {
+            "routeName": "biz.demo.route",
+            "routeParams": {
+              "module": "BusinessSettingsDemoAController"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "biz_main_a2",
+      "title": "业务模块 A2",
+      "items": [
+        {
+          "id": "biz.toggle.a2",
+          "type": "toggle",
+          "title": "业务开关1",
+          "subtitle": "panel.json 与本目录控制器同级",
+          "detail": null,
+          "enabled": true,
+          "payload": {
+            "boolValue": false
+          }
+        },
+        {
+          "id": "biz.nav.a2",
+          "type": "navigation",
+          "title": "业务路由2",
+          "subtitle": null,
+          "detail": null,
+          "enabled": true,
+          "payload": {
+            "routeName": "biz.demo.route",
+            "routeParams": {
+              "module": "BusinessSettingsDemoAController"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

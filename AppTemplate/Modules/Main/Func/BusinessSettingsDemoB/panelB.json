@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "panelId": "business.settings.demo.b",
+  "sections": [
+    {
+      "id": "biz_b_main",
+      "title": "业务模块 B（与 A 不同）",
+      "items": [
+        {
+          "id": "biz.toggle.b",
+          "type": "toggle",
+          "title": "B 模块开关",
+          "subtitle": "独立目录 BusinessSettingsDemoB",
+          "detail": null,
+          "enabled": true,
+          "payload": {
+            "boolValue": true
+          }
+        },
+        {
+          "id": "biz.info.b",
+          "type": "info",
+          "title": "说明",
+          "subtitle": null,
+          "detail": "用于与业务 A 页对比验证配置互不一致",
+          "enabled": true,
+          "payload": {}
+        },
+        {
+          "id": "biz.nav.b",
+          "type": "navigation",
+          "title": "B 路由",
+          "subtitle": null,
+          "detail": null,
+          "enabled": true,
+          "payload": {
+            "routeName": "biz.demo.route.b",
+            "routeParams": {
+              "module": "BusinessSettingsDemoB"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

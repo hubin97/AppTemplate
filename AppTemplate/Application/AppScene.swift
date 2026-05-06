@@ -15,6 +15,9 @@ enum AppScene: SceneProvider {
     case jsTest
     case imageDecoder
     case iap
+    case dynamicSettingsDemo
+    case businessSettingsDemoA
+    case businessSettingsDemoB
     
     // MARK: -
     var getSegue: UIViewController? {
@@ -34,6 +37,23 @@ enum AppScene: SceneProvider {
             return ImageDecoderController(viewModel: nil)
         case .iap:
             return IAPViewController(viewModel: nil)
+        case .dynamicSettingsDemo:
+            return DynamicSettingsViewController(
+                viewModel: DynamicSettingsViewModel(panelSource: DynamicSettingsDefaultPanelSource()),
+                navigator: Application.shared.navigator
+            )
+        case .businessSettingsDemoA:
+            let panelSource = DynamicSettingsLocalPanelSource.resolvingOrFallback(resource: "panelA")
+            return BusinessSettingsDemoAController(
+                viewModel: DynamicSettingsViewModel(panelSource: panelSource),
+                navigator: Application.shared.navigator
+            )
+        case .businessSettingsDemoB:
+            let panelSourceB = DynamicSettingsLocalPanelSource.resolvingOrFallback(resource: "panelB")
+            return BusinessSettingsDemoBController(
+                viewModel: DynamicSettingsViewModel(panelSource: panelSourceB),
+                navigator: Application.shared.navigator
+            )
         }
     }
 }

@@ -17,6 +17,9 @@ class FuncViewModel: ViewModel {
         case webP   = "webP解析"
         case route  = "模块路由"
         case safari = "Safari场景"
+        case dynamicSettings = "动态设置·代码模板"
+        case businessSettingsDemoA = "动态设置·业务A(JSON)"
+        case businessSettingsDemoB = "动态设置·业务B(JSON)"
         case AVPlayerViewController
         case IAP
     }

@@ -100,6 +100,12 @@ extension FuncViewController: UITableViewDataSource, UITableViewDelegate {
             navigator.show(provider: RouteScene.testList, sender: self)
         case .safari:
             navigator.show(provider: DemoScene.testList, sender: self)
+        case .dynamicSettings:
+            navigator.show(provider: AppScene.dynamicSettingsDemo, sender: self)
+        case .businessSettingsDemoA:
+            navigator.show(provider: AppScene.businessSettingsDemoA, sender: self)
+        case .businessSettingsDemoB:
+            navigator.show(provider: AppScene.businessSettingsDemoB, sender: self)
         case .AVPlayerViewController:
             let url = "https://cozy-static-dev.cozyinnov.com/public/970040/C00000001/app/feedback/67877d72e4b0604661da588b.mp4"
             navigator.show(provider: BaseScene.videoPlayController(url: url, autoPlay: true, isWrap: true), sender: self, transition: .modal(type: .fullScreen))
