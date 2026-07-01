@@ -48,6 +48,8 @@ struct SettingItemModel: Codable, Equatable {
     var subtitle: String?
     /// 右侧或次要说明（如当前选中值摘要）。
     var detail: String?
+    /// 视图样式；未指定时由 `type` 决定默认样式。
+    var viewStyle: String?
     /// 是否可交互；为 false 时常用于置灰不可点。
     var enabled: Bool
     /// 按 `type` 解释：开关初值、路由名、路由参数等。
@@ -72,6 +74,18 @@ enum DynamicSettingItemType {
     static let navigation = "navigation"
     /// 仅展示信息，无开关无跳转。
     static let info = "info"
+}
+
+/// 条目视图样式常量：用于同一 `type` 在 UI 上呈现不同形态。
+enum DynamicSettingViewStyle {
+    /// 标准设置行（标题 + 副信息 + 右箭头/开关）
+    static let plain = "plain"
+    /// 设备卡片样式（更高、两行文本）
+    static let deviceCard = "deviceCard"
+    /// 顶部主操作按钮（深色背景）
+    static let primaryAction = "primaryAction"
+    /// 危险操作按钮（浅红背景）
+    static let dangerAction = "dangerAction"
 }
 
 // MARK: - Panel Source

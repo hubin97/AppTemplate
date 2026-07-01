@@ -1,62 +1,115 @@
 {
   "schemaVersion": 1,
-  "panelId": "business.settings.demo",
+  "panelId": "business.settings.demo.a",
   "sections": [
     {
       "id": "biz_main_a1",
-      "title": "业务模块 A1",
+      "title": "设备信息",
       "items": [
         {
-          "id": "biz.toggle.a1",
-          "type": "toggle",
-          "title": "业务开关",
-          "subtitle": "panel.json 与本目录控制器同级",
-          "detail": null,
+          "id": "biz.device.card.a",
+          "type": "navigation",
+          "viewStyle": "deviceCard",
+          "title": "WN08 2E",
+          "subtitle": "设备状态：${deviceStatus}",
+          "detail": "最近心跳：${updatedAt}",
           "enabled": true,
           "payload": {
-            "boolValue": false
+            "routeName": "biz.device.detail",
+            "routeParams": {
+              "deviceId": "WN08-2E"
+            }
           }
         },
         {
-          "id": "biz.nav.a1",
-          "type": "navigation",
-          "title": "业务路由",
-          "subtitle": null,
+          "id": "biz.toggle.guardian.a1",
+          "type": "toggle",
+          "viewStyle": "plain",
+          "title": "隐私保护",
+          "subtitle": "开启后将隐藏实时监控内容",
           "detail": null,
           "enabled": true,
           "payload": {
-            "routeName": "biz.demo.route",
+            "boolValue": true
+          }
+        },
+        {
+          "id": "biz.nav.mode.a1",
+          "type": "navigation",
+          "viewStyle": "plain",
+          "title": "音响模式",
+          "subtitle": null,
+          "detail": "${soundMode}",
+          "enabled": true,
+          "payload": {
+            "routeName": "biz.sound.mode",
             "routeParams": {
-              "module": "BusinessSettingsDemoAController"
+              "module": "BusinessSettingsDemoAController",
+              "scene": "sound_mode"
             }
           }
         }
       ]
     },
     {
-      "id": "biz_main_a2",
-      "title": "业务模块 A2",
+      "id": "biz_main_a2_action",
+      "title": "设备操作",
       "items": [
         {
-          "id": "biz.toggle.a2",
-          "type": "toggle",
-          "title": "业务开关1",
-          "subtitle": "panel.json 与本目录控制器同级",
-          "detail": null,
+          "id": "biz.action.share.a2",
+          "type": "navigation",
+          "viewStyle": "plain",
+          "title": "分享设备",
+          "subtitle": null,
+          "detail": "可分享给家人",
           "enabled": true,
           "payload": {
-            "boolValue": false
+            "routeName": "biz.share.device",
+            "routeParams": {
+              "module": "BusinessSettingsDemoAController"
+            }
           }
         },
         {
-          "id": "biz.nav.a2",
+          "id": "biz.action.upgrade.a2",
           "type": "navigation",
-          "title": "业务路由2",
+          "viewStyle": "plain",
+          "title": "OTA 升级",
           "subtitle": null,
+          "detail": "v${firmwareVersion}",
+          "enabled": true,
+          "payload": {
+            "routeName": "biz.ota.upgrade",
+            "routeParams": {
+              "module": "BusinessSettingsDemoAController"
+            }
+          }
+        },
+        {
+          "id": "biz.action.delete.primary",
+          "type": "navigation",
+          "viewStyle": "primaryAction",
+          "title": "删除设备",
+          "subtitle": "仅删除设备关联，不清空云端录像",
           "detail": null,
           "enabled": true,
           "payload": {
-            "routeName": "biz.demo.route",
+            "routeName": "biz.device.remove",
+            "routeParams": {
+              "module": "BusinessSettingsDemoAController"
+            }
+          }
+        },
+        {
+          "id": "biz.action.delete.data",
+          "type": "navigation",
+          "viewStyle": "dangerAction",
+          "title": "删除设备并清除数据",
+          "subtitle": "该操作不可撤销",
+          "detail": null,
+          "enabled": true,
+          "payload": {
+            "routeName": "biz.device.remove.with_data",
             "routeParams": {
               "module": "BusinessSettingsDemoAController"
             }

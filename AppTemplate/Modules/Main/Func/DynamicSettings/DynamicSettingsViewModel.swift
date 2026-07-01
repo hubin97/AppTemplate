@@ -43,6 +43,23 @@ class DynamicSettingsViewModel: ViewModel {
         }
     }
 
+    /// 将 `${key}` 模板占位符替换为运行时值，用于“副标题动态更新”等业务场景。
+    func applyRuntimeValues(_ values: [String: String]) {
+        guard !values.isEmpty else { return }
+        var p = panel.value
+        for secIndex in 0..<p.sections.count {
+            for itemIndex in 0..<p.sections[secIndex].items.count {
+                var item = p.sections[secIndex].items[itemIndex]
+                item.title = renderTemplate(item.title, values: values) ?? ""
+                item.subtitle = renderTemplate(item.subtitle, values: values)
+                item.detail = renderTemplate(item.detail, values: values)
+                p.sections[secIndex].items[itemIndex] = item
+            }
+        }
+        panel.accept(p)
+        refreshBridgeSnapshot()
+    }
+
     func item(at indexPath: IndexPath) -> SettingItemModel {
         let sec = panel.value.sections[indexPath.section]
         return sec.items[indexPath.row]
@@ -70,6 +87,14 @@ extension DynamicSettingsViewModel {
            let str = String(data: data, encoding: .utf8) {
             bridgeSnapshot.accept(str)
         }
+    }
+
+    private func renderTemplate(_ text: String?, values: [String: String]) -> String? {
+        guard var result = text else { return nil }
+        for (key, value) in values {
+            result = result.replacingOccurrences(of: "${\(key)}", with: value)
+        }
+        return result
     }
 }
 

@@ -33,7 +33,8 @@ class DynamicSettingsViewController: DefaultViewController, ViewModelProvider {
         listView.backgroundColor = .white
         listView.registerCell(DynamicSettingsCell.self)
         listView.tableFooterView = UIView(frame: CGRect.zero)
-        listView.rowHeight = 50
+        listView.rowHeight = UITableView.automaticDimension
+        listView.estimatedRowHeight = 64
         listView.dataSource = self
         listView.delegate = self
         return listView
@@ -76,6 +77,13 @@ class DynamicSettingsViewController: DefaultViewController, ViewModelProvider {
         let params = item.payload.routeParams?.map { "\($0.key)=\($0.value)" }.joined(separator: ", ") ?? ""
         let msg = [route, params].filter { !$0.isEmpty }.joined(separator: "\n")
         let alert = UIAlertController(title: "Navigation 演示", message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "确定", style: .default))
+        present(alert, animated: true)
+    }
+
+    /// 主操作/危险操作样式行点击处理；默认弹窗，业务可覆盖接入真实流程。
+    open func handleActionItem(_ item: SettingItemModel) {
+        let alert = UIAlertController(title: item.title, message: item.subtitle ?? item.detail, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "确定", style: .default))
         present(alert, animated: true)
     }
@@ -128,6 +136,11 @@ extension DynamicSettingsViewController: UITableViewDataSource, UITableViewDeleg
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let item = vm.item(at: indexPath)
+        let style = item.viewStyle ?? DynamicSettingViewStyle.plain
+        if style == DynamicSettingViewStyle.primaryAction || style == DynamicSettingViewStyle.dangerAction {
+            handleActionItem(item)
+            return
+        }
         guard item.type == DynamicSettingItemType.navigation else { return }
         handleNavigationItem(item)
     }

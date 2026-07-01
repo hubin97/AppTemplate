@@ -27,6 +27,7 @@ extension SettingItemModel {
             title: title,
             subtitle: subtitle,
             detail: detail,
+            viewStyle: DynamicSettingViewStyle.plain,
             enabled: enabled,
             payload: SettingPayloadModel(boolValue: isOn, routeName: nil, routeParams: nil)
         )
@@ -46,6 +47,7 @@ extension SettingItemModel {
             title: title,
             subtitle: subtitle,
             detail: detail,
+            viewStyle: DynamicSettingViewStyle.plain,
             enabled: enabled,
             payload: SettingPayloadModel(boolValue: nil, routeName: nil, routeParams: nil)
         )
@@ -67,6 +69,7 @@ extension SettingItemModel {
             title: title,
             subtitle: subtitle,
             detail: detail,
+            viewStyle: DynamicSettingViewStyle.plain,
             enabled: enabled,
             payload: SettingPayloadModel(boolValue: nil, routeName: routeName, routeParams: routeParams)
         )
