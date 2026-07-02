@@ -160,6 +160,7 @@ PODS:
   - libwebp/sharpyuv (1.5.0)
   - libwebp/webp (1.5.0):
     - libwebp/sharpyuv
+  - lottie-ios (4.6.0)
   - MJRefresh (3.7.9)
   - MMKV (2.2.3):
     - MMKVCore (~> 2.2.3)
@@ -210,6 +211,7 @@ DEPENDENCIES:
   - IQKeyboardManagerSwift
   - Kingfisher (~> 8.0)
   - KingfisherWebP
+  - lottie-ios
   - MJRefresh
   - MMKV
   - "NSObject+Rx"
@@ -239,6 +241,7 @@ SPEC REPOS:
     - Kingfisher
     - KingfisherWebP
     - libwebp
+    - lottie-ios
     - MJRefresh
     - MMKV
     - MMKVCore
@@ -282,6 +285,7 @@ SPEC CHECKSUMS:
   Kingfisher: ff0d31a1f07bdff6a1ebb3ba08b8e6e567b6500c
   KingfisherWebP: 42d393b312344f6f7a43f7cef6088b9c20249b64
   libwebp: 02b23773aedb6ff1fd38cec7a77b81414c6842a8
+  lottie-ios: 8f959969761e9c45d70353667d00af0e5b9cadb3
   MJRefresh: ff9e531227924c84ce459338414550a05d2aea78
   MMKV: 941e8774da0e6fdf12c6b3fcc833ca687ae5a42d
   MMKVCore: 6d5cc1bacce539f4c974985dfe646fb65a5d27d2
@@ -300,6 +304,6 @@ SPEC CHECKSUMS:
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 8678dd37072abb91a44d9cb9bfc4d1f50221a2b5
+PODFILE CHECKSUM: 4dad9537948fbb4d8e4677062d2410e2a508c825
 
 COCOAPODS: 1.16.2

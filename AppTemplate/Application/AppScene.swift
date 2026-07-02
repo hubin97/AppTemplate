@@ -14,6 +14,7 @@ enum AppScene: SceneProvider {
     case tabs(viewModel: TabBarViewModel)
     case jsTest
     case imageDecoder
+    case lottieHUD
     case iap
     
     // MARK: -
@@ -32,6 +33,8 @@ enum AppScene: SceneProvider {
             return vc
         case .imageDecoder:
             return ImageDecoderController(viewModel: nil)
+        case .lottieHUD:
+            return ProgressHUDLottieController(viewModel: nil)
         case .iap:
             return IAPViewController(viewModel: nil)
         }

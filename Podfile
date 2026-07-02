@@ -30,6 +30,7 @@ target 'AppTemplate' do
   pod 'R.swift'
   pod 'SwiftLint', :configurations => ['Debug']
   pod 'Bugly'
+  pod 'lottie-ios'
   
   # Pods for AppStart
 #  pod 'AppStart', '0.1.4'
