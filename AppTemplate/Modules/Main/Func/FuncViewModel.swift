@@ -18,6 +18,7 @@ class FuncViewModel: ViewModel {
         case route  = "模块路由"
         case safari = "Safari场景"
         case lottieHUD = "ProgressHUD"
+        case battery = "Battery"
         case AVPlayerViewController
         case IAP
     }

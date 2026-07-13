@@ -15,6 +15,7 @@ enum AppScene: SceneProvider {
     case jsTest
     case imageDecoder
     case lottieHUD
+    case battery
     case iap
     
     // MARK: -
@@ -35,6 +36,8 @@ enum AppScene: SceneProvider {
             return ImageDecoderController(viewModel: nil)
         case .lottieHUD:
             return ProgressHUDLottieController(viewModel: nil)
+        case .battery:
+            return BatteryDemoController(viewModel: nil)
         case .iap:
             return IAPViewController(viewModel: nil)
         }
