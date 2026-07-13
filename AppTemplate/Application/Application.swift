@@ -44,6 +44,7 @@ extension Application {
     /// `注意:注意:注意: 主工程Project-> Localization里面必须包含所有需要适配的语言, 才能正常切换到目标语言下; 否则展示fallback`
     func setupConfig() {
         self.setupLocalized()
+        BleAppConfiguration.setup()
     }
     
     func setupLocalized() {

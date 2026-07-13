@@ -107,6 +107,8 @@ extension FuncViewController: UITableViewDataSource, UITableViewDelegate {
             navigator.show(provider: BaseScene.videoPlayController(url: url, autoPlay: true, isWrap: true), sender: self, transition: .modal(type: .fullScreen))
         case .IAP:
             navigator.show(provider: AppScene.iap, sender: self)
+        case .ble:
+            navigator.show(provider: AppScene.bleTest, sender: self)
         }
     }
 }

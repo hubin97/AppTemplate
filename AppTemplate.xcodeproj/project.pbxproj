@@ -278,6 +278,8 @@
 				DEVELOPMENT_TEAM = YP9F4937J4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AppTemplate/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "需要蓝牙权限以连接和测试 BLE 设备";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "需要蓝牙权限以连接和测试 BLE 设备";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -309,6 +311,8 @@
 				DEVELOPMENT_TEAM = YP9F4937J4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AppTemplate/Info.plist;
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "需要蓝牙权限以连接和测试 BLE 设备";
+				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "需要蓝牙权限以连接和测试 BLE 设备";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

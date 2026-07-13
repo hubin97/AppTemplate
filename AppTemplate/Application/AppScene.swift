@@ -16,6 +16,10 @@ enum AppScene: SceneProvider {
     case imageDecoder
     case lottieHUD
     case iap
+    case bleTest
+    case bleScan
+    case bleCentralState
+    case bleConnection
     
     // MARK: -
     var getSegue: UIViewController? {
@@ -37,6 +41,14 @@ enum AppScene: SceneProvider {
             return ProgressHUDLottieController(viewModel: nil)
         case .iap:
             return IAPViewController(viewModel: nil)
+        case .bleTest:
+            return BleTestListController(viewModel: nil)
+        case .bleScan:
+            return BleScanController(viewModel: nil)
+        case .bleCentralState:
+            return BleCentralStateController(viewModel: nil)
+        case .bleConnection:
+            return BleConnectionController(viewModel: nil)
         }
     }
 }

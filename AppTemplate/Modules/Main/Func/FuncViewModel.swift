@@ -20,6 +20,7 @@ class FuncViewModel: ViewModel {
         case lottieHUD = "ProgressHUD"
         case AVPlayerViewController
         case IAP
+        case ble = "BLE 测试"
     }
     
     let items = ItemType.allCases
