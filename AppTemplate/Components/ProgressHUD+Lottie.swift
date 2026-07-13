@@ -21,6 +21,7 @@ extension ProgressHUD {
     ) {
         let animationSize = size ?? ProgressHUD.mediaSize
         let lottieView = LottieAnimationView(name: named)
+        lottieView.backgroundColor = .white
         lottieView.frame = CGRect(x: 0, y: 0, width: animationSize, height: animationSize)
         lottieView.contentMode = .scaleAspectFit
         lottieView.loopMode = .loop
