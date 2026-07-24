@@ -8,54 +8,71 @@ import Foundation
 import CoreBluetooth
 import AppStart
 
-// MARK: - 广播解析器
+// MARK: - 设备名录（原 IOTCloudConfigResolver 简化版）
 
-struct BleSocketSerialParser: BleAdvDataParser {
-    typealias ParsedData = String
-    func parse(advertisementData: [String: Any]) -> String? {
-        guard let data = advertisementData["kCBAdvDataManufacturerData"] as? Data,
-              data.count >= 6 else { return nil }
-        return data.prefix(6).map { String(format: "%02X", $0) }.joined()
-    }
+enum BleDeviceCatalog {
+    static let tempPatchNames: Set<String> = ["T31"]
+    static let phototherapyNames: Set<String> = ["Lumi 1"]
 }
 
 // MARK: - 产品协议
 
 enum BleProducts {
-    static let pump = BleProductProfile(
-        id: "pump_x",
-        displayName: "Pump",
-        configuration: .init(
-            matching: BleRegexMatchingStrategy(mode: .advertisementData([0xaa])),
-            serviceUUIDs: [CBUUID(string: "AF00")],
-            writeCharUUID: CBUUID(string: "AF01"),
-            notifyCharUUID: CBUUID(string: "AF02"),
-            reconnect: .init(enabled: true, maxAttempts: 3, interval: 5),
-            writeQueue: .serialized(
-                ackMatcher: BleByteAckMatcher(indices: [0, 1, 3]),
-                defaultTimeout: 3,
-                order: .descending
-            ),
-            debugLog: true
+
+    static let pumpParser = BlePumpProtocolParser()
+    static let tempPatchParser = BleTempPatchProtocolParser()
+    static let phototherapyParser = BlePhototherapyProtocolParser()
+
+    /// 吸奶器：0xaa 厂商协议，匹配与解析均由 parser 完成
+    static let pump = BleConfiguration(
+        matching: BleParserValidatedMatchingStrategy(parser: pumpParser),
+        serviceUUIDs: [BleGattUUID.transportService],
+        writeCharUUID: BleGattUUID.transportWrite,
+        notifyCharUUID: BleGattUUID.transportNotify,
+        reconnect: .init(enabled: true, maxAttempts: 3, interval: 15),
+        writeQueue: .serialized(
+            ackMatcher: BleByteAckMatcher(indices: [0, 1, 3]),
+            defaultTimeout: 3,
+            order: .descending
         ),
-        parser: BleMACParser()
+        parser: pumpParser,
+        debugLog: true,
+        logTag: "[Ble/Pump]"
     )
 
-    static let socket = BleProductProfile(
-        id: "smart_socket",
-        displayName: "智能插座",
-        configuration: .init(
-            matching: BleRegexMatchingStrategy(mode: .advertisementData([0xBB, 0x02])),
-            serviceUUIDs: [CBUUID(string: "BF00")],
-            writeCharUUID: CBUUID(string: "BF01"),
-            notifyCharUUID: CBUUID(string: "BF02"),
-            writeQueue: .direct,
-            debugLog: true
+    /// 温度贴：设备名 + FFFF serviceData
+    static let tempPatch = BleConfiguration(
+        matching: BleParserValidatedMatchingStrategy(
+            names: BleDeviceCatalog.tempPatchNames,
+            parser: tempPatchParser
         ),
-        parser: BleSocketSerialParser()
+        serviceUUIDs: [],
+        writeQueue: .direct,
+        parser: tempPatchParser,
+        debugLog: true,
+        logTag: "[Ble/TempPatch]"
     )
 
-    static let all: [BleProductProfile] = [pump, socket]
+    /// 光疗仪：设备名 + 39 字节 manufacturerData
+    static let phototherapy = BleConfiguration(
+        matching: BleParserValidatedMatchingStrategy(
+            names: BleDeviceCatalog.phototherapyNames,
+            parser: phototherapyParser
+        ),
+        serviceUUIDs: [],
+        writeQueue: .direct,
+        parser: phototherapyParser,
+        debugLog: true,
+        logTag: "[Ble/Phototherapy]"
+    )
+
+    static let all: [BleConfiguration] = [pump, tempPatch, phototherapy]
+
+    static let displayNames: [String: String] = [
+        "[Ble/Pump]": "吸奶器",
+        "[Ble/TempPatch]": "温度贴",
+        "[Ble/Phototherapy]": "光疗仪"
+    ]
 }
 
 // MARK: - App 入口
@@ -104,35 +121,37 @@ enum BleStateFormatter {
         data.map { String(format: "%02X", $0) }.joined(separator: " ")
     }
 
-    static func productDisplayName(for productId: String?) -> String {
-        guard let productId,
-              let profile = BleSession.shared.profile(id: productId) else {
-            return productId ?? "未知产品"
-        }
-        return profile.displayName
+    static func productDisplayName(for configuration: BleConfiguration?) -> String {
+        guard let configuration else { return "未知产品" }
+        return BleProducts.displayNames[configuration.logTag] ?? configuration.logTag
     }
 
     static func productDisplayName(for connection: BlePeripheralConnection) -> String {
         if case .ready(let info) = connection.currentState {
             let serviceUUID = info.service.uuid
-            if let profile = BleSession.shared.registeredProfiles.first(where: {
-                $0.configuration.serviceUUIDs.contains(serviceUUID)
+            if let config = BleSession.shared.registeredConfigurations.first(where: {
+                $0.serviceUUIDs.contains(serviceUUID)
             }) {
-                return profile.displayName
+                return productDisplayName(for: config)
             }
         }
         return "未知产品"
     }
 
     static func parsedDataDescription(for discovery: BleDiscovery) -> String {
-        switch discovery.productId {
-        case BleProducts.pump.id:
-            if let mac = discovery.parsedData as? String { return "MAC: \(mac)" }
-        case BleProducts.socket.id:
-            if let serial = discovery.parsedData as? String { return "序列号: \(serial)" }
-        default:
+        guard let result = discovery.parsedData as? BleProtocolParseResult else {
             if let text = discovery.parsedData as? String { return text }
+            return "解析数据: --"
         }
-        return "解析数据: --"
+
+        var parts: [String] = []
+        if let mac = result.mac { parts.append("MAC: \(mac)") }
+        if let deviceKey = result.extraData["deviceKey"] as? String {
+            parts.append("deviceKey: \(deviceKey)")
+        }
+        if let productKey = result.extraData["productKey"] as? String {
+            parts.append("productKey: \(productKey)")
+        }
+        return parts.isEmpty ? "解析数据: --" : parts.joined(separator: " · ")
     }
 }

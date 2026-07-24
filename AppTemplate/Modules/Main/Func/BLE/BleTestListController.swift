@@ -57,10 +57,10 @@ class BleTestListController: DefaultViewController {
     }
 
     private func refreshSessionInfo() {
-        let profiles = BleSession.shared.registeredProfiles
-            .map(\.displayName)
+        let names = BleSession.shared.registeredConfigurations
+            .map { BleStateFormatter.productDisplayName(for: $0) }
             .joined(separator: "、")
-        let profileLine = profiles.isEmpty ? "无" : profiles
+        let profileLine = names.isEmpty ? "无" : names
 
         if let connection = BleSession.shared.activeConnection {
             let name = connection.peripheral.name ?? "未知设备"

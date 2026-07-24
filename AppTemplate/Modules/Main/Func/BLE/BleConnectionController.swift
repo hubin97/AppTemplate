@@ -47,14 +47,21 @@ class BleConnectionController: DefaultViewController {
         field.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
         field.autocapitalizationType = .allCharacters
         field.autocorrectionType = .no
-        field.text = "01 02 03"
+        field.text = BlePumpCommand.hexDescription(BlePumpCommand.defaultC0Control())
         return field
     }()
 
     private lazy var writeButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle("发送写指令", for: .normal)
+        button.setTitle("C0 控制", for: .normal)
         button.addTarget(self, action: #selector(writeButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
+    private lazy var f0Button: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("F0 鉴权", for: .normal)
+        button.addTarget(self, action: #selector(f0ButtonTapped), for: .touchUpInside)
         return button
     }()
 
@@ -74,6 +81,7 @@ class BleConnectionController: DefaultViewController {
         view.addSubview(logTextView)
         view.addSubview(commandField)
         view.addSubview(writeButton)
+        view.addSubview(f0Button)
         view.addSubview(disconnectButton)
 
         stateLabel.snp.makeConstraints { make in
@@ -97,6 +105,10 @@ class BleConnectionController: DefaultViewController {
         writeButton.snp.makeConstraints { make in
             make.top.equalTo(commandField.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(16)
+        }
+        f0Button.snp.makeConstraints { make in
+            make.centerY.equalTo(writeButton)
+            make.leading.equalTo(writeButton.snp.trailing).offset(16)
         }
         disconnectButton.snp.makeConstraints { make in
             make.centerY.equalTo(writeButton)
@@ -126,12 +138,15 @@ class BleConnectionController: DefaultViewController {
             stateLabel.textColor = .systemOrange
             deviceLabel.text = "请先在「扫描并连接」页面连接设备"
             writeButton.isEnabled = false
+            f0Button.isEnabled = false
             disconnectButton.isEnabled = false
             return
         }
 
         writeButton.isEnabled = true
+        f0Button.isEnabled = true
         disconnectButton.isEnabled = true
+        updateCommandFieldForConnection(connection)
         let peripheral = connection.peripheral
         deviceLabel.text = """
         设备：\(peripheral.name ?? "未知")
@@ -175,6 +190,7 @@ class BleConnectionController: DefaultViewController {
         case .ready:
             stateLabel.textColor = .systemGreen
             if let connection = BleSession.shared.activeConnection {
+                updateCommandFieldForConnection(connection)
                 let peripheral = connection.peripheral
                 deviceLabel.text = """
                 设备：\(peripheral.name ?? "未知")
@@ -201,12 +217,24 @@ class BleConnectionController: DefaultViewController {
     }
 
     @objc private func writeButtonTapped() {
-        guard let connection = BleSession.shared.activeConnection else {
-            ProgressHUD.failed("无活跃连接")
+        sendCommand(from: commandField.text)
+    }
+
+    @objc private func f0ButtonTapped() {
+        sendCommand(data: BlePumpCommand.defaultF0Auth())
+    }
+
+    private func sendCommand(from hex: String?) {
+        guard let data = parseHex(hex) else {
+            ProgressHUD.failed("指令格式错误")
             return
         }
-        guard let data = parseHex(commandField.text) else {
-            ProgressHUD.failed("指令格式错误")
+        sendCommand(data: data)
+    }
+
+    private func sendCommand(data: Data) {
+        guard let connection = BleSession.shared.activeConnection else {
+            ProgressHUD.failed("无活跃连接")
             return
         }
 
@@ -224,6 +252,27 @@ class BleConnectionController: DefaultViewController {
                     ProgressHUD.failed(error.localizedDescription)
                 }
             }
+        }
+    }
+
+    private func isPumpConnection(_ connection: BlePeripheralConnection) -> Bool {
+        if case .ready(let info) = connection.currentState {
+            return info.service.uuid == BleGattUUID.transportService
+        }
+        return BleStateFormatter.productDisplayName(for: connection) == "吸奶器"
+    }
+
+    private func updateCommandFieldForConnection(_ connection: BlePeripheralConnection) {
+        let isPump = isPumpConnection(connection)
+        f0Button.isHidden = !isPump
+        if isPump {
+            commandField.text = BlePumpCommand.hexDescription(BlePumpCommand.defaultC0Control())
+            commandField.placeholder = "C0 控制帧（可编辑）"
+            writeButton.setTitle("C0 控制", for: .normal)
+        } else {
+            commandField.placeholder = "十六进制指令，如 01 02 03"
+            commandField.text = "01 02 03"
+            writeButton.setTitle("发送写指令", for: .normal)
         }
     }
 

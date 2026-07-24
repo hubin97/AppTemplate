@@ -109,12 +109,9 @@ extension LibsManager {
     func setupLogger() {
         let logLevel = DDLogLevel.verbose
 #if DEBUG
-        //LogM.shared.launch(logLevel, logMode: .detail).entrance(R.image.lanuch_logo())
-        LogM.shared.setup(level: logLevel, consoleMode: .easy, fileMode: .detail).entrance()
-        NetworkPrintlnPlugin.shared.loglevel = logLevel
+        LogM.shared.setup(level: logLevel, consoleMode: .easy, fileMode: .detail, storagePolicy: .default).entrance()
 #else
-        //LogM.shared.level(logLevel).file(.detail).launch()
-        LogM.shared.setup(level: logLevel).launch()
+        LogM.shared.setup(level: logLevel, storagePolicy: .standard).launch()
 #endif
     }
 }

@@ -14,7 +14,7 @@ class BleScanController: DefaultViewController {
     private struct DeviceRow {
         let discovery: BleDiscovery
         var name: String { discovery.peripheral.name ?? "未知设备" }
-        var productName: String { BleStateFormatter.productDisplayName(for: discovery.productId) }
+        var productName: String { BleStateFormatter.productDisplayName(for: discovery.configuration) }
         var parsedDescription: String { BleStateFormatter.parsedDataDescription(for: discovery) }
         var rssi: Int { discovery.advertisement.rssi.intValue }
     }
