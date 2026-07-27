@@ -109,6 +109,8 @@ extension FuncViewController: UITableViewDataSource, UITableViewDelegate {
             navigator.show(provider: AppScene.iap, sender: self)
         case .ble:
             navigator.show(provider: AppScene.bleTest, sender: self)
+        case .authPermission:
+            navigator.show(provider: AppScene.authPermission, sender: self)
         }
     }
 }

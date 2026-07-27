@@ -20,6 +20,7 @@ class FuncViewModel: ViewModel {
         case lottieHUD = "ProgressHUD"
         case AVPlayerViewController
         case IAP
+        case authPermission = "权限校验"
         case ble = "BLE 测试"
     }
     

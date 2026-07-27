@@ -15,7 +15,7 @@ class DefaultViewController: ViewController, Themeable {
     override func bindViewModel() {
         super.bindViewModel()
         withThemeUpdates { (self, theme) in
-            print("DefaultViewController-withThemeUpdates")
+            //print("DefaultViewController-withThemeUpdates")
             self.view.backgroundColor = theme.backgroundColor
             self.naviBar.backgroundColor = theme.backgroundColor
             self.naviBar.textColor = theme.textColor
