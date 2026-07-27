@@ -2,7 +2,7 @@ PODS:
   - Alamofire (5.10.2)
   - AppStart (0.1.4):
     - AppStart/Base (= 0.1.4)
-    - AppStart/BLE (= 0.1.4)
+    - AppStart/Ble (= 0.1.4)
     - AppStart/Network (= 0.1.4)
     - AppStart/ProgressHUD (= 0.1.4)
     - AppStart/Sources (= 0.1.4)
@@ -20,7 +20,7 @@ PODS:
   - AppStart/Base/Extension (0.1.4):
     - AppStart/Base/Global
   - AppStart/Base/Global (0.1.4)
-  - AppStart/BLE (0.1.4):
+  - AppStart/Ble (0.1.4):
     - AppStart/Utils/Logger
   - AppStart/Network (0.1.4):
     - AppStart/Network/Core (= 0.1.4)
@@ -267,7 +267,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AppStart: 8fe554dd585a9c253d34f25ef5eaeeeca1addc93
+  AppStart: 6bc9f13b3fb9cceae29b7fbec6cfa4433d67657a
   Bugly: 217ac2ce5f0f2626d43dbaa4f70764c953a26a31
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
   Demo: fba87876ff7833426e22b0bf158eeb38fbef1b94
