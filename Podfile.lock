@@ -23,8 +23,15 @@ PODS:
   - AppStart/Ble (0.1.4):
     - AppStart/Utils/Logger
   - AppStart/Network (0.1.4):
+    - AppStart/Network/Connectivity (= 0.1.4)
     - AppStart/Network/Core (= 0.1.4)
     - AppStart/Network/Utils (= 0.1.4)
+    - Moya
+    - ObjectMapper
+    - PromiseKit
+    - RxRelay
+    - RxSwift
+  - AppStart/Network/Connectivity (0.1.4):
     - Moya
     - ObjectMapper
     - PromiseKit
@@ -40,6 +47,7 @@ PODS:
     - RxRelay
     - RxSwift
   - AppStart/Network/Utils (0.1.4):
+    - AppStart/Network/Connectivity
     - Moya
     - ObjectMapper
     - PromiseKit
@@ -76,6 +84,7 @@ PODS:
     - AppStart/Utils/Toolkit (= 0.1.4)
   - AppStart/Utils/AuthStatus (0.1.4):
     - AppStart/Base
+    - AppStart/Network/Connectivity
   - AppStart/Utils/Logger (0.1.4):
     - AppStart/Base
     - AppStart/Sources
@@ -267,7 +276,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: 7193b3b92c74a07f85569e1a6c4f4237291e7496
-  AppStart: 8c767a6d275ce914fa0be00602abe1e229aad2e6
+  AppStart: e05a8e58e664c8bd8313714cb27f441f491627be
   Bugly: 217ac2ce5f0f2626d43dbaa4f70764c953a26a31
   CocoaLumberjack: 5644158777912b7de7469fa881f8a3f259c2512a
   Demo: fba87876ff7833426e22b0bf158eeb38fbef1b94

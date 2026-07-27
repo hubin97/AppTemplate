@@ -27,13 +27,11 @@ class AuthPermissionDemoController: DefaultViewController {
             Row(title: "日历", permission: .calendar),
             Row(title: "提醒事项", permission: .reminder),
             Row(title: "Siri", permission: .siri),
-            Row(title: "蓝牙", permission: .bluetooth),
-            Row(title: "网络连通性", permission: .networkReachability)
+            Row(title: "蓝牙", permission: .bluetooth)
         ]
     }
 
     private var statusTexts: [Int: String] = [:]
-    private var networkMonitorTask: Task<Void, Never>?
 
     private lazy var hintLabel: UILabel = {
         let label = UILabel()
@@ -90,25 +88,11 @@ class AuthPermissionDemoController: DefaultViewController {
         super.viewDidLoad()
         // FIXME: 应该提前设置
         AuthStatus.isSiriCapabilityEnabled = true
-        startNetworkMonitor()
         Task { await refreshAllStatuses() }
-    }
-
-    deinit {
-        networkMonitorTask?.cancel()
     }
 
     @objc private func openSettingsTapped() {
         AuthorizationStatus.shared.openSettings()
-    }
-
-    private func startNetworkMonitor() {
-        networkMonitorTask = Task {
-            for await _ in AuthorizationStatus.monitorNetworkReachability() {
-                guard let index = Row.all.firstIndex(where: { $0.permission == .networkReachability }) else { continue }
-                await refreshRow(at: index, requestIfNeeded: false)
-            }
-        }
     }
 
     @MainActor

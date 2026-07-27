@@ -21,6 +21,7 @@ enum AppScene: SceneProvider {
     case bleCentralState
     case bleConnection
     case authPermission
+    case connectivity
     
     // MARK: -
     var getSegue: UIViewController? {
@@ -52,6 +53,8 @@ enum AppScene: SceneProvider {
             return BleConnectionController(viewModel: nil)
         case .authPermission:
             return AuthPermissionDemoController(viewModel: nil)
+        case .connectivity:
+            return ConnectivityDemoController(viewModel: nil)
         }
     }
 }
