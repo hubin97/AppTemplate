@@ -141,10 +141,14 @@ class BleScanController: DefaultViewController {
                 ProgressHUD.animate("连接中...")
             }
             do {
-                _ = try await BleSession.shared.connect(discovery: row.discovery, timeout: 10)
+                _ = try await BleSession.shared.connect(discovery: row.discovery)
                 await MainActor.run {
                     ProgressHUD.succeed("已连接")
                     self.navigator.show(provider: AppScene.bleConnection, sender: self)
+                }
+            } catch BleError.connectionTimeout {
+                await MainActor.run {
+                    ProgressHUD.failed("连接超时")
                 }
             } catch {
                 await MainActor.run {
