@@ -141,14 +141,8 @@ class ConnectivityDemoController: DefaultViewController {
     @MainActor
     private func refreshCellularPolicy() {
         let policy = ConnectivityCenter.shared.cellularDataPolicy()
-        switch policy {
-        case .unrestricted:
-            cellularPolicyText = "未受限"
-        case .restricted:
-            cellularPolicyText = "已受限"
-        case .unknown:
-            cellularPolicyText = "未知"
-        }
+        let hint = ConnectivityCenter.shared.wirelessDataAccessHint()
+        cellularPolicyText = "\(policy.displayText) · \(hint.displayText)"
         updateDetailLabel()
         tableView.reloadData()
     }
@@ -186,7 +180,7 @@ class ConnectivityDemoController: DefaultViewController {
         guard monitorTask == nil else { return }
         isMonitoring = true
         monitorTask = Task { [weak self] in
-            for await snap in ConnectivityCenter.shared.monitor() {
+            for await snap in connectivityUpdates() {
                 guard !Task.isCancelled else { break }
                 await MainActor.run {
                     self?.applySnapshot(snap)

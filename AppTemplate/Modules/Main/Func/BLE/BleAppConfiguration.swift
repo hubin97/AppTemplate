@@ -23,7 +23,7 @@ enum BleProducts {
     static let tempPatchParser = BleTempPatchProtocolParser()
     static let phototherapyParser = BlePhototherapyProtocolParser()
 
-    /// 吸奶器：0xaa 厂商协议，匹配与解析均由 parser 完成
+    /// Pump demo：0xaa 厂商协议，匹配与解析均由 parser 完成
     static let pump = BleConfiguration(
         matching: BleParserValidatedMatchingStrategy(parser: pumpParser),
         serviceUUIDs: [BleGattUUID.transportService],
@@ -40,7 +40,7 @@ enum BleProducts {
         logTag: "[Ble/Pump]"
     )
 
-    /// 温度贴：设备名 + FFFF serviceData
+    /// TempPatch：设备名 + FFFF serviceData
     static let tempPatch = BleConfiguration(
         matching: BleParserValidatedMatchingStrategy(
             names: BleDeviceCatalog.tempPatchNames,
@@ -53,7 +53,7 @@ enum BleProducts {
         logTag: "[Ble/TempPatch]"
     )
 
-    /// 光疗仪：设备名 + 39 字节 manufacturerData
+    /// Phototherapy：设备名 + 39 字节 manufacturerData
     static let phototherapy = BleConfiguration(
         matching: BleParserValidatedMatchingStrategy(
             names: BleDeviceCatalog.phototherapyNames,
@@ -69,9 +69,9 @@ enum BleProducts {
     static let all: [BleConfiguration] = [pump, tempPatch, phototherapy]
 
     static let displayNames: [String: String] = [
-        "[Ble/Pump]": "吸奶器",
-        "[Ble/TempPatch]": "温度贴",
-        "[Ble/Phototherapy]": "光疗仪"
+        "[Ble/Pump]": "Pump",
+        "[Ble/TempPatch]": "TempPatch",
+        "[Ble/Phototherapy]": "Phototherapy"
     ]
 }
 

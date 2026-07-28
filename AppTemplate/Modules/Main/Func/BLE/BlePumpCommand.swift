@@ -2,7 +2,7 @@
 //  BlePumpCommand.swift
 //  AppTemplate
 //
-//  吸奶器 0xAA 0x55 协议帧（对齐 Momcozy LTBTData）。
+//  0xAA 0x55 protocol frame (demo).
 
 import Foundation
 

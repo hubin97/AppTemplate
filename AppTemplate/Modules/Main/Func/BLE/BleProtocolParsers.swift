@@ -2,7 +2,7 @@
 //  BleProtocolParsers.swift
 //  AppTemplate
 //
-//  吸奶器 / 温度贴 / 光疗仪广播解析器（适配 BleAdvDataParser）。
+//  Pump / TempPatch / Phototherapy advertisement parsers (BleAdvDataParser).
 
 import Foundation
 import CoreBluetooth
@@ -23,7 +23,7 @@ struct BleProtocolParseResult {
     var extraData: [String: Any] = [:]
 }
 
-// MARK: - 吸奶器（0xaa 协议 4.1）
+// MARK: - Pump (0xaa protocol 4.1)
 //
 // 广播格式：kCBAdvDataManufacturerData
 //   [0]     = 0xAA
@@ -53,7 +53,7 @@ struct BlePumpProtocolParser: BleAdvDataParser {
     }
 }
 
-// MARK: - 温度贴（T31）
+// MARK: - TempPatch (T31)
 //
 // 匹配：LocalName ∈ BleDeviceCatalog.tempPatchNames（如 "T31"）
 // manufacturerData：productKey[0..6] + secretKey[6..14] + signType[14]
@@ -109,7 +109,7 @@ struct BleTempPatchProtocolParser: BleAdvDataParser {
     }
 }
 
-// MARK: - 光疗仪（Lumi 1）
+// MARK: - Phototherapy (Lumi 1)
 //
 // 匹配：LocalName ∈ BleDeviceCatalog.phototherapyNames（如 "Lumi 1"）
 // manufacturerData 固定 39 字节：

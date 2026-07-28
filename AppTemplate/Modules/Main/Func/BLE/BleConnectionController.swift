@@ -259,7 +259,7 @@ class BleConnectionController: DefaultViewController {
         if case .ready(let info) = connection.currentState {
             return info.service.uuid == BleGattUUID.transportService
         }
-        return BleStateFormatter.productDisplayName(for: connection) == "吸奶器"
+        return BleStateFormatter.productDisplayName(for: connection) == "Pump"
     }
 
     private func updateCommandFieldForConnection(_ connection: BlePeripheralConnection) {
