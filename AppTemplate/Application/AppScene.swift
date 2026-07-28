@@ -17,6 +17,12 @@ enum AppScene: SceneProvider {
     case lottieHUD
     case battery
     case iap
+    case bleTest
+    case bleScan
+    case bleCentralState
+    case bleConnection
+    case authPermission
+    case connectivity
     
     // MARK: -
     var getSegue: UIViewController? {
@@ -40,6 +46,18 @@ enum AppScene: SceneProvider {
             return BatteryDemoController(viewModel: nil)
         case .iap:
             return IAPViewController(viewModel: nil)
+        case .bleTest:
+            return BleTestListController(viewModel: nil)
+        case .bleScan:
+            return BleScanController(viewModel: nil)
+        case .bleCentralState:
+            return BleCentralStateController(viewModel: nil)
+        case .bleConnection:
+            return BleConnectionController(viewModel: nil)
+        case .authPermission:
+            return AuthPermissionDemoController(viewModel: nil)
+        case .connectivity:
+            return ConnectivityDemoController(viewModel: nil)
         }
     }
 }

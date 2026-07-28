@@ -10,3 +10,9 @@
 "NSCameraUsageDescription" = "用于拍照和上传照片到头像和使用反馈，以及扫码连接设备";
 "NSPhotoLibraryAddUsageDescription" = "用于访问照片，从您的图库中上传照片到头像和使用反馈";
 "NSPhotoLibraryUsageDescription" = "用于访问照片，从您的图库中上传照片到头像和使用反馈";
+"NSLocationWhenInUseUsageDescription" = "用于测试使用期间定位权限";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "用于测试始终定位权限";
+"NSMicrophoneUsageDescription" = "用于测试麦克风权限";
+"NSCalendarsUsageDescription" = "用于测试日历权限";
+"NSRemindersUsageDescription" = "用于测试提醒事项权限";
+"NSSiriUsageDescription" = "用于测试 Siri 权限";

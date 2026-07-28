@@ -33,8 +33,8 @@ target 'AppTemplate' do
   pod 'lottie-ios'
   
   # Pods for AppStart
-#  pod 'AppStart', '0.1.4'
-  pod 'AppStart', :path => '../AppStart'
+  pod 'AppStart', '0.2.0'
+#  pod 'AppStart', :path => '../AppStart'
   pod 'Router', :path => './PodsRepo'
   pod 'Demo', :path => './PodsRepo'
 
@@ -58,7 +58,8 @@ post_install do |installer|
       #
       target.build_configurations.each do |config|
           config.build_settings['SWIFT_VERSION'] = '5.0'
-          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '13.0'
+          # 与 platform :ios, '14.0' 及 AppStart podspec 保持一致，避免 iOS 14+ API 可用性报错
+          config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
       end
   end
 end

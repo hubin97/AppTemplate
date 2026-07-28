@@ -16,6 +16,7 @@ struct _R {
   var color: color { .init(bundle: bundle) }
   var image: image { .init(bundle: bundle) }
   var info: info { .init(bundle: bundle) }
+  var entitlements: entitlements { .init() }
   var file: file { .init(bundle: bundle) }
   var storyboard: storyboard { .init(bundle: bundle) }
 
@@ -227,6 +228,11 @@ struct _R {
         }
       }
     }
+  }
+
+  /// This `_R.entitlements` struct is generated, and contains static references to 0 properties.
+  struct entitlements {
+    let comAppleDeveloperSiri: Bool = true
   }
 
   /// This `_R.file` struct is generated, and contains static references to 9 resource files.
