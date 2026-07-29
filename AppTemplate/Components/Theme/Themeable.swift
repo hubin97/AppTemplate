@@ -5,77 +5,71 @@
 //  Created by hubin.h on 2025/12/11.
 //  Copyright © 2025 hubin.h. All rights reserved.
 
-import Foundation
-import RxSwift
-import RxCocoa
+import UIKit
+import ObjectiveC
 
-// MARK: - Global Variables & Functions (if necessary)
-
-// MARK: - Main Class
-protocol Themeable: NSObject {
-    // Swift 协议里的 Self 只能用于 final 类 / struct / enum，或者只在返回值/泛型约束里出现;
-    // UI 层组件 + 逃逸闭包 + 可继承类 → 不要在协议 requirement 中用 Self
-    //func withThemeUpdates(_ handler: @escaping (Self, AppTheme) -> Void)
+@MainActor
+protocol Themeable: AnyObject {
+    /// 页面只需覆写这个方法；订阅和生命周期由基础 UI 类统一管理。
+    func themeDidChange(_ theme: AppTheme)
 }
 
-extension Themeable {
-    
-    /// 使用主题，并在主题变化时自动更新。
-    /// 自动处理 weak self，无需手动添加 [weak self] 和 guard let self
-    func withThemeUpdates(_ handler: @escaping (Self, AppTheme) -> Void) {
-        // 每次使用前，尝试从存储中同步一次主题（保证冷启动时也能拿到最新持久化主题）
-        ThemeService.shared.loadSavedTheme()
+private final class ThemeObservation {
+    var task: Task<Void, Never>?
 
-        // 直接订阅主题变化，BehaviorRelay 会立即推送当前主题
-        ThemeService.shared.theme
-            .subscribe(onNext: { [weak self] theme in
-                guard let strongSelf = self else { return }
-                handler(strongSelf, theme)
-            }).disposed(by: rx.disposeBag)
+    deinit {
+        task?.cancel()
     }
 }
 
-// MARK: - Utilities & Helpers
-//@propertyWrapper
-//class Themed<View: UIView> {
-//    private var view: View?
-//
-//    /// 传入闭包，定义每次主题更新要做的事情
-//    private let applyClosure: (View, AppTheme) -> Void
-//
-//    init(apply: @escaping (View, AppTheme) -> Void) {
-//        self.applyClosure = apply
-//    }
-//
-//    var wrappedValue: View {
-//        get { view! }
-//        set {
-//            view = newValue
-//
-//            // 绑定主题
-//            ThemeService.shared.theme
-//                .asObservable()
-//                .subscribe(onNext: { [weak self] theme in
-//                    guard let view = self?.view else { return }
-//                    self?.applyClosure(view, theme)
-//                })
-//                .disposed(by: newValue.rx.disposeBag)
-//
-//            // 初始应用主题
-//            if let view = view {
-//                applyClosure(view, ThemeService.shared.currentTheme)
-//            }
-//        }
-//    }
-//}
-//
-//typealias ThemedView = Themed<UIView>
-//typealias ThemedLabel = Themed<UILabel>
-//typealias ThemedButton = Themed<UIButton>
-//
-////@ThemedButton(apply: { btn, theme in
-////    btn.backgroundColor = theme.buttonBackground
-////    btn.setTitleColor(theme.buttonText, for: .normal)
-////})
-////var loginButton = UIButton()
-//
+private var themeObservationKey: UInt8 = 0
+
+@MainActor
+extension Themeable where Self: NSObject {
+    /// 供基础 UI 类启动监听，业务页面不需要调用。
+    func startThemeUpdates() {
+        let observation: ThemeObservation
+        if let existing = objc_getAssociatedObject(self, &themeObservationKey) as? ThemeObservation {
+            observation = existing
+        } else {
+            observation = ThemeObservation()
+            objc_setAssociatedObject(
+                self,
+                &themeObservationKey,
+                observation,
+                .OBJC_ASSOCIATION_RETAIN_NONATOMIC
+            )
+        }
+
+        observation.task?.cancel()
+        observation.task = Task { [weak self] in
+            for await theme in Theme.updates {
+                await MainActor.run {
+                    guard let self else { return }
+                    self.themeDidChange(theme)
+                }
+            }
+        }
+    }
+}
+
+@MainActor
+extension Themeable where Self: ViewController {
+    /// 通用页面主题：背景、导航栏、状态栏。
+    func applyPageTheme(_ theme: AppTheme) {
+        view.backgroundColor = theme.colors.background
+        naviBar.backgroundColor = theme.colors.background
+        naviBar.textColor = theme.colors.text
+        naviBar.updateIcons(isDark: theme.isDark, textColor: theme.colors.tint)
+        updateStatusBar(with: theme.statusBarStyle)
+    }
+}
+
+@MainActor
+extension Themeable where Self: UITableViewCell {
+    /// 通用 Cell 主题。
+    func applyCellTheme(_ theme: AppTheme) {
+        backgroundColor = theme.colors.background
+        contentView.backgroundColor = theme.colors.background
+    }
+}

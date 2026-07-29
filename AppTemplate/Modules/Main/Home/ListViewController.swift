@@ -18,7 +18,6 @@ class ListViewController: DefaultViewController, ViewModelProvider {
     
     lazy var tableView: TableView = {
         let listView = TableView(frame: CGRect.zero, style: .plain)
-        listView.backgroundColor = .white
         listView.registerCell(DefaultTableViewCell.self)
         listView.tableFooterView = UIView(frame: CGRect.zero)
         listView.dataSource = self
@@ -44,13 +43,7 @@ class ListViewController: DefaultViewController, ViewModelProvider {
         }
     }
     
-    override func bindViewModel() {
-        super.bindViewModel()
-        
-        withThemeUpdates { (self, theme) in
-            self.tableView.backgroundColor = theme.tableViewColor
-        }
-    }
+    override var themeableTableViews: [UITableView] { [tableView] }
 }
 
 // MARK: - delegate or data source

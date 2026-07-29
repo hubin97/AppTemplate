@@ -192,7 +192,6 @@ class ProgressHUDLottieController: DefaultViewController {
     override func setupLayout() {
         super.setupLayout()
         naviBar.title = "ProgressHUD"
-        view.backgroundColor = UIColor(hexStr: "#F9F7F5")
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.equalTo(naviBar.snp.bottom)
@@ -203,16 +202,23 @@ class ProgressHUDLottieController: DefaultViewController {
     override func bindViewModel() {
         super.bindViewModel()
         setupProgressHUD()
-        withThemeUpdates { (self, theme) in
-            self.tableView.backgroundColor = theme.tableViewColor
-        }
+    }
+
+    override var themeableTableViews: [UITableView] { [tableView] }
+
+    override func themeDidChange(_ theme: AppTheme) {
+        super.themeDidChange(theme)
+        ProgressHUD.colorAnimation = theme.colors.tint
+        ProgressHUD.colorStatus = theme.colors.tint
+        ProgressHUD.colorProgress = theme.colors.tint
     }
     
     func setupProgressHUD() {
-        ProgressHUD.colorAnimation = UIColor(hexStr: "#B37A7E")
-        ProgressHUD.colorStatus = UIColor(hexStr: "#B37A7E")
+        let theme = Theme.current
+        ProgressHUD.colorAnimation = theme.colors.tint
+        ProgressHUD.colorStatus = theme.colors.tint
         ProgressHUD.fontStatus = Fonts.figma(.w500)(16)
-        ProgressHUD.colorProgress = UIColor(hexStr: "#B37A7E")
+        ProgressHUD.colorProgress = theme.colors.tint
         ProgressHUD.animationType = .circleStrokeSpin
         //ProgressHUD.imageSuccess = R.image.icon_hud_success()!
         //ProgressHUD.imageError = R.image.icon_hud_error()!

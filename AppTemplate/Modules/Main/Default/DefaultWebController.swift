@@ -14,18 +14,12 @@ class DefaultWebController: JSWebController, Themeable {
     
     override func bindViewModel() {
         super.bindViewModel()
-        withThemeUpdates { (self, theme) in
-            self.view.backgroundColor = theme.backgroundColor
-            self.naviBar.backgroundColor = theme.backgroundColor
-            self.naviBar.textColor = theme.textColor
-            // 更新导航栏按钮图标以适配主题
-            self.naviBar.updateIcons(isDark: theme.type == .dark, textColor: theme.textColor)
-            self.setNeedsStatusBarAppearanceUpdate()
-        }
+        startThemeUpdates()
     }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ThemeService.shared.current.statusBarStyle
+
+    func themeDidChange(_ theme: AppTheme) {
+        applyPageTheme(theme)
+        progressViewTintColor = theme.colors.tint
     }
 }
 

@@ -28,11 +28,7 @@ enum AppScene: SceneProvider {
     var getSegue: UIViewController? {
         switch self {
         case .tabs(let viewModel):
-            let normalColor = viewModel.tabBarItems.first?.textColor_n ?? .lightGray
-            let selectColor = viewModel.tabBarItems.first?.textColor_h ?? .black
-            let tabBarVc = DefaultTabBarController(viewModel: viewModel)
-            tabBarVc.setAppearance(normalColor: normalColor, selectColor: selectColor)
-            return tabBarVc
+            return DefaultTabBarController(viewModel: viewModel)
         case .jsTest:
             let vc = DefaultWebController(viewModel: JSWebViewModel(symbol: "LUTE_NATIVE"))
             //vc.isHideLeftView = true

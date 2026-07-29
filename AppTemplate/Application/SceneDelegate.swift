@@ -20,6 +20,20 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         Application.shared.launch(in: window)
     }
 
+    func windowScene(
+        _ windowScene: UIWindowScene,
+        didUpdate previousCoordinateSpace: UICoordinateSpace,
+        interfaceOrientation previousInterfaceOrientation: UIInterfaceOrientation,
+        traitCollection previousTraitCollection: UITraitCollection
+    ) {
+        guard windowScene.traitCollection.hasDifferentColorAppearance(
+            comparedTo: previousTraitCollection
+        ) else {
+            return
+        }
+        Theme.systemAppearanceDidChange(windowScene.traitCollection)
+    }
+
     func sceneDidDisconnect(_ scene: UIScene) {
         // Called as the scene is being released by the system.
         // This occurs shortly after the scene enters the background, or when its session is discarded.

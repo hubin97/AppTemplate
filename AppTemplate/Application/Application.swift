@@ -44,7 +44,7 @@ extension Application {
     /// `注意:注意:注意: 主工程Project-> Localization里面必须包含所有需要适配的语言, 才能正常切换到目标语言下; 否则展示fallback`
     func setupConfig() {
         self.setupLocalized()
-        BleAppConfiguration.setup()
+        //BleAppConfiguration.setup()
     }
     
     func setupLocalized() {
@@ -96,10 +96,7 @@ extension Application {
         self.setupConfig()
         self.setSemanticLayout()
 
-        // 禁用夜间模式
-        if #available(iOS 13.0, *) {
-            window.overrideUserInterfaceStyle = .light
-        }
+        Theme.attach(to: window)
         window.rootViewController = UIViewController()
         window.makeKeyAndVisible()
         

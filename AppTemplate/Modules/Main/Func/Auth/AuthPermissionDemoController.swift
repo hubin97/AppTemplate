@@ -50,7 +50,6 @@ class AuthPermissionDemoController: DefaultViewController {
 
     private lazy var tableView: TableView = {
         let listView = TableView(frame: .zero, style: .plain)
-        listView.backgroundColor = .systemBackground
         listView.registerCell(DefaultTableViewCell.self)
         listView.tableFooterView = UIView(frame: .zero)
         listView.dataSource = self
@@ -85,10 +84,16 @@ class AuthPermissionDemoController: DefaultViewController {
         }
     }
 
+    override var themeableTableViews: [UITableView] { [tableView] }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // FIXME: 应该提前设置
-        AuthStatus.isSiriCapabilityEnabled = true
+        AuthStatus.configure {
+            $0.isSiriCapabilityEnabled = true
+            // 本地网络默认 grantConfirmationWait = 15s；误报已授权时可调大
+            $0.localNetwork.grantConfirmationWait = 20
+        }
         Task { await refreshAllStatuses() }
     }
 

@@ -12,13 +12,10 @@ import Kingfisher
 // MARK: - Main Class
 class MineViewController: DefaultViewController, ViewModelProvider {
     typealias ViewModelType = MineViewModel
-    
-    let languageChanged = BehaviorRelay<Void>(value: ())
 
     lazy var tableView: TableView = {
         let listView = TableView(frame: CGRect.zero, style: .plain)
-        listView.backgroundColor = .white
-        listView.registerCell(SettingSwitchCell.self)
+        listView.registerCell(SettingCell.self)
         listView.tableFooterView = UIView(frame: CGRect.zero)
         listView.dataSource = self
         listView.delegate = self
@@ -45,17 +42,15 @@ class MineViewController: DefaultViewController, ViewModelProvider {
     
     override func bindViewModel() {
         super.bindViewModel()
-        withThemeUpdates { (self, theme) in
-            print("MineViewController-withThemeUpdates")
-//            self.view.backgroundColor = theme.backgroundColor
-//            self.naviBar.backgroundColor = theme.backgroundColor
-            self.tableView.backgroundColor = theme.tableViewColor
-//            self.naviBar.textColor = theme.textColor
-        }
-        
-        let refresh = Observable.of(rx.viewWillAppear.mapToVoid(), languageChanged.asObservable()).merge()
-        refresh.bind(to: vm.refresh).disposed(by: rx.disposeBag)       
+
+        let refresh = Observable.of(
+            rx.viewWillAppear.mapToVoid(),
+            vm.languageDidChange.asObservable()
+        ).merge()
+        refresh.bind(to: vm.refresh).disposed(by: rx.disposeBag)
     }
+
+    override var themeableTableViews: [UITableView] { [tableView] }
 }
 
 // MARK: - Private Methods
@@ -79,12 +74,64 @@ extension MineViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = vm.items.value[indexPath.row]
-        let cell = tableView.getReusableCell(SettingSwitchCell.self)
+        let cell = tableView.getReusableCell(SettingCell.self)
         cell.bind(to: item)
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let item = vm.items.value[indexPath.row]
+        switch item.itemType {
+        case .displayMode:
+            presentDisplayModePicker()
+        case .themePalette:
+            presentThemePalettePicker()
+        case .language:
+            presentLanguagePicker()
+        default:
+            break
+        }
+    }
+}
+
+private extension MineViewController {
+    func presentDisplayModePicker() {
+        let alert = UIAlertController(title: "显示模式", message: nil, preferredStyle: .actionSheet)
+        ThemeMode.allCases.forEach { mode in
+            let title = mode == vm.displayMode.value ? "✓ \(mode.displayName)" : mode.displayName
+            alert.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
+                self?.vm.selectDisplayMode(mode)
+            })
+        }
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    func presentThemePalettePicker() {
+        let alert = UIAlertController(title: "主题设置", message: nil, preferredStyle: .actionSheet)
+        ThemePalette.allCases.forEach { palette in
+            let color = palette.accentColor(for: Theme.current.appearance)
+            let title = palette == vm.themePalette.value ? "✓ \(palette.displayName)" : palette.displayName
+            let action = UIAlertAction(title: title, style: .default) { [weak self] _ in
+                self?.vm.selectThemePalette(palette)
+            }
+            action.setValue(color, forKey: "titleTextColor")
+            alert.addAction(action)
+        }
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+        present(alert, animated: true)
+    }
+
+    func presentLanguagePicker() {
+        let alert = UIAlertController(title: "语言设置", message: nil, preferredStyle: .actionSheet)
+        LocalizedUtils.supportedLanguages.forEach { language in
+            let title = language == vm.language.value ? "✓ \(language.rawValue)" : language.rawValue
+            alert.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
+                self?.vm.selectLanguage(language)
+            })
+        }
+        alert.addAction(UIAlertAction(title: "取消", style: .cancel))
+        present(alert, animated: true)
     }
 }

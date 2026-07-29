@@ -48,16 +48,15 @@ class DefaultTableViewCell: TableViewCell, Themeable {
         
         stackView.snp.makeConstraints({ (make) in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: inset/2, left: inset, bottom: inset/2, right: 0))
-            //make.height.greaterThanOrEqualTo(44)
         })
         
-        withThemeUpdates { (self, theme) in
-            // print("withThemeUpdates...\(theme)")
-            self.backgroundColor = theme.backgroundColor
-            //self.arrowView.image = theme.type == .light ? Asset.iconRightBlack.image.adaptRTL: Asset.iconRightWhite.image.adaptRTL
-            self.titleLabel.textColor = theme.textColor
-            self.detailLabel.textColor = theme.textColor
-        }
+        startThemeUpdates()
+    }
+
+    func themeDidChange(_ theme: AppTheme) {
+        applyCellTheme(theme)
+        titleLabel.textColor = theme.colors.text
+        detailLabel.textColor = theme.colors.tint
     }
     
     @MainActor required init?(coder: NSCoder) {
@@ -72,6 +71,8 @@ class DefaultTableViewCell: TableViewCell, Themeable {
 
         viewModel.detail.asDriver().drive(detailLabel.rx.text).disposed(by: rx.disposeBag)
         viewModel.detail.map({ $0 ?? "" }).map({ $0.isEmpty }).asDriver(onErrorJustReturn: true).drive(detailLabel.rx.isHidden).disposed(by: rx.disposeBag)
+
+        themeDidChange(Theme.current)
     }
 }
 // MARK: - Private Methods

@@ -11,6 +11,15 @@ import Foundation
 // MARK: - Date Format
 extension LocalizedUtils {
 
+    /// App 支持切换的语言列表。
+    static var supportedLanguages: [LanguageCode] {
+        [.cn, .en, .fr, .de, .it, .es, .ar]
+    }
+
+    static func currentLanguageCode() -> LanguageCode {
+        LanguageCode(rawValue: currentLanguage()) ?? .en
+    }
+
     /// 默认时间格式(云端支持格式) `"yyyy-MM-dd"`
     public static var dateFormat_standard: String {
         return "yyyy-MM-dd"

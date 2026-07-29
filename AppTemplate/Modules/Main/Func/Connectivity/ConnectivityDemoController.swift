@@ -79,7 +79,6 @@ class ConnectivityDemoController: DefaultViewController {
 
     private lazy var tableView: TableView = {
         let listView = TableView(frame: .zero, style: .plain)
-        listView.backgroundColor = .systemBackground
         listView.registerCell(DefaultTableViewCell.self)
         listView.tableFooterView = UIView(frame: .zero)
         listView.dataSource = self
@@ -114,6 +113,8 @@ class ConnectivityDemoController: DefaultViewController {
             make.leading.trailing.bottom.equalToSuperview()
         }
     }
+
+    override var themeableTableViews: [UITableView] { [tableView] }
 
     override func viewDidLoad() {
         super.viewDidLoad()

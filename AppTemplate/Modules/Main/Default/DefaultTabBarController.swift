@@ -14,12 +14,15 @@ class DefaultTabBarController: TabBarController, Themeable {
     
     override func bindViewModel() {
         super.bindViewModel()
-     
-        withThemeUpdates { (self, theme) in
-            let normalColor: UIColor = .lightGray
-            let selectColor: UIColor = theme.type == .light ? .black : .white
-            self.setAppearance(barTintColor: theme.backgroundColor, normalColor: normalColor, selectColor: selectColor)
-        }
+        startThemeUpdates()
+    }
+
+    func themeDidChange(_ theme: AppTheme) {
+        setAppearance(
+            barTintColor: theme.colors.background,
+            normalColor: theme.colors.tabNormal,
+            selectColor: theme.colors.tabSelected
+        )
     }
 }
 

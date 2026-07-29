@@ -62,7 +62,8 @@ extension LibsManager {
         ToastManager.shared.style.backgroundColor = .systemGroupedBackground
     }
     
-    func setupProgressHUD() {      
+    func setupProgressHUD() {
+        ProgressHUD.colorHUD = Colors.background
         ProgressHUD.colorAnimation = Colors.main
         ProgressHUD.colorStatus = Colors.main
         ProgressHUD.fontStatus = Fonts.figma(.w400)(17)
@@ -96,13 +97,13 @@ extension LibsManager {
 //        ]
     }
 
-    func setupCocoaLumberjack() {
-        DDLog.add(DDOSLogger.sharedInstance)
-        let fileLogger: DDFileLogger = DDFileLogger() // File Logger
-        fileLogger.rollingFrequency = TimeInterval(60*60*24)  // 24 hours
-        fileLogger.logFileManager.maximumNumberOfLogFiles = 7
-        DDLog.add(fileLogger)
-    }
+//    func setupCocoaLumberjack() {
+//        DDLog.add(DDOSLogger.sharedInstance)
+//        let fileLogger: DDFileLogger = DDFileLogger() // File Logger
+//        fileLogger.rollingFrequency = TimeInterval(60*60*24)  // 24 hours
+//        fileLogger.logFileManager.maximumNumberOfLogFiles = 7
+//        DDLog.add(fileLogger)
+//    }
     
     /// 开启日志管理
     /// 注意 `网络接口调用, release模式下默认不写入日志文件`

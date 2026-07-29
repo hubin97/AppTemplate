@@ -11,22 +11,20 @@ import Foundation
 
 // MARK: - Main Class
 class DefaultViewController: ViewController, Themeable {
+
+    /// 子类 override 返回需要跟随主题刷新的 TableView。
+    var themeableTableViews: [UITableView] { [] }
     
     override func bindViewModel() {
         super.bindViewModel()
-        withThemeUpdates { (self, theme) in
-            //print("DefaultViewController-withThemeUpdates")
-            self.view.backgroundColor = theme.backgroundColor
-            self.naviBar.backgroundColor = theme.backgroundColor
-            self.naviBar.textColor = theme.textColor
-            // 更新导航栏按钮图标以适配主题
-            self.naviBar.updateIcons(isDark: theme.type == .dark, textColor: theme.textColor)
-            self.setNeedsStatusBarAppearanceUpdate()
-        }
+        startThemeUpdates()
     }
-    
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return ThemeService.shared.current.statusBarStyle
+
+    func themeDidChange(_ theme: AppTheme) {
+        applyPageTheme(theme)
+        themeableTableViews.forEach {
+            $0.backgroundColor = theme.colors.tableBackground
+        }
     }
   
     override var shouldAutorotate: Bool {

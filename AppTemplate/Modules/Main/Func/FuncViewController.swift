@@ -17,7 +17,6 @@ class FuncViewController: DefaultViewController, ViewModelProvider {
   
     lazy var tableView: TableView = {
         let listView = TableView(frame: CGRect.zero, style: .plain)
-        listView.backgroundColor = .white
         listView.registerCell(DefaultTableViewCell.self)
         listView.tableFooterView = UIView(frame: CGRect.zero)
         listView.dataSource = self
@@ -38,28 +37,7 @@ class FuncViewController: DefaultViewController, ViewModelProvider {
         }
     }
 
-    override func bindViewModel() {
-        super.bindViewModel()
-        withThemeUpdates { (self, theme) in
-            self.tableView.backgroundColor = theme.tableViewColor
-        }
-    }
-    
-//    override var preferredStatusBarStyle: UIStatusBarStyle {
-//        if #available(iOS 13.0, *) {
-//            return .darkContent
-//        } else {
-//            return .default
-//        }
-//    }
-    
-//    override var shouldAutorotate: Bool {
-//        return true
-//    }
-//    
-//    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-//        return .allButUpsideDown
-//    }
+    override var themeableTableViews: [UITableView] { [tableView] }
 }
 
 // MARK: - Private Methods

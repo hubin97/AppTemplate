@@ -11,30 +11,42 @@ import RxCocoa
 
 // MARK: - Main Class
 class SettingCellViewModel: DefaultTableViewCellViewModel {
-    
-    let itemType: SettingItem        // 固定类型，初始化后不变
-    let hideNext: Bool               // 是否隐藏右箭头
 
-    let switchChanged = BehaviorRelay<Bool>(value: false)  // 监听 switch 变化
-    
-    init(itemType: SettingItem, hideNext: Bool = false) {
+    let itemType: SettingItem
+
+    init(itemType: SettingItem) {
         self.itemType = itemType
-        self.hideNext = hideNext
         super.init()
-        
+
         self.title.accept(itemType.title)
-        
+
         switch itemType {
-        case .nightMode(let isDark):
-            self.switchChanged.accept(isDark)
-        case .themeMode(let name):
-            self.detail.accept(name)
-        case .language(let lang):
-            self.detail.accept(lang)
+        case .displayMode(let mode):
+            self.detail.accept(mode.displayName)
+        case .themePalette(let palette):
+            self.detail.accept(palette.displayName)
+        case .language(let language):
+            self.detail.accept(language.rawValue)
         case .clearCache:
             break
         case .aboutUs:
             break
         }
     }
+}
+
+// MARK: - Private Methods
+extension SettingCellViewModel {
+}
+
+// MARK: - Callbacks
+extension SettingCellViewModel {
+}
+
+// MARK: - Utilities & Helpers
+extension SettingCellViewModel {
+}
+
+// MARK: - Delegate & Data Source
+extension SettingCellViewModel {
 }

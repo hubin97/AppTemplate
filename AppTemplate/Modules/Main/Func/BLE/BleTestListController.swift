@@ -18,7 +18,6 @@ class BleTestListController: DefaultViewController {
 
     private lazy var tableView: TableView = {
         let listView = TableView(frame: .zero, style: .plain)
-        listView.backgroundColor = .white
         listView.registerCell(DefaultTableViewCell.self)
         listView.tableFooterView = UIView(frame: .zero)
         listView.dataSource = self
@@ -51,10 +50,17 @@ class BleTestListController: DefaultViewController {
         }
     }
 
+    override func bindViewModel() {
+        super.bindViewModel()
+        BleAppConfiguration.setup()
+    }
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         refreshSessionInfo()
     }
+
+    override var themeableTableViews: [UITableView] { [tableView] }
 
     private func refreshSessionInfo() {
         let names = BleSession.shared.registeredConfigurations
