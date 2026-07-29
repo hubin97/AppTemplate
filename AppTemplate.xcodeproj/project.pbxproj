@@ -281,7 +281,9 @@
 				INFOPLIST_FILE = AppTemplate/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "需要蓝牙权限以连接和测试 BLE 设备";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "需要蓝牙权限以连接和测试 BLE 设备";
+				INFOPLIST_KEY_NSBonjourServices = _http._tcp;
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "用于测试日历权限授权流程";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "用于发现与连接局域网设备";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "用于测试始终定位权限授权流程";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "用于测试使用期间定位权限授权流程";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "用于测试麦克风权限授权流程";
@@ -321,7 +323,9 @@
 				INFOPLIST_FILE = AppTemplate/Info.plist;
 				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "需要蓝牙权限以连接和测试 BLE 设备";
 				INFOPLIST_KEY_NSBluetoothPeripheralUsageDescription = "需要蓝牙权限以连接和测试 BLE 设备";
+				INFOPLIST_KEY_NSBonjourServices = _http._tcp;
 				INFOPLIST_KEY_NSCalendarsUsageDescription = "用于测试日历权限授权流程";
+				INFOPLIST_KEY_NSLocalNetworkUsageDescription = "用于发现与连接局域网设备";
 				INFOPLIST_KEY_NSLocationAlwaysAndWhenInUseUsageDescription = "用于测试始终定位权限授权流程";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "用于测试使用期间定位权限授权流程";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "用于测试麦克风权限授权流程";

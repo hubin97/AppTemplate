@@ -27,7 +27,8 @@ class AuthPermissionDemoController: DefaultViewController {
             Row(title: "日历", permission: .calendar),
             Row(title: "提醒事项", permission: .reminder),
             Row(title: "Siri", permission: .siri),
-            Row(title: "蓝牙", permission: .bluetooth)
+            Row(title: "蓝牙", permission: .bluetooth),
+            Row(title: "本地网络", permission: .localNetwork)
         ]
     }
 

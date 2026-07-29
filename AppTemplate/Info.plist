@@ -25,6 +25,13 @@
 			</array>
 		</dict>
 	</dict>
+    <!-- 本地网络（Bonjour / 局域网，iOS 14+） -->
+    <key>NSLocalNetworkUsageDescription</key>
+    <string>App需要您的同意,才能发现与连接局域网设备</string>
+    <key>NSBonjourServices</key>
+    <array>
+        <string>_http._tcp</string>
+    </array>
 	<key>UIDesignRequiresCompatibility</key>
 	<true/>
 </dict>

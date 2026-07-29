@@ -16,3 +16,4 @@
 "NSCalendarsUsageDescription" = "用于测试日历权限";
 "NSRemindersUsageDescription" = "用于测试提醒事项权限";
 "NSSiriUsageDescription" = "用于测试 Siri 权限";
+"NSLocalNetworkUsageDescription" = "用于发现与连接局域网设备";
