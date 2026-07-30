@@ -10,7 +10,7 @@ import UIKit
 
 // MARK: - Main Class
 
-/// 演示 `resolve(_:requestIfNeeded:)`：先系统服务、再 App 授权。
+/// 演示 `snapshot(for:mode:)`：先系统服务、再 App 授权。
 class AuthPermissionDemoController: DefaultViewController {
 
     struct Row: Equatable {
@@ -22,8 +22,7 @@ class AuthPermissionDemoController: DefaultViewController {
             Row(title: "相机", permission: .camera),
             Row(title: "相册", permission: .photoLibrary),
             Row(title: "麦克风", permission: .microphone),
-            Row(title: "定位（使用期间）", permission: .location(.whenInUse)),
-            Row(title: "定位（始终）", permission: .location(.always)),
+            Row(title: "定位", permission: .location(.whenInUse)),
             Row(title: "日历", permission: .calendar),
             Row(title: "提醒事项", permission: .reminder),
             Row(title: "Siri", permission: .siri),
@@ -44,6 +43,8 @@ class AuthPermissionDemoController: DefaultViewController {
         点击行：服务可用且未授权时请求授权
         长按行：仅刷新快照
         右上角按钮：打开系统设置
+
+        定位：系统只有一项位置权限。Demo 用 .whenInUse；业务若需后台定位再传 .always（常需先去设置升级，勿与 whenInUse 拆成两个入口）
         """
         return label
     }()
@@ -104,14 +105,14 @@ class AuthPermissionDemoController: DefaultViewController {
     @MainActor
     private func refreshAllStatuses() async {
         for (index, _) in Row.all.enumerated() {
-            await refreshRow(at: index, requestIfNeeded: false)
+            await refreshRow(at: index, mode: .readOnly)
         }
     }
 
     @MainActor
-    private func refreshRow(at index: Int, requestIfNeeded: Bool) async {
+    private func refreshRow(at index: Int, mode: AuthQueryMode) async {
         let permission = Row.all[index].permission
-        let snapshot = await AuthorizationStatus.resolve(permission, requestIfNeeded: requestIfNeeded)
+        let snapshot = await AuthorizationStatus.snapshot(for: permission, mode: mode)
         statusTexts[index] = snapshot.summaryText
         reloadRow(index)
     }
@@ -142,7 +143,7 @@ extension AuthPermissionDemoController: UITableViewDataSource, UITableViewDelega
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         Task { @MainActor in
-            await self.refreshRow(at: indexPath.row, requestIfNeeded: true)
+            await self.refreshRow(at: indexPath.row, mode: .requestIfNeeded)
         }
     }
 
@@ -151,7 +152,7 @@ extension AuthPermissionDemoController: UITableViewDataSource, UITableViewDelega
             UIMenu(children: [
                 UIAction(title: "仅查询状态") { _ in
                     Task { @MainActor in
-                        await self.refreshRow(at: indexPath.row, requestIfNeeded: false)
+                        await self.refreshRow(at: indexPath.row, mode: .readOnly)
                     }
                 }
             ])
