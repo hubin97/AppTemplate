@@ -1,43 +1,43 @@
 PODS:
   - Alamofire (5.12.0)
-  - AppStart (0.2.0):
-    - AppStart/Base (= 0.2.0)
-    - AppStart/Ble (= 0.2.0)
-    - AppStart/Network (= 0.2.0)
-    - AppStart/ProgressHUD (= 0.2.0)
-    - AppStart/Sources (= 0.2.0)
-    - AppStart/UIComponents (= 0.2.0)
-    - AppStart/Utils (= 0.2.0)
-  - AppStart/Base (0.2.0):
-    - AppStart/Base/Core (= 0.2.0)
-    - AppStart/Base/Extension (= 0.2.0)
-    - AppStart/Base/Global (= 0.2.0)
-  - AppStart/Base/Core (0.2.0):
+  - AppStart (0.2.1):
+    - AppStart/Base (= 0.2.1)
+    - AppStart/Ble (= 0.2.1)
+    - AppStart/Network (= 0.2.1)
+    - AppStart/ProgressHUD (= 0.2.1)
+    - AppStart/Sources (= 0.2.1)
+    - AppStart/UIComponents (= 0.2.1)
+    - AppStart/Utils (= 0.2.1)
+  - AppStart/Base (0.2.1):
+    - AppStart/Base/Core (= 0.2.1)
+    - AppStart/Base/Extension (= 0.2.1)
+    - AppStart/Base/Global (= 0.2.1)
+  - AppStart/Base/Core (0.2.1):
     - AppStart/Base/Extension
     - AppStart/Base/Global
     - AppStart/Sources
     - SnapKit
-  - AppStart/Base/Extension (0.2.0):
+  - AppStart/Base/Extension (0.2.1):
     - AppStart/Base/Global
-  - AppStart/Base/Global (0.2.0)
-  - AppStart/Ble (0.2.0):
+  - AppStart/Base/Global (0.2.1)
+  - AppStart/Ble (0.2.1):
     - AppStart/Utils/Logger
-  - AppStart/Network (0.2.0):
-    - AppStart/Network/Connectivity (= 0.2.0)
-    - AppStart/Network/Core (= 0.2.0)
-    - AppStart/Network/Utils (= 0.2.0)
+  - AppStart/Network (0.2.1):
+    - AppStart/Network/Connectivity (= 0.2.1)
+    - AppStart/Network/Core (= 0.2.1)
+    - AppStart/Network/Utils (= 0.2.1)
     - Moya
     - ObjectMapper
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Network/Connectivity (0.2.0):
+  - AppStart/Network/Connectivity (0.2.1):
     - Moya
     - ObjectMapper
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Network/Core (0.2.0):
+  - AppStart/Network/Core (0.2.1):
     - AppStart/ProgressHUD
     - AppStart/Sources
     - AppStart/Utils
@@ -46,28 +46,28 @@ PODS:
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/Network/Utils (0.2.0):
+  - AppStart/Network/Utils (0.2.1):
     - Moya
     - ObjectMapper
     - PromiseKit
     - RxRelay
     - RxSwift
-  - AppStart/ProgressHUD (0.2.0)
-  - AppStart/Sources (0.2.0)
-  - AppStart/UIComponents (0.2.0):
-    - AppStart/UIComponents/AlertView (= 0.2.0)
-    - AppStart/UIComponents/Protocols (= 0.2.0)
-    - AppStart/UIComponents/Views (= 0.2.0)
-  - AppStart/UIComponents/AlertView (0.2.0):
+  - AppStart/ProgressHUD (0.2.1)
+  - AppStart/Sources (0.2.1)
+  - AppStart/UIComponents (0.2.1):
+    - AppStart/UIComponents/AlertView (= 0.2.1)
+    - AppStart/UIComponents/Protocols (= 0.2.1)
+    - AppStart/UIComponents/Views (= 0.2.1)
+  - AppStart/UIComponents/AlertView (0.2.1):
     - AppStart/Base
-  - AppStart/UIComponents/Protocols (0.2.0):
+  - AppStart/UIComponents/Protocols (0.2.1):
     - AppStart/Base
     - AppStart/Sources
     - AppStart/UIComponents/Views
     - DZNEmptyDataSet
     - MJRefresh
     - RxRelay
-  - AppStart/UIComponents/Views (0.2.0):
+  - AppStart/UIComponents/Views (0.2.1):
     - AppStart/Base
     - AppStart/Utils/Toolkit
     - DZNEmptyDataSet
@@ -76,25 +76,25 @@ PODS:
     - PromiseKit
     - RxRelay
     - Toast-Swift
-  - AppStart/Utils (0.2.0):
-    - AppStart/Utils/AuthStatus (= 0.2.0)
-    - AppStart/Utils/Logger (= 0.2.0)
-    - AppStart/Utils/Reactive (= 0.2.0)
-    - AppStart/Utils/Toolkit (= 0.2.0)
-  - AppStart/Utils/AuthStatus (0.2.0):
+  - AppStart/Utils (0.2.1):
+    - AppStart/Utils/AuthStatus (= 0.2.1)
+    - AppStart/Utils/Logger (= 0.2.1)
+    - AppStart/Utils/Reactive (= 0.2.1)
+    - AppStart/Utils/Toolkit (= 0.2.1)
+  - AppStart/Utils/AuthStatus (0.2.1):
     - AppStart/Base
-  - AppStart/Utils/Logger (0.2.0):
+  - AppStart/Utils/Logger (0.2.1):
     - AppStart/Base
     - AppStart/Sources
     - AppStart/Utils/Toolkit
     - CocoaLumberjack
     - RxSwift
-  - AppStart/Utils/Reactive (0.2.0):
+  - AppStart/Utils/Reactive (0.2.1):
     - Kingfisher
     - RxGesture
     - RxRelay
     - RxSwift
-  - AppStart/Utils/Toolkit (0.2.0):
+  - AppStart/Utils/Toolkit (0.2.1):
     - AppStart/Base
     - Kingfisher
     - PromiseKit
@@ -209,7 +209,7 @@ PODS:
   - Toast-Swift (5.1.1)
 
 DEPENDENCIES:
-  - AppStart (from `../AppStart`)
+  - AppStart (= 0.2.1)
   - Bugly
   - Demo (from `./PodsRepo`)
   - DZNEmptyDataSet
@@ -232,6 +232,7 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
+    - AppStart
     - Bugly
     - CocoaLumberjack
     - DZNEmptyDataSet
@@ -265,8 +266,6 @@ SPEC REPOS:
     - Toast-Swift
 
 EXTERNAL SOURCES:
-  AppStart:
-    :path: "../AppStart"
   Demo:
     :path: "./PodsRepo"
   Router:
@@ -274,7 +273,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: ddb8d5201667b256dbc225f3fc6e835a0753186f
-  AppStart: 6b14d2d178836122f7cc9004e97cec62aaf75349
+  AppStart: d1e8a5e7b53a55c277f7ce8989887dd36aa42fda
   Bugly: 217ac2ce5f0f2626d43dbaa4f70764c953a26a31
   CocoaLumberjack: e4ba3b414dfca8c1916c6303d37f63b3a95134c6
   Demo: fba87876ff7833426e22b0bf158eeb38fbef1b94
@@ -309,6 +308,6 @@ SPEC CHECKSUMS:
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: f95e1a88789201e6b5a43f10555c8fe85b58790e
+PODFILE CHECKSUM: 9ff53fd2a1e39e327c8a824bdbefd871ae0c60c3
 
 COCOAPODS: 1.16.2

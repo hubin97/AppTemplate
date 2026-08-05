@@ -33,8 +33,8 @@ target 'AppTemplate' do
   pod 'lottie-ios'
   
   # Pods for AppStart
-  #pod 'AppStart', '0.2.0'
-  pod 'AppStart', :path => '../AppStart'
+  pod 'AppStart', '0.2.1'
+  #pod 'AppStart', :path => '../AppStart'
   pod 'Router', :path => './PodsRepo'
   pod 'Demo', :path => './PodsRepo'
 

@@ -101,6 +101,12 @@ extension Application {
         window.makeKeyAndVisible()
         
         LogM.debug("app launch")
+
+        // 分域路由 Demo：手动登记 RouteRegister（幂等）
+        AppRouterBootstrap.register([
+            CommunityRouteRegister.self,
+            ProfileRouteRegister.self,
+        ])
         
         // 自定义启动页
         self.initialScreen(in: window)

@@ -93,6 +93,8 @@ extension FuncViewController: UITableViewDataSource, UITableViewDelegate {
             navigator.show(provider: AppScene.authPermission, sender: self)
         case .connectivity:
             navigator.show(provider: AppScene.connectivity, sender: self)
+        case .appRouterDemo:
+            navigator.show(provider: AppScene.appRouterDemo, sender: self)
         }
     }
 }

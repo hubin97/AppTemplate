@@ -24,6 +24,7 @@ class FuncViewModel: ViewModel {
         case authPermission = "权限校验"
         case connectivity = "网络连通性"
         case ble = "BLE 测试"
+        case appRouterDemo = "分域路由"
     }
     
     let items = ItemType.allCases

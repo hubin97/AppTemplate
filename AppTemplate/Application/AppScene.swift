@@ -23,6 +23,8 @@ enum AppScene: SceneProvider {
     case bleConnection
     case authPermission
     case connectivity
+    /// 分域路由 Demo（AppRouter + RouteRegister + ViewModel）
+    case appRouterDemo
     
     // MARK: -
     var getSegue: UIViewController? {
@@ -54,6 +56,8 @@ enum AppScene: SceneProvider {
             return AuthPermissionDemoController(viewModel: nil)
         case .connectivity:
             return ConnectivityDemoController(viewModel: nil)
+        case .appRouterDemo:
+            return HomeDemoController(viewModel: HomeViewModel())
         }
     }
 }
