@@ -12,28 +12,17 @@ final class AppRouter {
     static let shared = AppRouter()
 
     private var builders: [ObjectIdentifier: (Any) -> UIViewController?] = [:]
-    private var didRegister = false
 
     private init() {}
-
-    var isRegistered: Bool { didRegister }
 
     func map<R: RouteKey>(_ type: R.Type, builder: @escaping (R) -> UIViewController?) {
         builders[ObjectIdentifier(type)] = { any in
             guard let route = any as? R else { return nil }
             return builder(route)
         }
-        didRegister = true
     }
 
     func viewController<R: RouteKey>(for route: R) -> UIViewController? {
         builders[ObjectIdentifier(R.self)]?(route)
     }
-
-    #if DEBUG
-    func resetForTests() {
-        builders.removeAll()
-        didRegister = false
-    }
-    #endif
 }

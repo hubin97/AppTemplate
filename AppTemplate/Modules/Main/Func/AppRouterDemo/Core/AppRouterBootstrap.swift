@@ -24,11 +24,4 @@ enum AppRouterBootstrap {
             $0.register(into: AppRouter.shared)
         }
     }
-
-    #if DEBUG
-    static func resetForTests() {
-        didRegister = false
-        AppRouter.shared.resetForTests()
-    }
-    #endif
 }
