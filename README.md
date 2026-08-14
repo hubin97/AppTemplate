@@ -6,27 +6,33 @@ Based on [AppStart](https://github.com/hubin97/AppStart).
 
 ## 更新日志
 
-| 日期 | 更新内容 |
-|------|----------|
-| 2026-08-05 | 分域路由 **AppRouterDemo**；升级 AppStart **0.2.1** |
-| 2026-08-03 | Agent 协作约定与 Prompt 模板 |
-| 2026-07-30 | 权限 Demo 改用 `snapshot(for:mode:)`，合并定位示例 |
-| 2026-07-29 | 主题系统重构、AuthStatus 新 API；权限 Demo 本地网络示例 |
-| 2026-07-28 | BLE 连接超时适配；Connectivity Demo 与 AppStart 依赖同步 |
-| 2026-07-27 | 权限校验 / 网络连通性 Demo；Ble subspec 更名同步 |
-| 2026-07-24 | 对接 AppStart 多产品 BLE Session API |
+
+| 日期         | 更新内容                                           |
+| ---------- | ---------------------------------------------- |
+| 2026-08-05 | 分域路由 **AppRouterDemo**；升级 AppStart **0.2.1**   |
+| 2026-08-03 | Agent 协作约定与 Prompt 模板                          |
+| 2026-07-30 | 权限 Demo 改用 `snapshot(for:mode:)`，合并定位示例        |
+| 2026-07-29 | 主题系统重构、AuthStatus 新 API；权限 Demo 本地网络示例         |
+| 2026-07-28 | BLE 连接超时适配；Connectivity Demo 与 AppStart 依赖同步   |
+| 2026-07-27 | 权限校验 / 网络连通性 Demo；Ble subspec 更名同步             |
+| 2026-07-24 | 对接 AppStart 多产品 BLE Session API                |
 | 2026-07-13 | 电池 / BLE / Lottie HUD 等 Functions 演示页；HUD 背景修复 |
-| 2026-07-02 | ProgressHUD Lottie 集成与示例页 |
+| 2026-07-02 | ProgressHUD Lottie 集成与示例页                      |
+
+
+
 
 ## 迭代计划
 
 > AppStart = 基础能力；AppTemplate = Demo 验证与接入样例。完成库能力后，在 Func 补对应演示页。
 
+
+
 ### AppStart · 基础库
 
 **AuthStatus / 权限**
 
-- [ ] 扩展权限类型（通知、跟踪、Face ID 等）统一进 `snapshot(for:mode:)`
+- [x] 扩展权限类型（通知、跟踪、Face ID 等）统一进 `snapshot(for:mode:)`
 - [ ] 权限引导 UI 组件（跳转设置 + 说明文案模板）
 - [ ] 批量查询性能优化（多权限页一次 snapshot）
 
@@ -58,6 +64,8 @@ Based on [AppStart](https://github.com/hubin97/AppStart).
 - [ ] `TextField` 编辑时多字符默认选中问题修复
 
 ---
+
+
 
 ### AppTemplate · Demo / 业务壳
 
@@ -93,6 +101,8 @@ Based on [AppStart](https://github.com/hubin97/AppStart).
 - [ ] ImageDecoder：WebP / 动图解码性能与内存对比 Demo 完善
 
 ---
+
+
 
 ### 联动特性（库 + Demo 成对交付）
 

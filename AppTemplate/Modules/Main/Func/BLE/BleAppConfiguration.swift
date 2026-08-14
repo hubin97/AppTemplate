@@ -29,7 +29,7 @@ enum BleProducts {
         serviceUUIDs: [BleGattUUID.transportService],
         writeCharUUID: BleGattUUID.transportWrite,
         notifyCharUUID: BleGattUUID.transportNotify,
-        reconnect: .init(enabled: true, maxAttempts: 3, interval: 15),
+        reconnect: .init(enabled: true, maxAttempts: 3, interval: 15), // 意外断开会自动重连；耗尽后库会 cancel 系统 connect
         writeQueue: .serialized(
             ackMatcher: BleByteAckMatcher(indices: [0, 1, 3]),
             defaultTimeout: 3,
