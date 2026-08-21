@@ -209,7 +209,7 @@ PODS:
   - Toast-Swift (5.1.1)
 
 DEPENDENCIES:
-  - AppStart (= 0.2.1)
+  - AppStart (from `../AppStart`)
   - Bugly
   - Demo (from `./PodsRepo`)
   - DZNEmptyDataSet
@@ -232,7 +232,6 @@ DEPENDENCIES:
 SPEC REPOS:
   https://github.com/CocoaPods/Specs.git:
     - Alamofire
-    - AppStart
     - Bugly
     - CocoaLumberjack
     - DZNEmptyDataSet
@@ -266,6 +265,8 @@ SPEC REPOS:
     - Toast-Swift
 
 EXTERNAL SOURCES:
+  AppStart:
+    :path: "../AppStart"
   Demo:
     :path: "./PodsRepo"
   Router:
@@ -273,7 +274,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Alamofire: ddb8d5201667b256dbc225f3fc6e835a0753186f
-  AppStart: d1e8a5e7b53a55c277f7ce8989887dd36aa42fda
+  AppStart: e7d402651a6ad14cdc4fcf2442185f7f072d19f9
   Bugly: 217ac2ce5f0f2626d43dbaa4f70764c953a26a31
   CocoaLumberjack: e4ba3b414dfca8c1916c6303d37f63b3a95134c6
   Demo: fba87876ff7833426e22b0bf158eeb38fbef1b94
@@ -308,6 +309,6 @@ SPEC CHECKSUMS:
   SwiftLint: bf6da11a31c6644a0bbb27f4fa15fd9636db00b3
   Toast-Swift: 7a03a532afe3a560d4044bc7c237e2864d295173
 
-PODFILE CHECKSUM: 9ff53fd2a1e39e327c8a824bdbefd871ae0c60c3
+PODFILE CHECKSUM: 0a8521f2a1caa65f9bba57b23641ac7473d03dab
 
 COCOAPODS: 1.16.2

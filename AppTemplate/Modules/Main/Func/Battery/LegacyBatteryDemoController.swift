@@ -1,5 +1,5 @@
 //
-//  BatteryDemoController.swift
+//  LegacyBatteryDemoController.swift
 //  AppTemplate
 //
 //  Created by hubin.h on 2026/7/13.
@@ -10,7 +10,7 @@ import SnapKit
 
 // MARK: - BatteryDemoController
 
-class BatteryDemoController: DefaultViewController {
+class LegacyBatteryDemoController: DefaultViewController {
 
     private struct DemoCase {
         let title: String
@@ -85,7 +85,7 @@ class BatteryDemoController: DefaultViewController {
 }
 
 // MARK: - UITableViewDataSource & Delegate
-extension BatteryDemoController: UITableViewDataSource, UITableViewDelegate {
+extension LegacyBatteryDemoController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         cases.count

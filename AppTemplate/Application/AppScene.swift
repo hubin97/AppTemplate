@@ -16,6 +16,8 @@ enum AppScene: SceneProvider {
     case imageDecoder
     case lottieHUD
     case battery
+    case batteryLegacy
+    case powerBattery
     case iap
     case bleTest
     case bleScan
@@ -41,7 +43,11 @@ enum AppScene: SceneProvider {
         case .lottieHUD:
             return ProgressHUDLottieController(viewModel: nil)
         case .battery:
-            return BatteryDemoController(viewModel: nil)
+            return BatteryDemoListController(viewModel: nil)
+        case .batteryLegacy:
+            return LegacyBatteryDemoController(viewModel: nil)
+        case .powerBattery:
+            return PowerBatteryDemoController(viewModel: nil)
         case .iap:
             return IAPViewController(viewModel: nil)
         case .bleTest:
