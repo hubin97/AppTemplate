@@ -71,15 +71,19 @@ class BleTestListController: DefaultViewController {
         if let connection = BleSession.shared.activeConnection {
             let name = connection.peripheral.name ?? "未知设备"
             let state = BleStateFormatter.peripheralStateDescription(connection.currentState)
+            let count = BleSession.shared.activeConnections.count
             sessionInfoLabel.text = """
             已注册产品：\(profileLine)
-            当前会话：\(name)
+            当前主连接：\(name)
             状态：\(state)
+            活跃连接数：\(count)（扫描页可追加连接）
             """
         } else {
+            let count = BleSession.shared.activeConnections.count
             sessionInfoLabel.text = """
             已注册产品：\(profileLine)
-            当前会话：无活跃连接
+            当前主连接：无
+            活跃连接数：\(count)
             """
         }
     }

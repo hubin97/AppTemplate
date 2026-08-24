@@ -65,6 +65,13 @@ class BleConnectionController: DefaultViewController {
         return button
     }()
 
+    private lazy var handshakeButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle("配网握手", for: .normal)
+        button.addTarget(self, action: #selector(handshakeButtonTapped), for: .touchUpInside)
+        return button
+    }()
+
     private lazy var disconnectButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle("断开连接", for: .normal)
@@ -82,6 +89,7 @@ class BleConnectionController: DefaultViewController {
         view.addSubview(commandField)
         view.addSubview(writeButton)
         view.addSubview(f0Button)
+        view.addSubview(handshakeButton)
         view.addSubview(disconnectButton)
 
         stateLabel.snp.makeConstraints { make in
@@ -107,11 +115,15 @@ class BleConnectionController: DefaultViewController {
             make.leading.equalToSuperview().offset(16)
         }
         f0Button.snp.makeConstraints { make in
-            make.centerY.equalTo(writeButton)
-            make.leading.equalTo(writeButton.snp.trailing).offset(16)
+            make.top.equalTo(writeButton.snp.bottom).offset(8)
+            make.leading.equalToSuperview().offset(16)
+        }
+        handshakeButton.snp.makeConstraints { make in
+            make.centerY.equalTo(f0Button)
+            make.leading.equalTo(f0Button.snp.trailing).offset(16)
         }
         disconnectButton.snp.makeConstraints { make in
-            make.centerY.equalTo(writeButton)
+            make.centerY.equalTo(f0Button)
             make.trailing.equalToSuperview().inset(16)
         }
     }
@@ -139,19 +151,24 @@ class BleConnectionController: DefaultViewController {
             deviceLabel.text = "请先在「扫描并连接」页面连接设备"
             writeButton.isEnabled = false
             f0Button.isEnabled = false
+            handshakeButton.isEnabled = false
             disconnectButton.isEnabled = false
             return
         }
 
         writeButton.isEnabled = true
         f0Button.isEnabled = true
+        handshakeButton.isEnabled = true
         disconnectButton.isEnabled = true
         updateCommandFieldForConnection(connection)
         let peripheral = connection.peripheral
+        let connectionCount = BleSession.shared.activeConnections.count
         deviceLabel.text = """
         设备：\(peripheral.name ?? "未知")
         产品：\(BleStateFormatter.productDisplayName(for: connection))
+        活跃连接数：\(connectionCount)
         UUID：\(peripheral.identifier.uuidString)
+        GATT：\(gattSummary(for: connection))
         """
         updateStateLabel(connection.currentState)
     }
@@ -192,10 +209,13 @@ class BleConnectionController: DefaultViewController {
             if let connection = BleSession.shared.activeConnection {
                 updateCommandFieldForConnection(connection)
                 let peripheral = connection.peripheral
+                let connectionCount = BleSession.shared.activeConnections.count
                 deviceLabel.text = """
                 设备：\(peripheral.name ?? "未知")
                 产品：\(BleStateFormatter.productDisplayName(for: connection))
+                活跃连接数：\(connectionCount)
                 UUID：\(peripheral.identifier.uuidString)
+                GATT：\(gattSummary(for: connection))
                 """
             }
         case .failed, .timedOut:
@@ -222,6 +242,57 @@ class BleConnectionController: DefaultViewController {
 
     @objc private func f0ButtonTapped() {
         sendCommand(data: BlePumpCommand.defaultF0Auth())
+    }
+
+    @objc private func handshakeButtonTapped() {
+        guard let connection = BleSession.shared.activeConnection else {
+            ProgressHUD.failed("无活跃连接")
+            return
+        }
+        guard isPumpConnection(connection) else {
+            ProgressHUD.failed("仅 Pump 设备支持配网握手 Demo")
+            return
+        }
+
+        writeTask?.cancel()
+        writeTask = Task { [weak self] in
+            do {
+                let result = try await BleProvisionHandshake.run(
+                    on: connection,
+                    log: { message in
+                        Task { @MainActor in
+                            self?.appendLog(message)
+                        }
+                    }
+                )
+                await MainActor.run {
+                    var detail = "握手完成"
+                    if let profile = result.profile {
+                        detail += " · \(profile.logName)"
+                    }
+                    if let key = result.f0Info?.encryptionKey {
+                        detail += " · key=0x\(String(format: "%02X", key))"
+                    }
+                    if result.tripletInfo?.isValid == true {
+                        detail += " · 三元组 OK"
+                    }
+                    self?.appendLog(detail)
+                    ProgressHUD.succeed("握手完成")
+                }
+            } catch {
+                await MainActor.run {
+                    self?.appendLog("握手失败 · \(error.localizedDescription)")
+                    ProgressHUD.failed(error.localizedDescription)
+                }
+            }
+        }
+    }
+
+    private func gattSummary(for connection: BlePeripheralConnection) -> String {
+        if case .ready(let info) = connection.currentState {
+            return info.service.uuid.uuidString
+        }
+        return "—"
     }
 
     private func sendCommand(from hex: String?) {
@@ -256,15 +327,20 @@ class BleConnectionController: DefaultViewController {
     }
 
     private func isPumpConnection(_ connection: BlePeripheralConnection) -> Bool {
-        if case .ready(let info) = connection.currentState {
-            return info.service.uuid == BleGattUUID.transportService
+        if BleStateFormatter.productDisplayName(for: connection) == "Pump" {
+            return true
         }
-        return BleStateFormatter.productDisplayName(for: connection) == "Pump"
+        if case .ready(let info) = connection.currentState {
+            return BleUUID.matches(info.service.uuid, BleGattUUID.primary.serviceUUID)
+                || BleUUID.matches(info.service.uuid, BleGattUUID.extended.serviceUUID)
+        }
+        return false
     }
 
     private func updateCommandFieldForConnection(_ connection: BlePeripheralConnection) {
         let isPump = isPumpConnection(connection)
         f0Button.isHidden = !isPump
+        handshakeButton.isHidden = !isPump
         if isPump {
             commandField.text = BlePumpCommand.hexDescription(BlePumpCommand.defaultC0Control())
             commandField.placeholder = "C0 控制帧（可编辑）"

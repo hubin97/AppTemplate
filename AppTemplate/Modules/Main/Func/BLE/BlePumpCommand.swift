@@ -31,6 +31,10 @@ enum BlePumpCommand {
     private static let cidC0: UInt8 = 0xC0
     private static let cidF0: UInt8 = 0xF0
 
+    private static let cidB0: UInt8 = 0xB0
+    private static let cidFD: UInt8 = 0xFD
+    private static let cidF7: UInt8 = 0xF7
+
     /// 连接后鉴权码（Momcozy `LT_BLE_AUTHVAL`）
     static let defaultAuthCodes: [UInt8] = [0xAA, 0x55, 0x11, 0x00]
 
@@ -41,6 +45,21 @@ enum BlePumpCommand {
 
     static func f0Auth(authCodes: [UInt8] = defaultAuthCodes) -> Data {
         encode(cid: cidF0, cal: 0x04, cab: authCodes)
+    }
+
+    /// B0 获取设备状态
+    static func b0State() -> Data {
+        encode(cid: cidB0, cal: 0x00, cab: [])
+    }
+
+    /// FD 获取加密信息（协议 3.1.6：CAL=0x00，无请求参数）
+    static func fdQuery() -> Data {
+        encode(cid: cidFD, cal: 0x00, cab: [])
+    }
+
+    /// F7 获取三元组信息
+    static func f7Triplet() -> Data {
+        encode(cid: cidF7, cal: 0x00, cab: [])
     }
 
     /// C0 常规控制：运行 + 按摩 + 档位 4（Momcozy `ReqControlModel(normal:)` 默认）

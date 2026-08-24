@@ -23,15 +23,12 @@ enum BleProducts {
     static let tempPatchParser = BleTempPatchProtocolParser()
     static let phototherapyParser = BlePhototherapyProtocolParser()
 
-    /// Pump demo：0xaa 厂商协议，匹配与解析均由 parser 完成
+    /// Pump demo：0xaa 厂商协议；GATT 由 parser `bleGattProfile` 在 connect 时 merge
     static let pump = BleConfiguration(
         matching: BleParserValidatedMatchingStrategy(parser: pumpParser),
-        serviceUUIDs: [BleGattUUID.transportService],
-        writeCharUUID: BleGattUUID.transportWrite,
-        notifyCharUUID: BleGattUUID.transportNotify,
         reconnect: .init(enabled: true, maxAttempts: 3, interval: 15), // 意外断开会自动重连；耗尽后库会 cancel 系统 connect
         writeQueue: .serialized(
-            ackMatcher: BleByteAckMatcher(indices: [0, 1, 3]),
+            ackMatcher: BlePumpAckMatcher(),
             defaultTimeout: 3,
             order: .descending
         ),
@@ -46,7 +43,6 @@ enum BleProducts {
             names: BleDeviceCatalog.tempPatchNames,
             parser: tempPatchParser
         ),
-        serviceUUIDs: [],
         writeQueue: .direct,
         parser: tempPatchParser,
         debugLog: true,
@@ -59,7 +55,6 @@ enum BleProducts {
             names: BleDeviceCatalog.phototherapyNames,
             parser: phototherapyParser
         ),
-        serviceUUIDs: [],
         writeQueue: .direct,
         parser: phototherapyParser,
         debugLog: true,
@@ -130,12 +125,21 @@ enum BleStateFormatter {
         if case .ready(let info) = connection.currentState {
             let serviceUUID = info.service.uuid
             if let config = BleSession.shared.registeredConfigurations.first(where: {
-                $0.serviceUUIDs.contains(serviceUUID)
+                configuration($0, matchesService: serviceUUID)
             }) {
                 return productDisplayName(for: config)
             }
         }
         return "未知产品"
+    }
+
+    private static func configuration(_ config: BleConfiguration, matchesService uuid: CBUUID) -> Bool {
+        if (config.gattProfile.serviceUUIDs ?? []).contains(where: { BleUUID.matches(uuid, $0) }) {
+            return true
+        }
+        guard config.logTag == BleProducts.pump.logTag else { return false }
+        return BleUUID.matches(uuid, BleGattUUID.primary.serviceUUID)
+            || BleUUID.matches(uuid, BleGattUUID.extended.serviceUUID)
     }
 
     static func parsedDataDescription(for discovery: BleDiscovery) -> String {
@@ -146,6 +150,9 @@ enum BleStateFormatter {
 
         var parts: [String] = []
         if let mac = result.mac { parts.append("MAC: \(mac)") }
+        if let deviceType = result.deviceType {
+            parts.append(String(format: "Type: 0x%02X", deviceType))
+        }
         if let deviceKey = result.extraData["deviceKey"] as? String {
             parts.append("deviceKey: \(deviceKey)")
         }

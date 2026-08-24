@@ -134,18 +134,24 @@ class BleScanController: DefaultViewController {
         statusLabel.text = "扫描中... 已发现 \(devices.count) 台设备"
     }
 
-    private func connect(to row: DeviceRow) {
+    private func connect(to row: DeviceRow, setAsActive: Bool) {
         connectTask?.cancel()
         connectTask = Task { [weak self] in
             guard let self else { return }
             await MainActor.run {
-                ProgressHUD.animate("连接中...")
+                ProgressHUD.animate(setAsActive ? "连接中..." : "追加连接...")
             }
             do {
-                _ = try await BleSession.shared.connect(discovery: row.discovery)
+                _ = try await BleSession.shared.connect(
+                    discovery: row.discovery,
+                    setAsActive: setAsActive
+                )
+                let count = BleSession.shared.activeConnections.count
                 await MainActor.run {
-                    ProgressHUD.succeed("已连接")
-                    self.navigator.show(provider: AppScene.bleConnection, sender: self)
+                    ProgressHUD.succeed(setAsActive ? "已连接" : "已追加（共 \(count) 台）")
+                    if setAsActive {
+                        self.navigator.show(provider: AppScene.bleConnection, sender: self)
+                    }
                 }
             } catch BleError.connectionTimeout {
                 await MainActor.run {
@@ -178,6 +184,16 @@ extension BleScanController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         stopScanning()
-        connect(to: devices[indexPath.row])
+        connect(to: devices[indexPath.row], setAsActive: true)
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let row = devices[indexPath.row]
+        let append = UIContextualAction(style: .normal, title: "追加连接") { [weak self] _, _, completion in
+            self?.connect(to: row, setAsActive: false)
+            completion(true)
+        }
+        append.backgroundColor = .systemTeal
+        return UISwipeActionsConfiguration(actions: [append])
     }
 }
