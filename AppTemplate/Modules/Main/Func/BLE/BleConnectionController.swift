@@ -13,6 +13,7 @@ class BleConnectionController: DefaultViewController {
 
     private var stateTask: Task<Void, Never>?
     private var notifyTask: Task<Void, Never>?
+    private var analyticsTask: Task<Void, Never>?
     private var writeTask: Task<Void, Never>?
 
     private lazy var stateLabel: UILabel = {
@@ -138,9 +139,11 @@ class BleConnectionController: DefaultViewController {
         super.viewWillDisappear(animated)
         stateTask?.cancel()
         notifyTask?.cancel()
+        analyticsTask?.cancel()
         writeTask?.cancel()
         stateTask = nil
         notifyTask = nil
+        analyticsTask = nil
         writeTask = nil
     }
 
@@ -196,6 +199,18 @@ class BleConnectionController: DefaultViewController {
                     self?.appendLog(
                         "Notify · \(update.characteristic.uuid.uuidString) · \(BleStateFormatter.dataHexDescription(update.data))"
                     )
+                }
+            }
+        }
+
+        analyticsTask?.cancel()
+        analyticsTask = Task { [weak self] in
+            let stream = await connection.characteristicUpdates(matching: BleGattUUID.secondary.notifyUUID)
+            for await update in stream {
+                guard !Task.isCancelled else { break }
+                let event = BlePumpAnalyticsParser.parse(update.data)
+                await MainActor.run {
+                    self?.appendLog("Analytics · \(event.hex)")
                 }
             }
         }

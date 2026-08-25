@@ -235,12 +235,15 @@ struct _R {
     let comAppleDeveloperSiri: Bool = true
   }
 
-  /// This `_R.file` struct is generated, and contains static references to 10 resource files.
+  /// This `_R.file` struct is generated, and contains static references to 11 resource files.
   struct file {
     let bundle: Foundation.Bundle
 
     /// Resource file `.swiftlint.yml`.
     var swiftlintYml: RswiftResources.FileResource { .init(name: ".swiftlint", pathExtension: "yml", bundle: bundle, locale: LocaleReference.none) }
+
+    /// Resource file `BLE_README.md`.
+    var ble_READMEMd: RswiftResources.FileResource { .init(name: "BLE_README", pathExtension: "md", bundle: bundle, locale: LocaleReference.none) }
 
     /// Resource file `PrivacyInfo.xcprivacy`.
     var privacyInfoXcprivacy: RswiftResources.FileResource { .init(name: "PrivacyInfo", pathExtension: "xcprivacy", bundle: bundle, locale: LocaleReference.none) }

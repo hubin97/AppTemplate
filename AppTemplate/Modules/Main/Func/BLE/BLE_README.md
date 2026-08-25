@@ -11,8 +11,8 @@ Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BL
 
 | 文件 | 职责 |
 |------|------|
-| `BleAppConfiguration.swift` | 产品 `BleConfiguration` 注册、状态格式化 |
-| `BleProtocolParsers.swift` | 广播解析、`BleGattUUID`、动态 `bleGattProfile` |
+| `BleAppConfiguration.swift` | 产品 `BleConfiguration` 注册（含 GATT）、状态格式化 |
+| `BleProtocolParsers.swift` | 广播解析、`BleGattUUID`、动态 `bleGattProfile`、M5 副通道 payload |
 | `BlePumpProtocol.swift` | 0xAA 帧解析、`BlePumpAckMatcher`、F0/FD/F7 模型 |
 | `BlePumpCommand.swift` | 组包（F0 / FD / F7 / C0 等） |
 | `BleProvisionHandshake.swift` | 配网握手编排 |
@@ -55,7 +55,7 @@ BleConfiguration(
 |------|------|
 | `primary` | 短 UUID 主链路透传（AF00 / AF01 / AF02） |
 | `extended` | 128-bit 主链路透传（与 `primary` 同职责） |
-| `secondary` | 128-bit 次通道（埋点 / 上报，尚未接入） |
+| `secondary` | 128-bit 次通道（埋点 / 上报，M5 等） |
 | `ota` | OTA / RCSP（AE00 / AE01 / AE02，尚未接入） |
 
 广播 `deviceType`（byte[1]）→ 连接 GATT：
@@ -105,7 +105,7 @@ try await BleProvisionHandshake.run(on: connection) { log($0) }
 | `0x10`, `0x11` | W1 / M10, W1Lite | `f0` |
 | `0x01`, `0x03`, `0x04` | M9, Air1, Air2 | `f0_fd` |
 | `0x05`, `0x06`, `0x08`, `0x09`, `0x16` | M9Pro, M8, V3, V3Pro, M8Pro | `f0_f7` |
-| `0x07` | M5Pro | `f0_fd_f7` |
+| `0x07` | M5Pro | `f0_fd_f7` + 副通道埋点 |
 | 其他 | 未知 | 默认 `f0_fd` |
 
 ### 执行顺序
@@ -123,6 +123,24 @@ F0 → resolve(productType) → (allowsFD && needsFD ? FD : 跳过) → (include
 
 - FD 门闩：协议驱动（`needsFD` + CAL=0 查询），非 Momcozy 侧「始终发 FD / key 写入 CAB」
 - 真实设备若与协议文档不一致，需在真机验证后再调整
+
+---
+
+## M5 副通道埋点（R2）
+
+M5 类设备：**主链路透传**（`primary`）+ **128-bit 次通道**（`secondary`）并行；逻辑均在 App 层。
+
+| 项 | 说明 |
+|----|------|
+| 识别 | 广播 `deviceType == 0x07`（M5 等） |
+| 主 GATT 注册 | `BleProducts.pump`：`gattProfile: primary` |
+| 附加 GATT merge | `BleProtocolParseResult.supplementaryGattProfiles`（0x07 → secondary） |
+| Connect | `BleSession.connect(discovery:)` → `effectiveConfiguration` |
+| 收上报 | `characteristicUpdates(matching: BleGattUUID.secondary.notifyUUID)` |
+| 写附加通道 | `connection.write(..., to: BleGattUUID.secondary.writeUUID)` 或 `peripheral.writeValue` |
+| 解析 | `BlePumpAnalyticsParser` |
+
+框架只做：`supplementaryGattProfiles` 的 discover / subscribe，且附加 Notify **不进**主 ACK 队列。
 
 ---
 

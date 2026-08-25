@@ -23,9 +23,13 @@ enum BleProducts {
     static let tempPatchParser = BleTempPatchProtocolParser()
     static let phototherapyParser = BlePhototherapyProtocolParser()
 
-    /// Pump demo：0xaa 厂商协议；GATT 由 parser `bleGattProfile` 在 connect 时 merge
+    /// Pump demo：0xaa 厂商协议；注册时写入主 GATT 默认值（primary）。
+    /// connect 时 `effectiveConfiguration` 按广播 `deviceType` merge：
+    /// - 主 GATT（`BleProvidesGattProfile`）：0x08/0x09 → extended，其余保留 primary
+    /// - 附加 GATT（`BleProvidesSupplementaryGattProfiles`）：0x07 → secondary，其余无附加
     static let pump = BleConfiguration(
         matching: BleParserValidatedMatchingStrategy(parser: pumpParser),
+        gattProfile: BleGattUUID.primary.gattProfile,
         reconnect: .init(enabled: true, maxAttempts: 3, interval: 15), // 意外断开会自动重连；耗尽后库会 cancel 系统 connect
         writeQueue: .serialized(
             ackMatcher: BlePumpAckMatcher(),
@@ -140,6 +144,7 @@ enum BleStateFormatter {
         guard config.logTag == BleProducts.pump.logTag else { return false }
         return BleUUID.matches(uuid, BleGattUUID.primary.serviceUUID)
             || BleUUID.matches(uuid, BleGattUUID.extended.serviceUUID)
+            || BleUUID.matches(uuid, BleGattUUID.secondary.serviceUUID)
     }
 
     static func parsedDataDescription(for discovery: BleDiscovery) -> String {

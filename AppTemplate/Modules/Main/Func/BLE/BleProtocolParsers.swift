@@ -63,8 +63,9 @@ struct BleProtocolParseResult {
     var extraData: [String: Any] = [:]
 }
 
-extension BleProtocolParseResult: BleProvidesGattProfile {
+extension BleProtocolParseResult: BleProvidesGattProfile, BleProvidesSupplementaryGattProfiles {
 
+    /// 主 GATT：按广播 deviceType 选取；connect 时由 `effectiveConfiguration` merge。
     var bleGattProfile: BleGattProfile {
         switch deviceType {
         case 0x08, 0x09:
@@ -72,6 +73,29 @@ extension BleProtocolParseResult: BleProvidesGattProfile {
         default:
             return BleGattUUID.primary.gattProfile
         }
+    }
+
+    /// 附加 GATT：按 deviceType 注入（如 M5Pro 0x07 → secondary 埋点）。
+    var supplementaryGattProfiles: [BleGattProfile] {
+        guard deviceType == 0x07 else { return [] }
+        return [BleGattUUID.secondary.gattProfile]
+    }
+}
+
+// MARK: - 埋点 副通道 Notify payload
+
+struct BlePumpAnalyticsEvent {
+    let raw: Data
+    var hex: String {
+        raw.map { String(format: "%02X", $0) }.joined(separator: " ")
+    }
+}
+
+enum BlePumpAnalyticsParser {
+
+    /// Demo：透传 hex；固件格式明确后在此扩展字段解析。
+    static func parse(_ data: Data) -> BlePumpAnalyticsEvent {
+        BlePumpAnalyticsEvent(raw: data)
     }
 }
 
