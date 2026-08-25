@@ -140,7 +140,7 @@ M5 类设备：**主链路透传**（`primary`）+ **128-bit 次通道**（`seco
 | 写附加通道 | `connection.write(..., to: BleGattUUID.secondary.writeUUID)` 或 `peripheral.writeValue` |
 | 解析 | `BlePumpAnalyticsParser` |
 
-框架只做：`supplementaryGattProfiles` 的 discover / subscribe，且附加 Notify **不进**主 ACK 队列。
+框架只做：`supplementaryGattProfiles` 的 discover / subscribe，附加 Notify **不进**主 ACK；附加写用 `write(_:to:)`（非主 UUID 等同 direct）。
 
 ---
 
