@@ -2,7 +2,7 @@
 //  BlePumpTrace.swift
 //  AppTemplate
 //
-//  Pump 0xAA 指令解析打印（对齐 Momcozy `BT+Printer`：发送 / 接收字段展开）。
+//  Pump 0xAA 指令解析打印（发送 / 接收字段展开）。
 
 import Foundation
 

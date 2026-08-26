@@ -1,23 +1,37 @@
 # AppTemplate · BLE 业务层
 
-Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BLE](../../../../../../AppStart/AppStart/Ble/BLE_README.md) 框架。
+Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BLE](../../../../../../../AppStart/AppStart/Ble/BLE_README.md) 框架。
 
 > 框架负责：扫描、连接、GATT、串行写队列、`BleAckMatcher` 协议。  
-> 本文档负责：0xAA 协议、GATT UUID、配网握手、产品注册。
+> 本文档负责：0xAA 协议、GATT UUID、配网握手、产品注册、设备管理与页面。
 
 ---
 
-## 文件
+## 目录
+
+按功能模块拆分（`Modules/Main/Func/BLE/`）：
+
+| 目录 | 职责 |
+|------|------|
+| `DeviceManager/` | 业务层已绑定设备：`BleDeviceManager` / `BleBoundDevice` / 握手入库 |
+| `Support/` | 配置、广播解析、UI token、Pump 握手辅助 |
+| `Support/Pump/` | Pump 帧解析、组包、Trace |
+| `Discovery/` | 附近设备扫描列表（名 / MAC / UUID / RSSI） |
+| `BoundList/` | 已绑定设备列表（更多细节） |
+| `Panel/` | 设备面板；Pump 先复用控制台样式 |
+| `Console/` | 测试入口、蓝牙状态、连接控制台 |
 
 | 文件 | 职责 |
 |------|------|
-| `BleAppConfiguration.swift` | 产品 `BleConfiguration` 注册（含 GATT）、状态格式化 |
-| `BleProtocolParsers.swift` | 广播解析、`BleGattUUID`、动态 `bleGattProfile`、M5 副通道 payload |
-| `BlePumpProtocol.swift` | 0xAA 帧解析、`BlePumpAckMatcher`、F0/FD/F7/C0/B0 模型 |
-| `BlePumpTrace.swift` | 指令字段解析打印（LogM + 连接调试页） |
-| `BlePumpCommand.swift` | 组包（F0 / FD / F7 / C0 等） |
-| `BleProvisionHandshake.swift` | 配网握手编排 |
-| `BleScanController.swift` / `BleConnectionController.swift` | Demo UI |
+| `Support/BleAppConfiguration.swift` | 产品 `BleConfiguration` 注册（含 GATT）、状态格式化 |
+| `Support/BleProtocolParsers.swift` | 广播解析、`BleGattUUID`、动态 `bleGattProfile`、副通道 payload |
+| `Support/Pump/BlePumpProtocol.swift` | 0xAA 帧解析、`BlePumpAckMatcher`、F0/FD/F7/C0/B0 模型 |
+| `Support/Pump/BlePumpTrace.swift` | 指令字段解析打印（LogM + 连接调试页） |
+| `Support/Pump/BlePumpCommand.swift` | 组包（F0 / FD / F7 / C0 等） |
+| `Support/BlePumpHandshake.swift` | Pump 配网握手编排（原 `BleProvisionHandshake`） |
+| `Console/BleConnectionController.swift` | 连接控制台 |
+
+绑定路径：发现列表点选 → 连接 + 握手（Pump：`BlePumpHandshake`）→ `BleDeviceManager.upsert`。
 
 ---
 
@@ -28,8 +42,8 @@ Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BL
 | 产品 | 匹配 | GATT |
 |------|------|------|
 | Pump | `BleParserValidatedMatchingStrategy` + 0xAA 厂商数据 | connect 时由 parser `bleGattProfile` merge |
-| TempPatch | LocalName `T31` + parser | 默认空 profile |
-| Phototherapy | LocalName `Lumi 1` + parser | 默认空 profile |
+| TempPatch | LocalName ∈ `BleDeviceCatalog.tempPatchNames` + parser | 默认空 profile |
+| Phototherapy | LocalName ∈ `BleDeviceCatalog.phototherapyNames` + parser | 默认空 profile |
 
 Pump 配置要点：
 
@@ -56,7 +70,7 @@ BleConfiguration(
 |------|------|
 | `primary` | 短 UUID 主链路透传（AF00 / AF01 / AF02） |
 | `extended` | 128-bit 主链路透传（与 `primary` 同职责） |
-| `secondary` | 128-bit 次通道（埋点 / 上报，M5 等） |
+| `secondary` | 128-bit 次通道（埋点 / 上报） |
 | `ota` | OTA / RCSP（AE00 / AE01 / AE02，尚未接入） |
 
 广播 `deviceType`（byte[1]）→ 连接 GATT：
@@ -84,7 +98,7 @@ BleConfiguration(
 
 ## 指令解析打印（`BlePumpTrace`）
 
-对齐 Momcozy `BT+Printer`：解析与打印都在 App 层（`BlePumpTrace`），不改 AppStart。
+解析与打印都在 App 层（`BlePumpTrace`），不改 AppStart。
 
 | 方向 | CID | 输出 |
 |------|-----|------|
@@ -107,27 +121,27 @@ BleConfiguration(
 连接就绪后，Demo 调用：
 
 ```swift
-try await BleProvisionHandshake.run(on: connection) { log($0) }
+try await BlePumpHandshake.run(on: connection) { log($0) }
 ```
 
 ### 两层决策
 
 | 层 | 职责 | 来源 |
 |----|------|------|
-| **Profile** | 产品典型链路（是否含 FD / F7） | F0 `productType` → `BleProvisionProfile.resolve` |
+| **Profile** | 产品典型链路（是否含 FD / F7） | F0 `productType` → `BlePumpProvisionProfile.resolve` |
 | **F0 加密字段** | FD 是否**实发** | `BlePumpF0Info.needsFD` |
 
 ### productType → Profile
 
-`productType` 与广播 `deviceType`、Momcozy `PType` 同码：
+`productType` 与广播 `deviceType` 同码：
 
-| productType | 机型 | Profile |
-|-------------|------|---------|
-| `0x10`, `0x11` | W1 / M10, W1Lite | `f0` |
-| `0x01`, `0x03`, `0x04` | M9, Air1, Air2 | `f0_fd` |
-| `0x05`, `0x06`, `0x08`, `0x09`, `0x16` | M9Pro, M8, V3, V3Pro, M8Pro | `f0_f7` |
-| `0x07` | M5Pro | `f0_fd_f7` + 副通道埋点 |
-| 其他 | 未知 | 默认 `f0_fd` |
+| productType | Profile |
+|-------------|------|
+| `0x10`, `0x11` | `f0` |
+| `0x01`, `0x03`, `0x04` | `f0_fd` |
+| `0x05`, `0x06`, `0x08`, `0x09`, `0x16` | `f0_f7` |
+| `0x07` | `f0_fd_f7` + 副通道埋点 |
+| 其他 | 默认 `f0_fd` |
 
 ### 执行顺序
 
@@ -140,20 +154,20 @@ F0 → resolve(productType) → (allowsFD && needsFD ? FD : 跳过) → (include
 - **F7**：三元组（productKey / deviceKey / secretKey）
 - **B0**：连接后状态同步，不在配网链内
 
-### 与 Momcozy 的差异（Demo 按协议文档）
+### Demo 与部分固件实现的差异（以协议文档为准）
 
-- FD 门闩：协议驱动（`needsFD` + CAL=0 查询），非 Momcozy 侧「始终发 FD / key 写入 CAB」
+- FD 门闩：协议驱动（`needsFD` + CAL=0 查询），不是「始终发 FD / key 写入 CAB」
 - 真实设备若与协议文档不一致，需在真机验证后再调整
 
 ---
 
-## M5 副通道埋点（R2）
+## 副通道埋点（R2）
 
-M5 类设备：**主链路透传**（`primary`）+ **128-bit 次通道**（`secondary`）并行；逻辑均在 App 层。
+`deviceType == 0x07` 的设备：**主链路透传**（`primary`）+ **128-bit 次通道**（`secondary`）并行；逻辑均在 App 层。
 
 | 项 | 说明 |
 |----|------|
-| 识别 | 广播 `deviceType == 0x07`（M5 等） |
+| 识别 | 广播 `deviceType == 0x07` |
 | 主 GATT 注册 | `BleProducts.pump`：`gattProfile: primary` |
 | 附加 GATT merge | `BleProtocolParseResult.supplementaryGattProfiles`（0x07 → secondary） |
 | Connect | `BleSession.connect(discovery:)` → `effectiveConfiguration` |
@@ -167,5 +181,5 @@ M5 类设备：**主链路透传**（`primary`）+ **128-bit 次通道**（`seco
 
 ## 相关文档
 
-- 框架 API：[AppStart/Ble/BLE_README.md](../../../../../../AppStart/AppStart/Ble/BLE_README.md)
-- 迭代规划：[AppStart/Ble/BLE_ROADMAP.md](../../../../../../AppStart/AppStart/Ble/BLE_ROADMAP.md)
+- 框架 API：[AppStart/Ble/BLE_README.md](../../../../../../../AppStart/AppStart/Ble/BLE_README.md)
+- 迭代规划：[AppStart/Ble/BLE_ROADMAP.md](../../../../../../../AppStart/AppStart/Ble/BLE_ROADMAP.md)

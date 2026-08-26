@@ -12,8 +12,9 @@ class BleTestListController: DefaultViewController {
 
     enum Item: String, CaseIterable {
         case centralState = "蓝牙状态监控"
-        case scan = "扫描并连接"
-        case connection = "连接控制台（复用 Session）"
+        case discovery = "附近设备"
+        case boundList = "我的设备"
+        case connection = "连接控制台"
     }
 
     private lazy var tableView: TableView = {
@@ -110,8 +111,10 @@ extension BleTestListController: UITableViewDataSource, UITableViewDelegate {
         switch item {
         case .centralState:
             navigator.show(provider: AppScene.bleCentralState, sender: self)
-        case .scan:
-            navigator.show(provider: AppScene.bleScan, sender: self)
+        case .discovery:
+            navigator.show(provider: AppScene.bleDiscovery, sender: self)
+        case .boundList:
+            navigator.show(provider: AppScene.bleBoundList, sender: self)
         case .connection:
             navigator.show(provider: AppScene.bleConnection, sender: self)
         }

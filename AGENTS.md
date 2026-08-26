@@ -16,7 +16,7 @@
 - 应用入口：`AppTemplate/Application/`
 - 功能 Demo：`AppTemplate/Modules/Main/Func/`
 - 通用组件示例：`AppTemplate/Components/`
-- BLE App 侧配置与演示：`AppTemplate/Modules/Main/Func/BLE/`（如 `BleAppConfiguration`、Scan/Connection Demo 等）
+- BLE App 侧配置与演示：`AppTemplate/Modules/Main/Func/BLE/`（`DeviceManager` / `Support` / `Discovery` / `BoundList` / `Panel` / `Console`）
 
 ## 编码与接入约定
 

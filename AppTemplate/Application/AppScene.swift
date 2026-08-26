@@ -21,6 +21,9 @@ enum AppScene: SceneProvider {
     case iap
     case bleTest
     case bleScan
+    case bleDiscovery
+    case bleBoundList
+    case bleDevicePanel(uuid: String)
     case bleCentralState
     case bleConnection
     case authPermission
@@ -52,8 +55,12 @@ enum AppScene: SceneProvider {
             return IAPViewController(viewModel: nil)
         case .bleTest:
             return BleTestListController(viewModel: nil)
-        case .bleScan:
-            return BleScanController(viewModel: nil)
+        case .bleScan, .bleDiscovery:
+            return BleDiscoveryListController(viewModel: nil)
+        case .bleBoundList:
+            return BleBoundDeviceListController(viewModel: nil)
+        case .bleDevicePanel(let uuid):
+            return BleDevicePanelFactory.make(uuid: uuid)
         case .bleCentralState:
             return BleCentralStateController(viewModel: nil)
         case .bleConnection:

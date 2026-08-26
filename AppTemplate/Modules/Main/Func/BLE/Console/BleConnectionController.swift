@@ -277,7 +277,7 @@ class BleConnectionController: DefaultViewController {
         writeTask?.cancel()
         writeTask = Task { [weak self] in
             do {
-                let result = try await BleProvisionHandshake.run(
+                let result = try await BlePumpHandshake.run(
                     on: connection,
                     log: { message in
                         Task { @MainActor in

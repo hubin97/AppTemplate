@@ -107,7 +107,7 @@ struct BlePumpF0Info {
         return "—"
     }
 
-    /// 已加密（F0 ACK）或 key==0 → 跳过 FD（对齐 Momcozy `openEncrypt`）。
+    /// 已加密（F0 ACK）或 key==0 → 跳过 FD。
     var needsFD: Bool {
         !encryptionEnabled && encryptionKey != 0
     }
@@ -116,7 +116,7 @@ struct BlePumpF0Info {
         guard let frame = BlePumpFrame.parse(ack.response),
               frame.cid == .f0,
               frame.isAck else {
-            throw BleProvisionError.invalidAck(expected: "F0 ACK", received: ack.response)
+            throw BlePumpHandshakeError.invalidAck(expected: "F0 ACK", received: ack.response)
         }
         return parse(cab: frame.cab)
     }
@@ -182,7 +182,7 @@ struct BlePumpC0Info {
     }
 }
 
-// MARK: - B0 / D0 状态（协议 CAB 字段顺序，与 Momcozy `AckStateModal` 一致）
+// MARK: - B0 / D0 状态（协议 CAB 字段顺序）
 
 struct BlePumpStateInfo {
     let battery: UInt8
@@ -231,11 +231,11 @@ struct BlePumpFDInfo {
     let encryptionEnabled: Bool
     let encryptionKey: UInt8
 
-    /// 与 Momcozy `updateEncryptState` 一致：只看 CT 是否 ACK。
+    /// 只看 CT 是否 ACK。
     static func parse(from ack: BleWriteAck) throws -> BlePumpFDInfo {
         guard let frame = BlePumpFrame.parse(ack.response),
               frame.cid == .fd else {
-            throw BleProvisionError.invalidAck(expected: "FD ACK", received: ack.response)
+            throw BlePumpHandshakeError.invalidAck(expected: "FD ACK", received: ack.response)
         }
         return BlePumpFDInfo(
             encryptionEnabled: frame.isAck,
@@ -259,7 +259,7 @@ struct BlePumpTripletInfo {
         guard let frame = BlePumpFrame.parse(ack.response),
               frame.cid == .f7,
               frame.isAck else {
-            throw BleProvisionError.invalidAck(expected: "F7 ACK", received: ack.response)
+            throw BlePumpHandshakeError.invalidAck(expected: "F7 ACK", received: ack.response)
         }
         let productKey = frame.cab.count >= 6
             ? String(data: frame.cab.prefix(6), encoding: .ascii)
@@ -271,7 +271,7 @@ struct BlePumpTripletInfo {
     }
 }
 
-enum BleProvisionError: LocalizedError {
+enum BlePumpHandshakeError: LocalizedError {
     case missingAck(String)
     case invalidAck(expected: String, received: Data)
 

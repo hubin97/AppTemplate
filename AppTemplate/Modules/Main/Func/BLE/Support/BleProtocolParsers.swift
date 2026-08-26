@@ -58,7 +58,7 @@ extension BleGattUUID.Channel {
 
 struct BleProtocolParseResult {
     var mac: String?
-    /// 0xAA 广播 byte[1] 设备类型（如 M9=0x01, V3=0x08）
+    /// 0xAA 广播 byte[1] 设备类型
     var deviceType: UInt8?
     var extraData: [String: Any] = [:]
 }
@@ -75,7 +75,7 @@ extension BleProtocolParseResult: BleProvidesGattProfile, BleProvidesSupplementa
         }
     }
 
-    /// 附加 GATT：按 deviceType 注入（如 M5Pro 0x07 → secondary 埋点）。
+    /// 附加 GATT：按 deviceType 注入（如 0x07 → secondary 埋点）。
     var supplementaryGattProfiles: [BleGattProfile] {
         guard deviceType == 0x07 else { return [] }
         return [BleGattUUID.secondary.gattProfile]
@@ -131,9 +131,9 @@ struct BlePumpProtocolParser: BleAdvDataParser {
     }
 }
 
-// MARK: - TempPatch (T31)
+// MARK: - TempPatch
 //
-// 匹配：LocalName ∈ BleDeviceCatalog.tempPatchNames（如 "T31"）
+// 匹配：LocalName ∈ BleDeviceCatalog.tempPatchNames
 // manufacturerData：productKey[0..6] + secretKey[6..14] + signType[14]
 // serviceData[FFFF]：deviceKey[0..16] + MAC[16..22]
 
@@ -187,9 +187,9 @@ struct BleTempPatchProtocolParser: BleAdvDataParser {
     }
 }
 
-// MARK: - Phototherapy (Lumi 1)
+// MARK: - Phototherapy
 //
-// 匹配：LocalName ∈ BleDeviceCatalog.phototherapyNames（如 "Lumi 1"）
+// 匹配：LocalName ∈ BleDeviceCatalog.phototherapyNames
 // manufacturerData 固定 39 字节：
 //   productKey[0..6] + secretKey[6..14] + signType[14] + MAC[15..21] + deviceKey[23..39]
 

@@ -35,7 +35,7 @@ enum BlePumpCommand {
     private static let cidFD: UInt8 = 0xFD
     private static let cidF7: UInt8 = 0xF7
 
-    /// 连接后鉴权码（Momcozy `LT_BLE_AUTHVAL`）
+    /// 连接后鉴权码
     static let defaultAuthCodes: [UInt8] = [0xAA, 0x55, 0x11, 0x00]
 
     /// F0 获取设备信息 / 鉴权，连接后 5s 内需发送
@@ -57,7 +57,7 @@ enum BlePumpCommand {
 //        encode(cid: cidFD, cal: 0x00, cab: [])
 //    }
 
-    /// 开启加密：CAB 携带 F0 解析出的 key（Momcozy `openEncrypt`）。
+    /// 开启加密：CAB 携带 F0 解析出的 key。
     static func fdOpenEncrypt(key: UInt8) -> Data {
         encode(cid: cidFD, cal: 0x01, cab: [key])
     }
@@ -67,7 +67,7 @@ enum BlePumpCommand {
         encode(cid: cidF7, cal: 0x00, cab: [])
     }
 
-    /// C0 常规控制：运行 + 按摩 + 档位 4（Momcozy `ReqControlModel(normal:)` 默认）
+    /// C0 常规控制：运行 + 按摩 + 档位 4
     static func defaultC0Control() -> Data {
         c0Control(
             state: .running,
