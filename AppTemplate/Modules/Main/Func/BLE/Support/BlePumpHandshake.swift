@@ -69,6 +69,14 @@ struct BlePumpHandshakeResult {
 
 enum BlePumpHandshake {
 
+    /// 连接就绪后拉 F0。
+    static func fetchF0(
+        on connection: BlePeripheralConnection,
+        log: @escaping (String) -> Void = { _ in }
+    ) async throws -> BlePumpF0Info {
+        try await sendF0(connection, log: log)
+    }
+
     /// F0 后按 productType 解析 Profile；FD 在 `allowsFD` 且 `needsFD` 时实发。
     static func run(
         on connection: BlePeripheralConnection,

@@ -2,7 +2,7 @@
 //  BleBoundDevice.swift
 //  AppTemplate
 //
-//  业务层已绑定设备快照。握手成功后写入，供设备列表与面板使用。
+//  已绑定设备快照（纯数据）。连接态见 `livePeripheralState`，不落库。
 
 import Foundation
 import AppStart
@@ -43,7 +43,6 @@ struct BleBoundDevice: Codable, Equatable {
     var productKey: String?
     var deviceKey: String?
     var lastRSSI: Int?
-    var handshakeProfile: String?
     var boundAt: Date
 
     var identifier: UUID? { UUID(uuidString: uuid) }
@@ -55,15 +54,26 @@ struct BleBoundDevice: Codable, Equatable {
 
 extension BleBoundDevice {
 
-    static func make(
-        from discovery: BleDiscovery,
-        handshakeProfile: String? = nil,
-        f0ProductKey: String? = nil
-    ) -> BleBoundDevice {
+    /// 当前 Session 连接池里同 UUID 的外设连接。
+    var liveConnection: BlePeripheralConnection? {
+        guard let id = identifier else { return nil }
+        return BleSession.shared.activeConnections.first {
+            $0.peripheral.identifier == id
+        }
+    }
+
+    /// 关联 `BlePeripheralConnection.currentState`；不在连接池时为 nil。
+    var livePeripheralState: BlePeripheralState? {
+        liveConnection?.currentState
+    }
+
+    var connectionDisplayName: String {
+        BleStateFormatter.boundDeviceConnectionSummary(livePeripheralState)
+    }
+
+    static func make(from discovery: BleDiscovery) -> BleBoundDevice {
         let parsed = discovery.parsedData as? BleProtocolParseResult
         let extra = parsed?.extraData ?? [:]
-        let productKey = f0ProductKey
-            ?? extra["productKey"] as? String
         return BleBoundDevice(
             uuid: discovery.peripheral.identifier.uuidString,
             peripheralName: discovery.displayName ?? "",
@@ -71,10 +81,9 @@ extension BleBoundDevice {
             productName: BleStateFormatter.productDisplayName(for: discovery.configuration),
             category: BleDeviceCategory.resolve(configuration: discovery.configuration),
             deviceType: parsed?.deviceType,
-            productKey: productKey,
+            productKey: extra["productKey"] as? String,
             deviceKey: extra["deviceKey"] as? String,
             lastRSSI: discovery.advertisement.rssi.intValue,
-            handshakeProfile: handshakeProfile,
             boundAt: Date()
         )
     }

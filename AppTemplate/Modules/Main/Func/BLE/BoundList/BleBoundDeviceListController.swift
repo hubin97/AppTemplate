@@ -61,7 +61,13 @@ class BleBoundDeviceListController: DefaultViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        BleDeviceManager.shared.startObservingConnections()
         reload()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        BleDeviceManager.shared.stopObservingConnections()
     }
 
     override var themeableTableViews: [UITableView] { [tableView] }

@@ -20,6 +20,7 @@ enum BleUITokens {
 
     static let radiusCard: CGFloat = 12
     static let radiusBadge: CGFloat = 8
+    static let space1: CGFloat = 4
     static let space2: CGFloat = 8
     static let space3: CGFloat = 12
     static let space4: CGFloat = 16

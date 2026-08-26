@@ -16,6 +16,8 @@ final class BleDeviceManager {
 
     var onChange: (() -> Void)?
 
+    private var connectionStateTasks: [UUID: Task<Void, Never>] = [:]
+
     private init() {
         load()
     }
@@ -40,6 +42,16 @@ final class BleDeviceManager {
         onChange?()
     }
 
+    /// 订阅 Session 内各连接的 `states()`，驱动列表刷新连接态展示。
+    func startObservingConnections() {
+        syncConnectionStateObservers()
+    }
+
+    func stopObservingConnections() {
+        connectionStateTasks.values.forEach { $0.cancel() }
+        connectionStateTasks.removeAll()
+    }
+
     // MARK: - Persistence
 
     private func persist() {
@@ -48,12 +60,41 @@ final class BleDeviceManager {
     }
 
     private func load() {
-        guard let data = UserDefaults.standard.data(forKey: defaultsKey),
-              let stored = try? JSONDecoder().decode([BleBoundDevice].self, from: data) else {
+        guard let data = UserDefaults.standard.data(forKey: defaultsKey) else {
             devices = []
             return
         }
-        devices = stored
+        if let stored = try? JSONDecoder().decode([BleBoundDevice].self, from: data) {
+            devices = stored
+            return
+        }
+        devices = []
+    }
+
+    private func syncConnectionStateObservers() {
+        let active = BleSession.shared.activeConnections
+        let activeIDs = Set(active.map(\.peripheral.identifier))
+
+        for (id, task) in connectionStateTasks where !activeIDs.contains(id) {
+            task.cancel()
+            connectionStateTasks.removeValue(forKey: id)
+        }
+
+        for connection in active {
+            let id = connection.peripheral.identifier
+            guard connectionStateTasks[id] == nil else { continue }
+            connectionStateTasks[id] = Task { [weak self] in
+                guard let self else { return }
+                let stream = await connection.states()
+                for await _ in stream {
+                    guard !Task.isCancelled else { break }
+                    await MainActor.run {
+                        self.syncConnectionStateObservers()
+                    }
+                }
+            }
+        }
+        onChange?()
     }
 }
 
@@ -62,21 +103,19 @@ enum BleDeviceBinder {
     /// 点击发现设备：连接 → 握手（Pump 走 F0/FD/F7，其他品类以 GATT 就绪为准）→ 写入设备管理。
     static func bind(discovery: BleDiscovery) async throws -> BleBoundDevice {
         let connection = try await BleSession.shared.connect(discovery: discovery, setAsActive: true)
-        var handshakeProfile: String?
-        var productKey: String?
+        var handshakeResult: BlePumpHandshakeResult?
 
         if BleDeviceCategory.resolve(configuration: discovery.configuration) == .pump {
-            let result = try await BlePumpHandshake.run(on: connection, log: { _ in })
-            handshakeProfile = result.profile?.logName
-            productKey = result.tripletInfo?.productKey
+            handshakeResult = try await BlePumpHandshake.run(on: connection, log: { _ in })
         }
 
-        let device = BleBoundDevice.make(
-            from: discovery,
-            handshakeProfile: handshakeProfile,
-            f0ProductKey: productKey
-        )
+        var device = BleBoundDevice.make(from: discovery)
+        if let triplet = handshakeResult?.tripletInfo {
+            if let productKey = triplet.productKey { device.productKey = productKey }
+            if let deviceKey = triplet.deviceKey { device.deviceKey = deviceKey }
+        }
         BleDeviceManager.shared.upsert(device)
+        BleDeviceManager.shared.startObservingConnections()
         return device
     }
 }

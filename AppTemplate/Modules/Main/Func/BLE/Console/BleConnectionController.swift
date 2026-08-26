@@ -15,6 +15,11 @@ class BleConnectionController: DefaultViewController {
     private var notifyTask: Task<Void, Never>?
     private var analyticsTask: Task<Void, Never>?
     private var writeTask: Task<Void, Never>?
+    /// 本页生命周期内已对某 peripheral 自动拉过 F0，避免重复请求。
+    private var autoF0PeripheralId: UUID?
+    /// Pump 链路透传态（F0/FD 后有效，仅当前页内存，不落库）。
+    private var pumpKey: UInt8?
+    private var pumpEncrypted = false
 
     private lazy var stateLabel: UILabel = {
         let label = UILabel()
@@ -39,17 +44,6 @@ class BleConnectionController: DefaultViewController {
         view.backgroundColor = UIColor(white: 0.96, alpha: 1)
         view.layer.cornerRadius = 8
         return view
-    }()
-
-    private lazy var commandField: UITextField = {
-        let field = UITextField()
-        field.placeholder = "十六进制指令，如 01 02 03"
-        field.borderStyle = .roundedRect
-        field.font = .monospacedSystemFont(ofSize: 14, weight: .regular)
-        field.autocapitalizationType = .allCharacters
-        field.autocorrectionType = .no
-        field.text = BlePumpCommand.hexDescription(BlePumpCommand.defaultC0Control())
-        return field
     }()
 
     private lazy var writeButton: UIButton = {
@@ -87,7 +81,6 @@ class BleConnectionController: DefaultViewController {
         view.addSubview(stateLabel)
         view.addSubview(deviceLabel)
         view.addSubview(logTextView)
-        view.addSubview(commandField)
         view.addSubview(writeButton)
         view.addSubview(f0Button)
         view.addSubview(handshakeButton)
@@ -106,13 +99,8 @@ class BleConnectionController: DefaultViewController {
             make.leading.trailing.equalToSuperview().inset(16)
             make.height.equalTo(220)
         }
-        commandField.snp.makeConstraints { make in
-            make.top.equalTo(logTextView.snp.bottom).offset(12)
-            make.leading.trailing.equalToSuperview().inset(16)
-            make.height.equalTo(40)
-        }
         writeButton.snp.makeConstraints { make in
-            make.top.equalTo(commandField.snp.bottom).offset(12)
+            make.top.equalTo(logTextView.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(16)
         }
         f0Button.snp.makeConstraints { make in
@@ -145,6 +133,7 @@ class BleConnectionController: DefaultViewController {
         notifyTask = nil
         analyticsTask = nil
         writeTask = nil
+        autoF0PeripheralId = nil
     }
 
     private func refreshConnectionUI() {
@@ -161,9 +150,8 @@ class BleConnectionController: DefaultViewController {
 
         writeButton.isEnabled = true
         f0Button.isEnabled = true
-        handshakeButton.isEnabled = true
         disconnectButton.isEnabled = true
-        updateCommandFieldForConnection(connection)
+        updatePumpControlsForConnection(connection)
         let peripheral = connection.peripheral
         let connectionCount = BleSession.shared.activeConnections.count
         deviceLabel.text = """
@@ -174,6 +162,7 @@ class BleConnectionController: DefaultViewController {
         GATT：\(gattSummary(for: connection))
         """
         updateStateLabel(connection.currentState)
+        autoFetchF0IfNeeded(for: connection)
     }
 
     private func startObserving() {
@@ -226,7 +215,7 @@ class BleConnectionController: DefaultViewController {
         case .ready:
             stateLabel.textColor = .systemGreen
             if let connection = BleSession.shared.activeConnection {
-                updateCommandFieldForConnection(connection)
+                updatePumpControlsForConnection(connection)
                 let peripheral = connection.peripheral
                 let connectionCount = BleSession.shared.activeConnections.count
                 deviceLabel.text = """
@@ -236,11 +225,13 @@ class BleConnectionController: DefaultViewController {
                 UUID：\(peripheral.identifier.uuidString)
                 GATT：\(gattSummary(for: connection))
                 """
+                autoFetchF0IfNeeded(for: connection)
             }
         case .failed, .timedOut:
             stateLabel.textColor = .systemRed
         case .disconnected:
             stateLabel.textColor = .systemOrange
+            resetPumpRuntime()
         default:
             stateLabel.textColor = .label
         }
@@ -257,7 +248,7 @@ class BleConnectionController: DefaultViewController {
     }
 
     @objc private func writeButtonTapped() {
-        sendCommand(from: commandField.text)
+        sendCommand(data: BlePumpCommand.defaultC0Control())
     }
 
     @objc private func f0ButtonTapped() {
@@ -273,6 +264,10 @@ class BleConnectionController: DefaultViewController {
             ProgressHUD.failed("仅 Pump 设备支持配网握手 Demo")
             return
         }
+        guard !pumpEncrypted else {
+            ProgressHUD.failed("加密已开启，无需重复握手")
+            return
+        }
 
         writeTask?.cancel()
         writeTask = Task { [weak self] in
@@ -286,6 +281,7 @@ class BleConnectionController: DefaultViewController {
                     }
                 )
                 await MainActor.run {
+                    self?.applyHandshakeRuntime(result)
                     var detail = "握手完成"
                     if let profile = result.profile {
                         detail += " · \(profile.logName)"
@@ -297,6 +293,7 @@ class BleConnectionController: DefaultViewController {
                         detail += " · 三元组 OK"
                     }
                     self?.appendLog(detail)
+                    self?.updatePumpControlsForConnection(connection)
                     ProgressHUD.succeed("握手完成")
                 }
             } catch {
@@ -315,31 +312,34 @@ class BleConnectionController: DefaultViewController {
         return "—"
     }
 
-    private func sendCommand(from hex: String?) {
-        guard let data = parseHex(hex) else {
-            ProgressHUD.failed("指令格式错误")
-            return
-        }
-        sendCommand(data: data)
-    }
-
     private func sendCommand(data: Data) {
         guard let connection = BleSession.shared.activeConnection else {
             ProgressHUD.failed("无活跃连接")
             return
         }
 
+        let wireData: Data
+        if pumpEncrypted, let key = pumpKey, key != 0 {
+            wireData = BlePumpLinkCrypto.encryptOutbound(data, key: key)
+        } else {
+            wireData = data
+        }
+
         writeTask?.cancel()
         writeTask = Task { [weak self] in
             let device = connection.peripheral.name ?? connection.peripheral.identifier.uuidString
             await MainActor.run {
-                self?.appendLog("Write · \(BleStateFormatter.dataHexDescription(data))")
+                self?.appendLog("Write · \(BleStateFormatter.dataHexDescription(wireData))")
+                if wireData != data, let key = self?.pumpKey {
+                    self?.appendLog("Write · 已加密 CAB · key=0x\(String(format: "%02X", key))")
+                }
+                // 数据解析打印
                 if let parsed = BlePumpTrace.describeSend(data, device: device) {
                     self?.appendLog(parsed)
                 }
             }
             do {
-                try await connection.write(data)
+                try await connection.write(wireData)
                 await MainActor.run {
                     ProgressHUD.succeed("发送成功")
                 }
@@ -363,41 +363,66 @@ class BleConnectionController: DefaultViewController {
         return false
     }
 
-    private func updateCommandFieldForConnection(_ connection: BlePeripheralConnection) {
+    private func updatePumpControlsForConnection(_ connection: BlePeripheralConnection) {
         let isPump = isPumpConnection(connection)
         f0Button.isHidden = !isPump
         handshakeButton.isHidden = !isPump
-        if isPump {
-            commandField.text = BlePumpCommand.hexDescription(BlePumpCommand.defaultC0Control())
-            commandField.placeholder = "C0 控制帧（可编辑）"
-            writeButton.setTitle("C0 控制", for: .normal)
-        } else {
-            commandField.placeholder = "十六进制指令，如 01 02 03"
-            commandField.text = "01 02 03"
-            writeButton.setTitle("发送写指令", for: .normal)
+        writeButton.setTitle(isPump ? "C0 控制" : "发送写指令", for: .normal)
+
+        handshakeButton.isEnabled = isPump && !pumpEncrypted
+    }
+
+    private func applyF0Runtime(_ info: BlePumpF0Info) {
+        if info.encryptionKey != 0 { pumpKey = info.encryptionKey }
+        if info.encryptionEnabled { pumpEncrypted = true }
+    }
+
+    private func applyHandshakeRuntime(_ result: BlePumpHandshakeResult) {
+        if let f0 = result.f0Info { applyF0Runtime(f0) }
+        if result.fdInfo?.encryptionEnabled == true { pumpEncrypted = true }
+    }
+
+    private func resetPumpRuntime() {
+        pumpKey = nil
+        pumpEncrypted = false
+    }
+
+    private func autoFetchF0IfNeeded(for connection: BlePeripheralConnection) {
+        guard isPumpConnection(connection),
+              case .ready = connection.currentState else { return }
+
+        let peripheralId = connection.peripheral.identifier
+        guard autoF0PeripheralId != peripheralId else { return }
+        autoF0PeripheralId = peripheralId
+
+        writeTask?.cancel()
+        writeTask = Task { [weak self] in
+            do {
+                let info = try await BlePumpHandshake.fetchF0(on: connection) { message in
+                    Task { @MainActor in
+                        self?.appendLog(message)
+                    }
+                }
+                await MainActor.run {
+                    self?.applyF0Runtime(info)
+                    self?.updatePumpControlsForConnection(connection)
+                }
+            } catch {
+                await MainActor.run {
+                    self?.appendLog("自动 F0 失败 · \(error.localizedDescription)")
+                    self?.autoF0PeripheralId = nil
+                }
+            }
         }
     }
 
     @objc private func disconnectButtonTapped() {
         guard let connection = BleSession.shared.activeConnection else { return }
+        resetPumpRuntime()
         connection.disconnect()
         BleSession.shared.activeConnection = nil
         appendLog("用户主动断开")
         refreshConnectionUI()
-    }
-
-    private func parseHex(_ text: String?) -> Data? {
-        guard let text else { return nil }
-        let parts = text
-            .replacingOccurrences(of: ",", with: " ")
-            .split(whereSeparator: \.isWhitespace)
-        guard !parts.isEmpty else { return nil }
-        var bytes: [UInt8] = []
-        for part in parts {
-            guard let value = UInt8(part, radix: 16) else { return nil }
-            bytes.append(value)
-        }
-        return Data(bytes)
     }
 
     private static let logFormatter: DateFormatter = {

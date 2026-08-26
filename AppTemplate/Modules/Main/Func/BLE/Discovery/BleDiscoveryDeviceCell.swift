@@ -57,7 +57,7 @@ final class BleDiscoveryDeviceCell: TableViewCell {
         card.addSubview(row)
 
         card.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 4, left: BleUITokens.space4, bottom: 4, right: BleUITokens.space4))
+            make.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: BleUITokens.space2, vertical: BleUITokens.space1))
         }
         row.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12))

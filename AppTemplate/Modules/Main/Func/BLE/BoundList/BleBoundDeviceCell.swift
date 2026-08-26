@@ -81,7 +81,7 @@ final class BleBoundDeviceCell: TableViewCell {
         MAC  \(device.mac ?? "—")    UUID  \(device.uuid)
         型号  \(typeText)    信号  \(rssiText)
         productKey  \(device.productKey ?? "—")    deviceKey  \(device.deviceKey ?? "—")
-        握手  \(device.handshakeProfile ?? "连接就绪")    添加于  \(bound)
+        连接  \(device.connectionDisplayName)    添加于  \(bound)
         """
     }
 

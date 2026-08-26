@@ -3,6 +3,7 @@
 //  AppTemplate
 //
 //  发现扫描：混扫已注册产品，点选设备握手并写入业务设备管理。
+//  进入即扫；下拉刷新重扫；单次 30s。
 
 import Foundation
 import CoreBluetooth
@@ -29,7 +30,7 @@ class BleDiscoveryListController: DefaultViewController {
             switch self {
             case .all: return "全部"
             case .stronger: return "较强"
-            case .nearby: return "很近"
+            case .nearby: return "极强"
             }
         }
 
@@ -83,29 +84,8 @@ class BleDiscoveryListController: DefaultViewController {
         label.font = .systemFont(ofSize: 13)
         label.textColor = BleUITokens.textSecondary
         label.numberOfLines = 0
-        label.text = "点「开始扫描」找附近设备，点某一台即可握手添加"
+        label.text = "点某一台即可握手添加"
         return label
-    }()
-
-    private lazy var scanButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("开始扫描", for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        button.backgroundColor = BleUITokens.momFill
-        button.layer.cornerRadius = BleUITokens.radiusBadge
-        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 14, bottom: 8, right: 14)
-        button.addTarget(self, action: #selector(scanButtonTapped), for: .touchUpInside)
-        return button
-    }()
-
-    private lazy var stopButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.setTitle("停止", for: .normal)
-        button.setTitleColor(BleUITokens.momFill, for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        button.addTarget(self, action: #selector(stopButtonTapped), for: .touchUpInside)
-        return button
     }()
 
     private lazy var emptyLabel: UILabel = {
@@ -127,6 +107,10 @@ class BleDiscoveryListController: DefaultViewController {
         listView.dataSource = self
         listView.delegate = self
         listView.rowHeight = 64
+        listView.contentInset = UIEdgeInsets(top: BleUITokens.space1, left: 0, bottom: 0, right: 0)
+        listView.setHeaderRefresh { [weak self] in
+            self?.startScanning()
+        }
         return listView
     }()
 
@@ -138,8 +122,6 @@ class BleDiscoveryListController: DefaultViewController {
         view.addSubview(nameField)
         view.addSubview(signalControl)
         view.addSubview(statusLabel)
-        view.addSubview(scanButton)
-        view.addSubview(stopButton)
         view.addSubview(tableView)
         view.addSubview(emptyLabel)
 
@@ -156,16 +138,7 @@ class BleDiscoveryListController: DefaultViewController {
         }
         statusLabel.snp.makeConstraints { make in
             make.top.equalTo(nameField.snp.bottom).offset(BleUITokens.space2)
-            make.leading.equalToSuperview().offset(BleUITokens.space4)
-            make.trailing.lessThanOrEqualTo(stopButton.snp.leading).offset(-8)
-        }
-        scanButton.snp.makeConstraints { make in
-            make.centerY.equalTo(statusLabel)
-            make.trailing.equalTo(stopButton.snp.leading).offset(-8)
-        }
-        stopButton.snp.makeConstraints { make in
-            make.centerY.equalTo(statusLabel)
-            make.trailing.equalToSuperview().inset(BleUITokens.space4)
+            make.leading.trailing.equalToSuperview().inset(BleUITokens.space4)
         }
         tableView.snp.makeConstraints { make in
             make.top.equalTo(statusLabel.snp.bottom).offset(BleUITokens.space3)
@@ -176,6 +149,11 @@ class BleDiscoveryListController: DefaultViewController {
             make.top.equalTo(tableView).offset(48)
             make.leading.trailing.equalToSuperview().inset(32)
         }
+    }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        startScanning()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -195,24 +173,15 @@ class BleDiscoveryListController: DefaultViewController {
         reloadVisible()
     }
 
-    @objc private func scanButtonTapped() {
-        startScanning()
-    }
-
-    @objc private func stopButtonTapped() {
-        stopScanning()
-        statusLabel.text = "已停止，当前显示 \(filteredDevices.count) 台"
-    }
-
     private func startScanning() {
-        stopScanning()
+        cancelScanTask()
         devices.removeAll()
         reloadVisible()
         statusLabel.text = "正在找附近的设备…"
 
         scanTask = Task { [weak self] in
             guard let self else { return }
-            let stream = BleSession.shared.scanAllProducts(timeout: 20)
+            let stream = BleSession.shared.scanAllProducts(timeout: 30)
             for await discovery in stream {
                 guard !Task.isCancelled else { break }
                 await MainActor.run {
@@ -220,16 +189,23 @@ class BleDiscoveryListController: DefaultViewController {
                 }
             }
             await MainActor.run {
+                self.tableView.mj_header?.endRefreshing()
+                guard !Task.isCancelled else { return }
                 self.statusLabel.text = "扫描结束，共 \(self.devices.count) 台"
                 self.reloadVisible()
             }
         }
     }
 
-    private func stopScanning() {
+    private func cancelScanTask() {
         scanTask?.cancel()
         scanTask = nil
         BleSession.shared.central.stopScanning()
+    }
+
+    private func stopScanning() {
+        cancelScanTask()
+        tableView.mj_header?.endRefreshing()
     }
 
     private func appendDiscovery(_ discovery: BleDiscovery) {
@@ -248,7 +224,7 @@ class BleDiscoveryListController: DefaultViewController {
         tableView.reloadData()
         if devices.isEmpty {
             emptyLabel.isHidden = false
-            emptyLabel.text = "附近还没扫到设备。把设备开到可被发现，再点「开始扫描」"
+            emptyLabel.text = "附近还没扫到设备。把设备开到可被发现，下拉刷新再试"
         } else if filteredDevices.isEmpty {
             emptyLabel.isHidden = false
             if !nameQuery.isEmpty {

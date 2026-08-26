@@ -116,6 +116,23 @@ enum BleStateFormatter {
         }
     }
 
+    /// 设备列表用：关联 `BlePeripheralState` 的简短摘要。
+    static func boundDeviceConnectionSummary(_ state: BlePeripheralState?) -> String {
+        guard let state else { return "未连接" }
+        switch state {
+        case .connecting: return "连接中"
+        case .connected: return "发现服务中"
+        case .ready: return "就绪"
+        case .disconnected(let reason):
+            switch reason {
+            case .userInitiated: return "已断开"
+            case .unexpected: return "意外断开"
+            }
+        case .failed: return "连接失败"
+        case .timedOut: return "连接超时"
+        }
+    }
+
     static func dataHexDescription(_ data: Data) -> String {
         data.map { String(format: "%02X", $0) }.joined(separator: " ")
     }
