@@ -104,7 +104,7 @@ enum BleProvisionHandshake {
         _ connection: BlePeripheralConnection,
         log: (String) -> Void
     ) async throws -> BlePumpF0Info {
-        guard let ack = try await connection.write(BlePumpCommand.f0Auth()) else {
+        guard let ack = try await write(BlePumpCommand.f0Auth(), on: connection, log: log) else {
             throw BleProvisionError.missingAck("F0")
         }
         let info = try BlePumpF0Info.parse(from: ack)
@@ -112,7 +112,7 @@ enum BleProvisionHandshake {
         return info
     }
 
-    /// 协议 3.1.6：CAL=0 查询；F0 已加密或 key 无效则跳过。
+    /// F0 已加密或 key==0 则跳过；否则发 FD，回包只看是否 ACK。
     private static func sendFDIfNeeded(
         _ connection: BlePeripheralConnection,
         f0Info: BlePumpF0Info,
@@ -122,11 +122,15 @@ enum BleProvisionHandshake {
             log("跳过 FD · encrypted=\(f0Info.encryptionEnabled) key=0x\(String(format: "%02X", f0Info.encryptionKey))")
             return nil
         }
-        guard let ack = try await connection.write(BlePumpCommand.fdQuery()) else {
+        guard let ack = try await write(
+            BlePumpCommand.fdOpenEncrypt(key: f0Info.encryptionKey),
+            on: connection,
+            log: log
+        ) else {
             throw BleProvisionError.missingAck("FD")
         }
         let fdInfo = try BlePumpFDInfo.parse(from: ack)
-        log("FD · ACK · encrypted=\(fdInfo.encryptionEnabled) key=0x\(String(format: "%02X", fdInfo.encryptionKey))")
+        log("FD · encrypted=\(fdInfo.encryptionEnabled) key=0x\(String(format: "%02X", fdInfo.encryptionKey))")
         return fdInfo
     }
 
@@ -134,11 +138,23 @@ enum BleProvisionHandshake {
         _ connection: BlePeripheralConnection,
         log: (String) -> Void
     ) async throws -> BlePumpTripletInfo {
-        guard let ack = try await connection.write(BlePumpCommand.f7Triplet()) else {
+        guard let ack = try await write(BlePumpCommand.f7Triplet(), on: connection, log: log) else {
             throw BleProvisionError.missingAck("F7")
         }
         let triplet = try BlePumpTripletInfo.parse(from: ack)
         log("F7 · ACK · valid=\(triplet.isValid) productKey=\(triplet.productKey ?? "-") deviceKey=\(triplet.deviceKey ?? "-")")
         return triplet
+    }
+
+    private static func write(
+        _ data: Data,
+        on connection: BlePeripheralConnection,
+        log: (String) -> Void
+    ) async throws -> BleWriteAck? {
+        let device = connection.peripheral.name ?? connection.peripheral.identifier.uuidString
+        if let parsed = BlePumpTrace.describeSend(data, device: device) {
+            log(parsed)
+        }
+        return try await connection.write(data)
     }
 }

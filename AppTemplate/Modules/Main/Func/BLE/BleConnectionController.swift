@@ -199,6 +199,10 @@ class BleConnectionController: DefaultViewController {
                     self?.appendLog(
                         "Notify · \(update.characteristic.uuid.uuidString) · \(BleStateFormatter.dataHexDescription(update.data))"
                     )
+                    let device = update.peripheral.name ?? update.peripheral.identifier.uuidString
+                    if let parsed = BlePumpTrace.describeReceive(update.data, device: device) {
+                        self?.appendLog(parsed)
+                    }
                 }
             }
         }
@@ -243,6 +247,7 @@ class BleConnectionController: DefaultViewController {
     }
 
     private func appendLog(_ message: String) {
+        LogM.tag("Ble/Pump").debug(message)
         let timestamp = Self.logFormatter.string(from: Date())
         let line = "[\(timestamp)] \(message)\n"
         logTextView.text = (logTextView.text ?? "") + line
@@ -326,10 +331,16 @@ class BleConnectionController: DefaultViewController {
 
         writeTask?.cancel()
         writeTask = Task { [weak self] in
+            let device = connection.peripheral.name ?? connection.peripheral.identifier.uuidString
+            await MainActor.run {
+                self?.appendLog("Write · \(BleStateFormatter.dataHexDescription(data))")
+                if let parsed = BlePumpTrace.describeSend(data, device: device) {
+                    self?.appendLog(parsed)
+                }
+            }
             do {
                 try await connection.write(data)
                 await MainActor.run {
-                    self?.appendLog("Write · \(BleStateFormatter.dataHexDescription(data))")
                     ProgressHUD.succeed("发送成功")
                 }
             } catch {

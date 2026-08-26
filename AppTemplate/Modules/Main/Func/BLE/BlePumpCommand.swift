@@ -52,9 +52,14 @@ enum BlePumpCommand {
         encode(cid: cidB0, cal: 0x00, cab: [])
     }
 
-    /// FD 获取加密信息（协议 3.1.6：CAL=0x00，无请求参数）
-    static func fdQuery() -> Data {
-        encode(cid: cidFD, cal: 0x00, cab: [])
+    /// FD 空查询（协议文档 3.1.6）；部分固件会 NACK，真机握手请用 `fdOpenEncrypt`。
+//    static func fdQuery() -> Data {
+//        encode(cid: cidFD, cal: 0x00, cab: [])
+//    }
+
+    /// 开启加密：CAB 携带 F0 解析出的 key（Momcozy `openEncrypt`）。
+    static func fdOpenEncrypt(key: UInt8) -> Data {
+        encode(cid: cidFD, cal: 0x01, cab: [key])
     }
 
     /// F7 获取三元组信息

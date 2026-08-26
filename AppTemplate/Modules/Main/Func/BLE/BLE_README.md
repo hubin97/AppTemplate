@@ -13,7 +13,8 @@ Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BL
 |------|------|
 | `BleAppConfiguration.swift` | 产品 `BleConfiguration` 注册（含 GATT）、状态格式化 |
 | `BleProtocolParsers.swift` | 广播解析、`BleGattUUID`、动态 `bleGattProfile`、M5 副通道 payload |
-| `BlePumpProtocol.swift` | 0xAA 帧解析、`BlePumpAckMatcher`、F0/FD/F7 模型 |
+| `BlePumpProtocol.swift` | 0xAA 帧解析、`BlePumpAckMatcher`、F0/FD/F7/C0/B0 模型 |
+| `BlePumpTrace.swift` | 指令字段解析打印（LogM + 连接调试页） |
 | `BlePumpCommand.swift` | 组包（F0 / FD / F7 / C0 等） |
 | `BleProvisionHandshake.swift` | 配网握手编排 |
 | `BleScanController.swift` / `BleConnectionController.swift` | Demo UI |
@@ -40,7 +41,7 @@ BleConfiguration(
         defaultTimeout: 3,
         order: .descending
     ),
-    parser: pumpParser,
+        parser: pumpParser,
     logTag: "[Ble/Pump]"
 )
 ```
@@ -71,13 +72,33 @@ BleConfiguration(
 
 ## Pump ACK 匹配（`BlePumpAckMatcher`）
 
-写队列**只**调用 `ackMatcher.matches`；REQ 形设备上报与写 ACK 的区分在业务层完成：
+写队列**只**调用 `ackMatcher.matches`：
 
 - 帧头 `0xAA 0x55`
-- `CT == 0x01`（ACK）
+- `CT` 为 ACK(`0x01`) 或 NACK(`0x02`)（真机 FD 可能回 NACK；只认 ACK 会超时，但 Notify 仍进调试页）
 - `CID` 与当前写指令一致
 
 见 `BlePumpProtocol.swift`。
+
+---
+
+## 指令解析打印（`BlePumpTrace`）
+
+对齐 Momcozy `BT+Printer`：解析与打印都在 App 层（`BlePumpTrace`），不改 AppStart。
+
+| 方向 | CID | 输出 |
+|------|-----|------|
+| 发送 | C0 | 状态 / 模式 / 档位 / 自定义 |
+| 发送 | F0 / FD / F7 / B0 | 鉴权码 / 查询加密 / 三元组 / 状态 |
+| 接收 | F0 | 产品型号（`0xNN`）/ 版本 / SN / 满奶 / 加密 |
+| 接收 | B0、D0 | 电量 / 状态 / 左右 / 模式 / 时间等 |
+| 接收 | FD、F7 | 加密 key / 三元组（握手对照） |
+
+连接调试页 Notify / 写指令在 hex 行后追加同一格式；`appendLog` 同时写入 `LogM.tag("Ble/Pump")`（Xcode 终端）。
+
+```
+<<< 接收数据解析: (设备名) | F0 | [产品型号=0x01 软件版本=20 SN码=… encrypted=false key=0x36]
+```
 
 ---
 
@@ -114,8 +135,8 @@ try await BleProvisionHandshake.run(on: connection) { log($0) }
 F0 → resolve(productType) → (allowsFD && needsFD ? FD : 跳过) → (includesF7 ? F7)
 ```
 
-- **needsFD**：F0 无加密且 key ∈ 1…127；已加密则跳过 FD
-- **FD 请求**：协议 3.1.6，`fdQuery()`（CAL=0）；应答 CAB[0] 状态 + CAB[1] key
+- **needsFD**：F0 已加密或 key==0 → 跳过 FD；否则带 key 发 FD，回包只看 CT 是否 ACK
+- **FD 请求**：真机 `fdOpenEncrypt(key)`（CAL=1，CAB=F0 key）；空查询 `fdQuery()` 会被部分固件 NACK（`CT=0x02`）
 - **F7**：三元组（productKey / deviceKey / secretKey）
 - **B0**：连接后状态同步，不在配网链内
 
