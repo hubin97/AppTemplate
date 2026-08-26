@@ -94,7 +94,9 @@ extension BleBoundDeviceListController: UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        navigator.show(provider: AppScene.bleDevicePanel(uuid: devices[indexPath.row].uuid), sender: self)
+        let device = devices[indexPath.row]
+        BleSession.shared.activeConnection = device.liveConnection
+        navigator.show(provider: AppScene.bleDevicePanel(uuid: device.uuid), sender: self)
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

@@ -71,6 +71,15 @@ extension BleBoundDevice {
         BleStateFormatter.boundDeviceConnectionSummary(livePeripheralState)
     }
 
+    /// 当前在 Session 连接池且处于连接流程中（含就绪）。
+    var isLiveConnected: Bool {
+        guard let state = livePeripheralState else { return false }
+        switch state {
+        case .connecting, .connected, .ready: return true
+        case .disconnected, .failed, .timedOut: return false
+        }
+    }
+
     static func make(from discovery: BleDiscovery) -> BleBoundDevice {
         let parsed = discovery.parsedData as? BleProtocolParseResult
         let extra = parsed?.extraData ?? [:]

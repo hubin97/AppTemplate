@@ -2,7 +2,7 @@
 //  BleBoundDeviceCell.swift
 //  AppTemplate
 //
-//  已绑定设备卡：相对发现页补充品类、握手、绑定时间等细节。
+//  已绑定设备卡：名称 + 右上角品类；其余字段逐行展示。
 
 import UIKit
 import SnapKit
@@ -12,7 +12,13 @@ final class BleBoundDeviceCell: TableViewCell {
     private let card = UIView()
     private let nameLabel = UILabel()
     private let categoryBadge = UILabel()
-    private let detailLabel = UILabel()
+    private let connectionRow = UIStackView()
+    private let connectionLabel = UILabel()
+    private let rssiBadge = UILabel()
+    private let macLabel = UILabel()
+    private let uuidLabel = UILabel()
+    private let typeLabel = UILabel()
+    private let boundLabel = UILabel()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -28,43 +34,84 @@ final class BleBoundDeviceCell: TableViewCell {
 
         nameLabel.font = .systemFont(ofSize: 16, weight: .medium)
         nameLabel.textColor = BleUITokens.textPrimary
+        nameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         categoryBadge.font = .systemFont(ofSize: 11, weight: .medium)
         categoryBadge.textColor = BleUITokens.momFill
         categoryBadge.backgroundColor = BleUITokens.momFill.withAlphaComponent(0.08)
         categoryBadge.textAlignment = .center
-        categoryBadge.layer.cornerRadius = 6
+        categoryBadge.layer.cornerRadius = BleUITokens.radiusBadge
         categoryBadge.clipsToBounds = true
+        categoryBadge.setContentHuggingPriority(.required, for: .horizontal)
+        categoryBadge.setContentCompressionResistancePriority(.required, for: .horizontal)
 
-        detailLabel.font = .systemFont(ofSize: 12)
-        detailLabel.textColor = BleUITokens.textSecondary
-        detailLabel.numberOfLines = 0
+        connectionLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        connectionLabel.textColor = BleUITokens.textSecondary
+        connectionLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        connectionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        rssiBadge.font = .systemFont(ofSize: 12, weight: .medium)
+        rssiBadge.textAlignment = .center
+        rssiBadge.layer.cornerRadius = BleUITokens.radiusBadge
+        rssiBadge.clipsToBounds = true
+        rssiBadge.setContentHuggingPriority(.required, for: .horizontal)
+        rssiBadge.setContentCompressionResistancePriority(.required, for: .horizontal)
+
+        macLabel.font = .monospacedSystemFont(ofSize: 12, weight: .regular)
+        macLabel.textColor = BleUITokens.textSecondary
+
+        uuidLabel.font = .monospacedSystemFont(ofSize: 12, weight: .regular)
+        uuidLabel.textColor = BleUITokens.textTertiary
+
+        typeLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        typeLabel.textColor = BleUITokens.textSecondary
+
+        boundLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        boundLabel.textColor = BleUITokens.textTertiary
 
         let header = UIStackView(arrangedSubviews: [nameLabel, categoryBadge])
         header.axis = .horizontal
         header.alignment = .center
-        header.spacing = 8
+        header.spacing = BleUITokens.space2
+        header.distribution = .fill
 
-        let stack = UIStackView(arrangedSubviews: [header, detailLabel])
+        connectionRow.axis = .horizontal
+        connectionRow.alignment = .center
+        connectionRow.spacing = BleUITokens.space2
+        connectionRow.distribution = .fill
+        connectionRow.addArrangedSubview(connectionLabel)
+        connectionRow.addArrangedSubview(rssiBadge)
+
+        let stack = UIStackView(arrangedSubviews: [
+            header,
+            connectionRow,
+            macLabel,
+            uuidLabel,
+            typeLabel,
+            boundLabel
+        ])
         stack.axis = .vertical
-        stack.spacing = 6
         stack.alignment = .fill
+        stack.spacing = BleUITokens.space2
 
         contentView.addSubview(card)
         card.addSubview(stack)
 
         card.snp.makeConstraints { make in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 6, left: BleUITokens.space4, bottom: 6, right: BleUITokens.space4))
+            make.edges.equalToSuperview().inset(UIEdgeInsets(horizontal: BleUITokens.space2, vertical: BleUITokens.space1))
         }
         stack.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(12)
         }
         categoryBadge.snp.makeConstraints { make in
-            make.height.equalTo(22)
-            make.width.greaterThanOrEqualTo(52)
+            make.height.equalTo(24)
+            make.width.greaterThanOrEqualTo(56)
         }
-        nameLabel.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        categoryBadge.setContentHuggingPriority(.required, for: .horizontal)
+        rssiBadge.snp.makeConstraints { make in
+            make.height.equalTo(24)
+            make.width.greaterThanOrEqualTo(72)
+        }
     }
 
     @MainActor required init?(coder: NSCoder) {
@@ -74,15 +121,34 @@ final class BleBoundDeviceCell: TableViewCell {
     func configure(_ device: BleBoundDevice) {
         nameLabel.text = device.displayName
         categoryBadge.text = " \(device.category.displayName) "
+        connectionLabel.text = "连接  \(device.connectionDisplayName)"
+
+        if device.isLiveConnected, let rssi = device.lastRSSI {
+            rssiBadge.isHidden = false
+            rssiBadge.text = "\(rssi) dBm"
+            applyRSSIStyle(rssi)
+        } else {
+            rssiBadge.isHidden = true
+        }
+
+        macLabel.text = "MAC  \(device.mac ?? "—")"
+        uuidLabel.text = "UUID  \(device.uuid)"
         let typeText = device.deviceType.map { String(format: "0x%02X", $0) } ?? "—"
-        let rssiText = device.lastRSSI.map { "\($0) dBm" } ?? "—"
-        let bound = Self.dateFormatter.string(from: device.boundAt)
-        detailLabel.text = """
-        MAC  \(device.mac ?? "—")    UUID  \(device.uuid)
-        型号  \(typeText)    信号  \(rssiText)
-        productKey  \(device.productKey ?? "—")    deviceKey  \(device.deviceKey ?? "—")
-        连接  \(device.connectionDisplayName)    添加于  \(bound)
-        """
+        typeLabel.text = "型号  \(typeText)"
+        boundLabel.text = "添加于  \(Self.dateFormatter.string(from: device.boundAt))"
+    }
+
+    private func applyRSSIStyle(_ rssi: Int) {
+        if rssi >= -50 {
+            rssiBadge.backgroundColor = BleUITokens.success.withAlphaComponent(0.15)
+            rssiBadge.textColor = BleUITokens.success
+        } else if rssi >= -70 {
+            rssiBadge.backgroundColor = BleUITokens.warning.withAlphaComponent(0.18)
+            rssiBadge.textColor = BleUITokens.warning
+        } else {
+            rssiBadge.backgroundColor = BleUITokens.border
+            rssiBadge.textColor = BleUITokens.textSecondary
+        }
     }
 
     private static let dateFormatter: DateFormatter = {
