@@ -58,7 +58,7 @@ enum AppScene: SceneProvider {
         case .bleScan, .bleDiscovery:
             return BleDiscoveryListController(viewModel: nil)
         case .bleBoundList:
-            return BleBoundDeviceListController(viewModel: nil)
+            return BleBoundDeviceListController(viewModel: BleBoundDeviceListViewModel())
         case .bleDevicePanel(let uuid):
             return BleDevicePanelFactory.make(uuid: uuid)
         case .bleCentralState:

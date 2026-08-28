@@ -37,7 +37,7 @@ Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BL
 
 ## 产品注册
 
-入口 `BleAppConfiguration.setup()` → `BleSession.shared.register(BleProducts.all)`。
+入口 `BleAppConfiguration.setup()` → `BleSession.shared.setRegisteredConfigurations(BleProducts.all)`。
 
 | 产品 | 匹配 | GATT |
 |------|------|------|

@@ -200,7 +200,7 @@ class BleDiscoveryListController: DefaultViewController {
     private func cancelScanTask() {
         scanTask?.cancel()
         scanTask = nil
-        BleSession.shared.central.stopScanning()
+        BleSession.shared.stopScanning()
     }
 
     private func stopScanning() {

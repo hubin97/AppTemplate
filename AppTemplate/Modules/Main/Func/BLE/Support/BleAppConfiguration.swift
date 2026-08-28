@@ -30,7 +30,7 @@ enum BleProducts {
     static let pump = BleConfiguration(
         matching: BleParserValidatedMatchingStrategy(parser: pumpParser),
         gattProfile: BleGattUUID.primary.gattProfile,
-        reconnect: .init(enabled: true, maxAttempts: 3, interval: 15), // 意外断开会自动重连；耗尽后库会 cancel 系统 connect
+        reconnect: .init(enabled: true, maxAttempts: 3, retryDelay: 5, attemptTimeout: 10), // 意外断开会自动重连；耗尽后库会 cancel 系统 connect
         writeQueue: .serialized(
             ackMatcher: BlePumpAckMatcher(),
             defaultTimeout: 3,
@@ -79,7 +79,7 @@ enum BleProducts {
 enum BleAppConfiguration {
 
     static func setup() {
-        BleSession.shared.register(BleProducts.all)
+        BleSession.shared.setRegisteredConfigurations(BleProducts.all)
     }
 }
 
@@ -102,6 +102,8 @@ enum BleStateFormatter {
     static func peripheralStateDescription(_ state: BlePeripheralState) -> String {
         switch state {
         case .connecting: return "连接中"
+        case .reconnecting(let attempt, let maximumAttempts):
+            return "自动重连中（\(attempt)/\(maximumAttempts)）"
         case .connected: return "已连接（发现服务中）"
         case .ready(let info):
             return "就绪 · \(info.peripheral.name ?? "未知") · \(info.service.uuid.uuidString)"
@@ -121,6 +123,8 @@ enum BleStateFormatter {
         guard let state else { return "未连接" }
         switch state {
         case .connecting: return "连接中"
+        case .reconnecting(let attempt, let maximumAttempts):
+            return "重连中 \(attempt)/\(maximumAttempts)"
         case .connected: return "发现服务中"
         case .ready: return "就绪"
         case .disconnected(let reason):
@@ -143,29 +147,11 @@ enum BleStateFormatter {
     }
 
     static func productDisplayName(for connection: BlePeripheralConnection) -> String {
-        if case .ready(let info) = connection.currentState {
-            let serviceUUID = info.service.uuid
-            if let config = BleSession.shared.registeredConfigurations.first(where: {
-                configuration($0, matchesService: serviceUUID)
-            }) {
-                return productDisplayName(for: config)
-            }
-        }
-        return "未知产品"
-    }
-
-    private static func configuration(_ config: BleConfiguration, matchesService uuid: CBUUID) -> Bool {
-        if (config.gattProfile.serviceUUIDs ?? []).contains(where: { BleUUID.matches(uuid, $0) }) {
-            return true
-        }
-        guard config.logTag == BleProducts.pump.logTag else { return false }
-        return BleUUID.matches(uuid, BleGattUUID.primary.serviceUUID)
-            || BleUUID.matches(uuid, BleGattUUID.extended.serviceUUID)
-            || BleUUID.matches(uuid, BleGattUUID.secondary.serviceUUID)
+        productDisplayName(for: connection.configurationSnapshot)
     }
 
     static func parsedDataDescription(for discovery: BleDiscovery) -> String {
-        guard let result = discovery.parsedData as? BleProtocolParseResult else {
+        guard let result: BleProtocolParseResult = discovery.parsedData() else {
             if let text = discovery.parsedData as? String { return text }
             return "解析数据: --"
         }

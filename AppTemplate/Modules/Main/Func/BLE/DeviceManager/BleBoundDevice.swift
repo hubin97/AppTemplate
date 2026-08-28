@@ -75,7 +75,7 @@ extension BleBoundDevice {
     var isLiveConnected: Bool {
         guard let state = livePeripheralState else { return false }
         switch state {
-        case .connecting, .connected, .ready: return true
+        case .connecting, .reconnecting, .connected, .ready: return true
         case .disconnected, .failed, .timedOut: return false
         }
     }

@@ -232,6 +232,9 @@ class BleConnectionController: DefaultViewController {
         case .disconnected:
             stateLabel.textColor = .systemOrange
             resetPumpRuntime()
+        case .reconnecting:
+            stateLabel.textColor = .systemOrange
+            resetPumpRuntime()
         default:
             stateLabel.textColor = .label
         }
@@ -417,10 +420,9 @@ class BleConnectionController: DefaultViewController {
     }
 
     @objc private func disconnectButtonTapped() {
-        guard let connection = BleSession.shared.activeConnection else { return }
+        guard BleSession.shared.activeConnection != nil else { return }
         resetPumpRuntime()
-        connection.disconnect()
-        BleSession.shared.activeConnection = nil
+        BleSession.shared.disconnectActiveConnection()
         appendLog("用户主动断开")
         refreshConnectionUI()
     }

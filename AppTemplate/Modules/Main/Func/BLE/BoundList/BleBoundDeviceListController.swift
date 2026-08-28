@@ -3,13 +3,17 @@
 //  AppTemplate
 //
 //  已绑定设备列表：展示握手入库后的设备，点击进入对应品类面板。
+//  下拉刷新：混扫 15s，命中列表内 UUID 则尝试连接并刷新 RSSI。
 
 import Foundation
+import Combine
 import AppStart
 
-class BleBoundDeviceListController: DefaultViewController {
+class BleBoundDeviceListController: DefaultViewController, ViewModelProvider {
 
-    private var devices: [BleBoundDevice] = []
+    typealias ViewModelType = BleBoundDeviceListViewModel
+
+    private var cancellables = Set<AnyCancellable>()
 
     private lazy var emptyLabel: UILabel = {
         let label = UILabel()
@@ -29,8 +33,12 @@ class BleBoundDeviceListController: DefaultViewController {
         listView.backgroundColor = BleUITokens.pageBackground
         listView.dataSource = self
         listView.delegate = self
+        listView.contentInset = UIEdgeInsets(top: BleUITokens.space1, left: 0, bottom: 0, right: 0)
         listView.rowHeight = UITableView.automaticDimension
         listView.estimatedRowHeight = 128
+        listView.setHeaderRefresh { [weak self] in
+            self?.vm.startScanningAndConnecting()
+        }
         return listView
     }()
 
@@ -53,56 +61,61 @@ class BleBoundDeviceListController: DefaultViewController {
 
     override func bindViewModel() {
         super.bindViewModel()
-        BleDeviceManager.shared.onChange = { [weak self] in
-            self?.reload()
-        }
-        reload()
+
+        vm.$devices
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] devices in
+                guard let self else { return }
+                self.tableView.reloadData()
+                self.emptyLabel.isHidden = !devices.isEmpty
+            }
+            .store(in: &cancellables)
+
+        vm.scanFinished
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                self?.tableView.mj_header?.endRefreshing()
+            }
+            .store(in: &cancellables)
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        BleDeviceManager.shared.startObservingConnections()
-        reload()
+        vm.viewWillAppear()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        BleDeviceManager.shared.stopObservingConnections()
+        vm.viewWillDisappear()
     }
 
     override var themeableTableViews: [UITableView] { [tableView] }
-
-    private func reload() {
-        devices = BleDeviceManager.shared.devices
-        tableView.reloadData()
-        emptyLabel.isHidden = !devices.isEmpty
-    }
 }
 
 // MARK: - UITableViewDataSource & UITableViewDelegate
 extension BleBoundDeviceListController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        devices.count
+        vm.devices.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.getReusableCell(BleBoundDeviceCell.self)
-        cell.configure(devices[indexPath.row])
+        cell.configure(vm.devices[indexPath.row])
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let device = devices[indexPath.row]
+        let device = vm.devices[indexPath.row]
         BleSession.shared.activeConnection = device.liveConnection
         navigator.show(provider: AppScene.bleDevicePanel(uuid: device.uuid), sender: self)
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let device = devices[indexPath.row]
-        let remove = UIContextualAction(style: .destructive, title: "移除") { _, _, completion in
-            BleDeviceManager.shared.remove(uuid: device.uuid)
+        let device = vm.devices[indexPath.row]
+        let remove = UIContextualAction(style: .destructive, title: "移除") { [weak self] _, _, completion in
+            self?.vm.removeDevice(uuid: device.uuid)
             completion(true)
         }
         return UISwipeActionsConfiguration(actions: [remove])
