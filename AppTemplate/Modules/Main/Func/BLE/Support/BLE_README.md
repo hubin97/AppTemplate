@@ -3,7 +3,7 @@
 Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BLE](../../../../../../../AppStart/AppStart/Ble/BLE_README.md) 框架。
 
 > 框架负责：扫描、连接、GATT、串行写队列、`BleAckMatcher` 协议。  
-> 本文档负责：0xAA 协议、GATT UUID、配网握手、产品注册、设备管理与页面。
+> 本文档负责：0xAA 协议、GATT UUID、配网握手、产品配置、设备管理与页面。
 
 ---
 
@@ -23,7 +23,7 @@ Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BL
 
 | 文件 | 职责 |
 |------|------|
-| `Support/BleAppConfiguration.swift` | 产品 `BleConfiguration` 注册（含 GATT）、状态格式化 |
+| `Support/BleAppConfiguration.swift` | 产品 `BleConfiguration` 配置（含 GATT）、状态格式化 |
 | `Support/BleProtocolParsers.swift` | 广播解析、`BleGattUUID`、动态 `bleGattProfile`、副通道 payload |
 | `Support/Pump/BlePumpProtocol.swift` | 0xAA 帧解析、`BlePumpAckMatcher`、F0/FD/F7/C0/B0 模型 |
 | `Support/Pump/BlePumpTrace.swift` | 指令字段解析打印（LogM + 连接调试页） |
@@ -35,9 +35,9 @@ Pump / TempPatch / Phototherapy 等产品协议与 Demo UI，基于 [AppStart BL
 
 ---
 
-## 产品注册
+## 产品配置
 
-入口 `BleAppConfiguration.setup()` → `BleSession.shared.setRegisteredConfigurations(BleProducts.all)`。
+入口 `BleAppConfiguration.setup()` → `BleSession.shared.configure(with: BleProducts.all)`。
 
 | 产品 | 匹配 | GATT |
 |------|------|------|
@@ -168,7 +168,7 @@ F0 → resolve(productType) → (allowsFD && needsFD ? FD : 跳过) → (include
 | 项 | 说明 |
 |----|------|
 | 识别 | 广播 `deviceType == 0x07` |
-| 主 GATT 注册 | `BleProducts.pump`：`gattProfile: primary` |
+| 主 GATT 配置 | `BleProducts.pump`：`gattProfile: primary` |
 | 附加 GATT merge | `BleProtocolParseResult.supplementaryGattProfiles`（0x07 → secondary） |
 | Connect | `BleSession.connect(discovery:)` → `effectiveConfiguration` |
 | 收上报 | `characteristicUpdates(matching: BleGattUUID.secondary.notifyUUID)` |

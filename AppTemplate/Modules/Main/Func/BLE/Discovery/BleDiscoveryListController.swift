@@ -2,7 +2,7 @@
 //  BleDiscoveryListController.swift
 //  AppTemplate
 //
-//  发现扫描：混扫已注册产品，点选设备握手并写入业务设备管理。
+//  发现扫描：混扫已配置产品，点选设备握手并写入业务设备管理。
 //  进入即扫；下拉刷新重扫；单次 30s。
 
 import Foundation

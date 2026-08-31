@@ -64,7 +64,7 @@ class BleTestListController: DefaultViewController {
     override var themeableTableViews: [UITableView] { [tableView] }
 
     private func refreshSessionInfo() {
-        let names = BleSession.shared.registeredConfigurations
+        let names = BleSession.shared.configurations
             .map { BleStateFormatter.productDisplayName(for: $0) }
             .joined(separator: "、")
         let profileLine = names.isEmpty ? "无" : names
@@ -74,7 +74,7 @@ class BleTestListController: DefaultViewController {
             let state = BleStateFormatter.peripheralStateDescription(connection.currentState)
             let count = BleSession.shared.activeConnections.count
             sessionInfoLabel.text = """
-            已注册产品：\(profileLine)
+            已配置产品：\(profileLine)
             当前主连接：\(name)
             状态：\(state)
             活跃连接数：\(count)（扫描页可追加连接）
@@ -82,7 +82,7 @@ class BleTestListController: DefaultViewController {
         } else {
             let count = BleSession.shared.activeConnections.count
             sessionInfoLabel.text = """
-            已注册产品：\(profileLine)
+            已配置产品：\(profileLine)
             当前主连接：无
             活跃连接数：\(count)
             """

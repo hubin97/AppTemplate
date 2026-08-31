@@ -79,7 +79,7 @@ enum BleProducts {
 enum BleAppConfiguration {
 
     static func setup() {
-        BleSession.shared.setRegisteredConfigurations(BleProducts.all)
+        BleSession.shared.configure(with: BleProducts.all)
     }
 }
 

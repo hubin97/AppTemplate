@@ -48,10 +48,7 @@ extension LibsManager {
     }
     
     func setupBugly() {
-#if DEBUG
-#else
-        Bugly.start(withAppId: "ef2148c327")
-#endif
+        Bugly.start(withAppId: "04657d8bfc")
     }
 
     func setupToast() {
