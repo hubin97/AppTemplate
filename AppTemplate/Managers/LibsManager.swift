@@ -19,6 +19,7 @@ import KingfisherWebP
 // MARK: - global var and methods
 
 // MARK: - main class
+@MainActor
 class LibsManager {
     
     static let shared = LibsManager()
@@ -40,7 +41,7 @@ class LibsManager {
 extension LibsManager {
     
     func setupMMKV() {
-        MMKVManager.shared.initMMKV()
+        MMKVManager.initMMKV()
     }
     
     func setupFirebase() {

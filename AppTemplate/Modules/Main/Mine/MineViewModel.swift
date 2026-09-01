@@ -11,42 +11,30 @@ import Kingfisher
 // MARK: - Global Variables & Functions (if necessary)
 
 // MARK: - Main Class
+@MainActor
 class MineViewModel: ViewModel {
     
-    // Inputs（简单暴露，不用 struct）
-    let refresh = PublishSubject<Void>()
-    let removeCache = PublishSubject<Void>()
-    let languageDidChange = PublishSubject<Void>()
+    // Rx 回调不在 MainActor 上；Subject / Relay 本身线程安全，允许非隔离读写。
+    nonisolated(unsafe) let refresh = PublishSubject<Void>()
+    nonisolated(unsafe) let removeCache = PublishSubject<Void>()
+    nonisolated(unsafe) let languageDidChange = PublishSubject<Void>()
 
-    let displayMode = BehaviorRelay<ThemeMode>(value: Theme.current.mode)
-    let themePalette = BehaviorRelay<ThemePalette>(value: Theme.current.palette)
-    let language = BehaviorRelay<LocalizedUtils.LanguageCode>(value: LocalizedUtils.currentLanguageCode())
+    nonisolated(unsafe) let displayMode: BehaviorRelay<ThemeMode>
+    nonisolated(unsafe) let themePalette: BehaviorRelay<ThemePalette>
+    nonisolated(unsafe) let language: BehaviorRelay<LocalizedUtils.LanguageCode>
 
-    // Outputs
-    let items = BehaviorRelay<[SettingCellViewModel]>(value: [])
-    let cacheSizeRelay = BehaviorRelay<Int>(value: 0)
+    nonisolated(unsafe) let items = BehaviorRelay<[SettingCellViewModel]>(value: [])
+    nonisolated(unsafe) let cacheSizeRelay = BehaviorRelay<Int>(value: 0)
 
     required init() {
+        // `NSObject.init` 是非隔离；Mine 页只在主线程建 VM。
+        let initialMode = MainActor.assumeIsolated { Theme.current.mode }
+        let initialPalette = MainActor.assumeIsolated { Theme.current.palette }
+        displayMode = BehaviorRelay(value: initialMode)
+        themePalette = BehaviorRelay(value: initialPalette)
+        language = BehaviorRelay(value: LocalizedUtils.currentLanguageCode())
         super.init()
         
-        displayMode
-            .skip(1)
-            .subscribe(onNext: { mode in
-                if Theme.current.mode != mode {
-                    Theme.set(mode: mode)
-                }
-            })
-            .disposed(by: rx.disposeBag)
-
-        themePalette
-            .skip(1)
-            .subscribe(onNext: { palette in
-                if Theme.current.palette != palette {
-                    Theme.set(palette: palette)
-                }
-            })
-            .disposed(by: rx.disposeBag)
-
         language
             .skip(1)
             .subscribe(onNext: { [weak self] code in
@@ -99,10 +87,12 @@ class MineViewModel: ViewModel {
 
     func selectDisplayMode(_ mode: ThemeMode) {
         displayMode.accept(mode)
+        Theme.set(mode: mode)
     }
 
     func selectThemePalette(_ palette: ThemePalette) {
         themePalette.accept(palette)
+        Theme.set(palette: palette)
     }
 
     func selectLanguage(_ language: LocalizedUtils.LanguageCode) {

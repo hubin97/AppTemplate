@@ -27,45 +27,51 @@ enum BleProducts {
     /// connect 时 `effectiveConfiguration` 按广播 `deviceType` merge：
     /// - 主 GATT（`BleProvidesGattProfile`）：0x08/0x09 → extended，其余保留 primary
     /// - 附加 GATT（`BleProvidesSupplementaryGattProfiles`）：0x07 → secondary，其余无附加
-    static let pump = BleConfiguration(
-        matching: BleParserValidatedMatchingStrategy(parser: pumpParser),
-        gattProfile: BleGattUUID.primary.gattProfile,
-        reconnect: .init(enabled: true, maxAttempts: 3, retryDelay: 5, attemptTimeout: 10), // 意外断开会自动重连；耗尽后库会 cancel 系统 connect
-        writeQueue: .serialized(
-            ackMatcher: BlePumpAckMatcher(),
-            defaultTimeout: 3,
-            order: .descending
-        ),
-        parser: pumpParser,
-        debugLog: true,
-        logTag: "[Ble/Pump]"
-    )
+    static var pump: BleConfiguration {
+        BleConfiguration(
+            matching: BleParserValidatedMatchingStrategy(parser: pumpParser),
+            gattProfile: BleGattUUID.primary.gattProfile,
+            reconnect: .init(enabled: true, maxAttempts: 3, retryDelay: 5, attemptTimeout: 10), // 意外断开会自动重连；耗尽后库会 cancel 系统 connect
+            writeQueue: .serialized(
+                ackMatcher: BlePumpAckMatcher(),
+                defaultTimeout: 3,
+                order: .descending
+            ),
+            parser: pumpParser,
+            debugLog: true,
+            logTag: "[Ble/Pump]"
+        )
+    }
 
     /// TempPatch：设备名 + FFFF serviceData
-    static let tempPatch = BleConfiguration(
-        matching: BleParserValidatedMatchingStrategy(
-            names: BleDeviceCatalog.tempPatchNames,
-            parser: tempPatchParser
-        ),
-        writeQueue: .direct,
-        parser: tempPatchParser,
-        debugLog: true,
-        logTag: "[Ble/TempPatch]"
-    )
+    static var tempPatch: BleConfiguration {
+        BleConfiguration(
+            matching: BleParserValidatedMatchingStrategy(
+                names: BleDeviceCatalog.tempPatchNames,
+                parser: tempPatchParser
+            ),
+            writeQueue: .direct,
+            parser: tempPatchParser,
+            debugLog: true,
+            logTag: "[Ble/TempPatch]"
+        )
+    }
 
     /// Phototherapy：设备名 + 39 字节 manufacturerData
-    static let phototherapy = BleConfiguration(
-        matching: BleParserValidatedMatchingStrategy(
-            names: BleDeviceCatalog.phototherapyNames,
-            parser: phototherapyParser
-        ),
-        writeQueue: .direct,
-        parser: phototherapyParser,
-        debugLog: true,
-        logTag: "[Ble/Phototherapy]"
-    )
+    static var phototherapy: BleConfiguration {
+        BleConfiguration(
+            matching: BleParserValidatedMatchingStrategy(
+                names: BleDeviceCatalog.phototherapyNames,
+                parser: phototherapyParser
+            ),
+            writeQueue: .direct,
+            parser: phototherapyParser,
+            debugLog: true,
+            logTag: "[Ble/Phototherapy]"
+        )
+    }
 
-    static let all: [BleConfiguration] = [pump, tempPatch, phototherapy]
+    static var all: [BleConfiguration] { [pump, tempPatch, phototherapy] }
 
     static let displayNames: [String: String] = [
         "[Ble/Pump]": "Pump",

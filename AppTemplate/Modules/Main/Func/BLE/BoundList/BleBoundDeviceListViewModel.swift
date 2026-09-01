@@ -9,6 +9,7 @@ import Combine
 import AppStart
 
 // MARK: - Main Class
+@MainActor
 final class BleBoundDeviceListViewModel: ViewModel {
 
     private static let scanTimeout: TimeInterval = 15
@@ -21,22 +22,18 @@ final class BleBoundDeviceListViewModel: ViewModel {
 
     required init() {
         super.init()
-        BleDeviceManager.shared.onChange = { [weak self] in
-            self?.reload()
-        }
-        reload()
-    }
-
-    deinit {
-        stopScanning()
     }
 
     func viewWillAppear() {
+        BleDeviceManager.shared.onChange = { [weak self] in
+            self?.reload()
+        }
         BleDeviceManager.shared.startObservingConnections()
         reload()
     }
 
     func viewWillDisappear() {
+        BleDeviceManager.shared.onChange = nil
         stopScanning()
         BleDeviceManager.shared.stopObservingConnections()
     }
@@ -56,16 +53,12 @@ final class BleBoundDeviceListViewModel: ViewModel {
                 guard !Task.isCancelled else { break }
                 let id = discovery.peripheral.identifier
                 guard targetUUIDs.contains(id) else { continue }
-                await MainActor.run {
-                    self.updateRSSI(for: id, rssi: discovery.advertisement.rssi.intValue)
-                    self.connectIfNeeded(discovery: discovery)
-                }
+                self.updateRSSI(for: id, rssi: discovery.advertisement.rssi.intValue)
+                self.connectIfNeeded(discovery: discovery)
             }
-            await MainActor.run {
-                self.scanFinished.send()
-                guard !Task.isCancelled else { return }
-                BleDeviceManager.shared.startObservingConnections()
-            }
+            self.scanFinished.send()
+            guard !Task.isCancelled else { return }
+            BleDeviceManager.shared.startObservingConnections()
         }
     }
 
@@ -103,15 +96,11 @@ extension BleBoundDeviceListViewModel {
 
         connectTasks[id] = Task { [weak self] in
             defer {
-                Task { @MainActor in
-                    self?.connectTasks.removeValue(forKey: id)
-                }
+                self?.connectTasks.removeValue(forKey: id)
             }
             do {
                 _ = try await BleSession.shared.connect(discovery: discovery, setAsActive: false)
-                await MainActor.run {
-                    BleDeviceManager.shared.startObservingConnections()
-                }
+                BleDeviceManager.shared.startObservingConnections()
             } catch {
                 // 扫描窗口内连不上时静默失败，下次下拉再试
             }

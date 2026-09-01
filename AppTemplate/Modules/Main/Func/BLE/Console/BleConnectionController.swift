@@ -277,7 +277,7 @@ class BleConnectionController: DefaultViewController {
             do {
                 let result = try await BlePumpHandshake.run(
                     on: connection,
-                    log: { message in
+                    log: { @Sendable [weak self] message in
                         Task { @MainActor in
                             self?.appendLog(message)
                         }
@@ -401,7 +401,7 @@ class BleConnectionController: DefaultViewController {
         writeTask?.cancel()
         writeTask = Task { [weak self] in
             do {
-                let info = try await BlePumpHandshake.fetchF0(on: connection) { message in
+                let info = try await BlePumpHandshake.fetchF0(on: connection) { @Sendable [weak self] message in
                     Task { @MainActor in
                         self?.appendLog(message)
                     }

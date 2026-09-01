@@ -6,6 +6,7 @@
 
 import Foundation
 
+@MainActor
 enum BleDevicePanelFactory {
 
     static func make(uuid: String) -> DefaultViewController {

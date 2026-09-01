@@ -13,11 +13,11 @@ private enum ThemeStorageKey {
     static let legacyType = "AppThemeType"
 }
 
-/// 主题状态可从任意线程读取；写操作与 UIKit 同步在主线程完成。
+/// 主题与窗口、trait、界面样式绑定，状态放在 MainActor，避免跨线程锁和 UIKit 跳转。
+@MainActor
 final class ThemeService {
     static let shared = ThemeService()
 
-    private let lock = NSLock()
     private weak var window: UIWindow?
     private var selection = ThemeSelection.default
     private var continuations: [UUID: AsyncStream<AppTheme>.Continuation] = [:]
@@ -30,69 +30,45 @@ final class ThemeService {
         )
     }
 
-    var current: AppTheme {
-        lock.lock()
-        defer { lock.unlock() }
-        return storedCurrent
-    }
+    var current: AppTheme { storedCurrent }
 
-    var isDark: Bool {
-        current.isDark
-    }
+    var isDark: Bool { storedCurrent.isDark }
 
     /// 在窗口显示前调用一次：恢复持久化配置，并同步 UIKit 的显示模式。
-    func attach(to window: UIWindow) {
-        performOnMain { [weak self] in
-            guard let self else { return }
-            self.window = window
-            let selection = self.loadSelection()
-            self.lock.lock()
-            self.selection = selection
-            self.lock.unlock()
-            self.applyInterfaceStyle()
-            self.refresh(using: window.traitCollection, force: true)
-        }
+    func attach(to window: UIWindow) async {
+        self.window = window
+        selection = await loadSelection()
+        applyInterfaceStyle()
+        refresh(using: window.traitCollection, force: true)
     }
 
     func update(mode: ThemeMode) {
-        performOnMain { [weak self] in
-            guard let self else { return }
-            self.lock.lock()
-            let changed = self.selection.mode != mode
-            if changed {
-                self.selection.mode = mode
-            }
-            let selection = self.selection
-            self.lock.unlock()
-            guard changed else { return }
-
-            self.saveSelection(selection)
-            self.applyInterfaceStyle()
-            self.refresh(
-                using: self.window?.traitCollection ?? UITraitCollection.current,
-                force: true
-            )
+        let changed = selection.mode != mode
+        if changed {
+            selection.mode = mode
         }
+        guard changed else { return }
+
+        saveSelection(selection)
+        applyInterfaceStyle()
+        refresh(
+            using: window?.traitCollection ?? UITraitCollection.current,
+            force: true
+        )
     }
 
     func update(palette: ThemePalette) {
-        performOnMain { [weak self] in
-            guard let self else { return }
-            self.lock.lock()
-            let changed = self.selection.palette != palette
-            if changed {
-                self.selection.palette = palette
-            }
-            let selection = self.selection
-            self.lock.unlock()
-            guard changed else { return }
-
-            self.saveSelection(selection)
-            self.refresh(
-                using: self.window?.traitCollection ?? UITraitCollection.current,
-                force: true
-            )
+        let changed = selection.palette != palette
+        if changed {
+            selection.palette = palette
         }
+        guard changed else { return }
+
+        saveSelection(selection)
+        refresh(
+            using: window?.traitCollection ?? UITraitCollection.current,
+            force: true
+        )
     }
 
     func toggleMode() {
@@ -101,34 +77,26 @@ final class ThemeService {
 
     /// Scene 的系统明暗外观发生变化时调用；非 `.system` 模式会自动忽略。
     func systemAppearanceDidChange(_ traits: UITraitCollection) {
-        performOnMain { [weak self] in
-            guard let self else { return }
-            self.lock.lock()
-            let mode = self.selection.mode
-            self.lock.unlock()
-            guard mode == .system else { return }
-            self.refresh(using: traits)
-        }
+        guard selection.mode == .system else { return }
+        refresh(using: traits)
     }
 
     /// 每个订阅者先收到当前快照，随后收到主题变化。
     func updates() -> AsyncStream<AppTheme> {
         let id = UUID()
-        let initialValue = current
-
-        return AsyncStream { continuation in
-            self.lock.lock()
-            self.continuations[id] = continuation
-            self.lock.unlock()
-
-            continuation.yield(initialValue)
-            continuation.onTermination = { [weak self] _ in
-                guard let self else { return }
-                self.lock.lock()
-                self.continuations.removeValue(forKey: id)
-                self.lock.unlock()
+        let (stream, continuation) = AsyncStream.makeStream(of: AppTheme.self)
+        continuations[id] = continuation
+        continuation.yield(current)
+        continuation.onTermination = { _ in
+            Task { @MainActor in
+                ThemeService.shared.removeContinuation(id)
             }
         }
+        return stream
+    }
+
+    private func removeContinuation(_ id: UUID) {
+        continuations.removeValue(forKey: id)
     }
 }
 
@@ -155,11 +123,7 @@ private extension ThemeService {
     }
 
     func refresh(using traits: UITraitCollection, force: Bool = false) {
-        lock.lock()
-        let selection = self.selection
         let previous = storedCurrent
-        lock.unlock()
-
         let newTheme = Self.resolve(selection: selection, traits: traits)
         guard force ||
                 newTheme.palette != previous.palette ||
@@ -168,21 +132,13 @@ private extension ThemeService {
             return
         }
 
-        lock.lock()
         storedCurrent = newTheme
-        let listeners = Array(continuations.values)
-        lock.unlock()
-
-        listeners.forEach { $0.yield(newTheme) }
+        continuations.values.forEach { $0.yield(newTheme) }
     }
 
     func applyInterfaceStyle() {
         assert(Thread.isMainThread)
-        lock.lock()
-        let mode = selection.mode
-        lock.unlock()
-
-        switch mode {
+        switch selection.mode {
         case .system:
             window?.overrideUserInterfaceStyle = .unspecified
         case .light:
@@ -193,33 +149,32 @@ private extension ThemeService {
     }
 
     func saveSelection(_ selection: ThemeSelection) {
-        mmkv.set(selection.mode.rawValue, forKey: ThemeStorageKey.mode)
-        mmkv.set(selection.palette.rawValue, forKey: ThemeStorageKey.palette)
+        Task {
+            await MMKVManager.shared.set([
+                ThemeStorageKey.mode: selection.mode.rawValue,
+                ThemeStorageKey.palette: selection.palette.rawValue
+            ])
+        }
     }
 
-    func loadSelection() -> ThemeSelection {
+    func loadSelection() async -> ThemeSelection {
         // 兼容旧版本只保存 light/dark 的 AppThemeType。
-        let modeRawValue = mmkv.string(forKey: ThemeStorageKey.mode)
-            ?? mmkv.string(forKey: ThemeStorageKey.legacyType)
+        var modeRawValue = await MMKVManager.shared.string(forKey: ThemeStorageKey.mode)
+        if modeRawValue == nil {
+            modeRawValue = await MMKVManager.shared.string(forKey: ThemeStorageKey.legacyType)
+        }
         let mode = modeRawValue.flatMap(ThemeMode.init(rawValue:)) ?? .system
 
-        let paletteRawValue = mmkv.string(forKey: ThemeStorageKey.palette)
+        let paletteRawValue = await MMKVManager.shared.string(forKey: ThemeStorageKey.palette)
         let palette = paletteRawValue.flatMap(ThemePalette.init(rawValue:)) ?? .black
 
         return ThemeSelection(mode: mode, palette: palette)
     }
-
-    func performOnMain(_ work: @escaping () -> Void) {
-        if Thread.isMainThread {
-            work()
-        } else {
-            DispatchQueue.main.async(execute: work)
-        }
-    }
 }
 
 /// 面向业务层的简洁入口，隐藏 Service 单例和持久化实现。
-/// 读写均非 MainActor 隔离，可在 ViewModel / Rx 回调中直接使用。
+/// 与 ThemeService 同属 MainActor，页面 / 主线程 ViewModel 可直接同步读写。
+@MainActor
 enum Theme {
     static var current: AppTheme { ThemeService.shared.current }
     static var isDark: Bool { ThemeService.shared.isDark }
@@ -237,8 +192,8 @@ enum Theme {
         ThemeService.shared.toggleMode()
     }
 
-    static func attach(to window: UIWindow) {
-        ThemeService.shared.attach(to: window)
+    static func attach(to window: UIWindow) async {
+        await ThemeService.shared.attach(to: window)
     }
 
     static func systemAppearanceDidChange(_ traits: UITraitCollection) {

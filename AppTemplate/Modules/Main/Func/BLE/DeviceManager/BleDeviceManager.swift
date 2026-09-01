@@ -7,6 +7,7 @@
 import Foundation
 import AppStart
 
+@MainActor
 final class BleDeviceManager {
 
     static let shared = BleDeviceManager()
@@ -88,9 +89,7 @@ final class BleDeviceManager {
                 let stream = await connection.states()
                 for await _ in stream {
                     guard !Task.isCancelled else { break }
-                    await MainActor.run {
-                        self.syncConnectionStateObservers()
-                    }
+                    self.syncConnectionStateObservers()
                 }
             }
         }
@@ -106,7 +105,7 @@ enum BleDeviceBinder {
         var handshakeResult: BlePumpHandshakeResult?
 
         if BleDeviceCategory.resolve(configuration: discovery.configuration) == .pump {
-            handshakeResult = try await BlePumpHandshake.run(on: connection, log: { _ in })
+            handshakeResult = try await BlePumpHandshake.run(on: connection, log: { (_: String) in })
         }
 
         var device = BleBoundDevice.make(from: discovery)
@@ -114,8 +113,8 @@ enum BleDeviceBinder {
             if let productKey = triplet.productKey { device.productKey = productKey }
             if let deviceKey = triplet.deviceKey { device.deviceKey = deviceKey }
         }
-        BleDeviceManager.shared.upsert(device)
-        BleDeviceManager.shared.startObservingConnections()
+        await BleDeviceManager.shared.upsert(device)
+        await BleDeviceManager.shared.startObservingConnections()
         return device
     }
 }

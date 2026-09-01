@@ -22,7 +22,8 @@ private final class ThemeObservation {
     }
 }
 
-private var themeObservationKey: UInt8 = 0
+// 仅作 associated object 地址，不读写键值本身。
+private nonisolated(unsafe) var themeObservationKey: UInt8 = 0
 
 @MainActor
 extension Themeable where Self: NSObject {
@@ -42,12 +43,10 @@ extension Themeable where Self: NSObject {
         }
 
         observation.task?.cancel()
-        observation.task = Task { [weak self] in
+        observation.task = Task { @MainActor [weak self] in
             for await theme in Theme.updates {
-                await MainActor.run {
-                    guard let self else { return }
-                    self.themeDidChange(theme)
-                }
+                guard let self else { return }
+                self.themeDidChange(theme)
             }
         }
     }
@@ -58,10 +57,15 @@ extension Themeable where Self: ViewController {
     /// 通用页面主题：背景、导航栏、状态栏。
     func applyPageTheme(_ theme: AppTheme) {
         view.backgroundColor = theme.colors.background
-        naviBar.backgroundColor = theme.colors.background
         naviBar.textColor = theme.colors.text
         naviBar.updateIcons(isDark: theme.isDark, textColor: theme.colors.tint)
         updateStatusBar(with: theme.statusBarStyle)
+        
+        if NaviBar.usesSystemBar {
+            navigationController?.navigationBar.tintColor = theme.colors.tint
+        } else {
+            naviBar.backgroundColor = theme.colors.background
+        }
     }
 }
 

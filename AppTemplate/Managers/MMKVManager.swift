@@ -8,14 +8,6 @@
 import Foundation
 import MMKV
 
-// MARK: - 全局 MMKV 实例
-/// `注意必须在初始化之后使用`
-let mmkv: MMKV = {
-    /// 初始化 MMKV 设置 加密Key, 以及 模式 为单一进程
-    let mmkv = MMKV.init(mmapID: MMKVKeys.bundle_id.rawValue, cryptKey: MMKVKeys.bundle_id.rawValue.data, mode: .singleProcess)
-    return mmkv ?? MMKV.default()!
-}()
-
 // MARK: 定义 MMKV 键的枚举
 // TODO: 除AuthManager以外的其他地方数据都将进行迁移(包括 DataManager, CacheManager等 非用户数据的)
 enum MMKVKeys: String {
@@ -30,34 +22,67 @@ enum MMKVKeys: String {
 }
 
 // MARK: - MMKVManager
-class MMKVManager {
-    /// 实例化
+actor MMKVManager {
     static let shared = MMKVManager()
-    
-    func initMMKV() {
+
+    /// `注意必须在初始化之后使用`
+    private let store: MMKV
+
+    private init() {
+        /// 初始化 MMKV 设置 加密Key, 以及 模式 为单一进程
+        let mmkv = MMKV.init(mmapID: MMKVKeys.bundle_id.rawValue, cryptKey: MMKVKeys.bundle_id.rawValue.data, mode: .singleProcess)
+        store = mmkv ?? MMKV.default()!
+    }
+
+    /// 进程级初始化，须在首次访问 `shared` 之前调用。
+    nonisolated static func initMMKV() {
         // 初始化 MMKV
         MMKV.initialize(rootDir: nil, logLevel: .none)
-        
-        //self.versionMigrate()
     }
-    
+
+    func string(forKey key: String) -> String? {
+        store.string(forKey: key)
+    }
+
+    func date(forKey key: String) -> Date? {
+        store.date(forKey: key)
+    }
+
+    func set(_ value: String, forKey key: String) {
+        store.set(value, forKey: key)
+    }
+
+    func set(_ date: Date, forKey key: String) {
+        store.set(date, forKey: key)
+    }
+
+    func set(_ values: [String: String]) {
+        for (key, value) in values {
+            store.set(value, forKey: key)
+        }
+    }
+
+    func removeValue(forKey key: String) {
+        store.removeValue(forKey: key)
+    }
+
     // FIXME: 数据迁移(NSUserDefaults->MMKV)
     func versionMigrate() {
         // #warning("兼容涂鸦SDK, mmkv版本降级了?")
         // 获取默认的 NSUserDefaults 实例
         let userDefaultsDictionary = UserDefaults.standard.dictionaryRepresentation()
-                
+
         /// 应该添加迁移限制条件,
         /// 1. 当前版本号 小于等于 `1.7.6`的时候才迁移,
         /// 2. 如果迁移过了则不迁移
         /// 3. 迁移完成后, 记录版本号
-        let migrateVersion = mmkv.string(forKey: MMKVKeys.migrateVersion.rawValue)
+        let migrateVersion = store.string(forKey: MMKVKeys.migrateVersion.rawValue)
         if let appVersion = kAppVersion, migrateVersion == nil && appVersion.compare("1.7.6", options: .numeric) != .orderedDescending {
             // 从 NSUserDefaults 迁移数据到 MMKV
             //mmkv.migrateFrom(userDefaults: UserDefaults.standard)
-            mmkv.migrateFrom(userDefaultsDictionaryRepresentation: userDefaultsDictionary)
+            store.migrateFrom(userDefaultsDictionaryRepresentation: userDefaultsDictionary)
             // 更新版本信息
-            mmkv.set(appVersion, forKey: MMKVKeys.migrateVersion.rawValue)
+            store.set(appVersion, forKey: MMKVKeys.migrateVersion.rawValue)
             // 记录迁移日志
             print("数据迁移完成，当前版本: \(appVersion)")
             // 迁移完成后，可以选择删除 NSUserDefaults 中的键值对
@@ -66,7 +91,7 @@ class MMKVManager {
         } else {
             print("不需要迁移数据，当前版本: \(kAppVersion ?? "")，已迁移版本: \(String(describing: migrateVersion))")
         }
-        
+
         // 数据验证
         //printMMKVData()
     }
@@ -74,7 +99,7 @@ class MMKVManager {
 
 // MARK: - private mothods
 extension MMKVManager {
-    
+
     /// `数据迁移校验`
 //    func printMMKVData() {
 //        //let mmkv = MMKV.init(mmapID: AppKeys.bundle_id.identity, cryptKey: AppKeys.bundle_id.identity.data)

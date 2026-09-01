@@ -12,7 +12,7 @@ import RxSwift
 import RxCocoa
 
 /// 是否登录
-let loggedIn = BehaviorRelay<Bool>(value: false)
+nonisolated(unsafe) let loggedIn = BehaviorRelay<Bool>(value: false)
 
 // MARK: 项目内标识信息
 enum AppKeys: String {
@@ -26,7 +26,7 @@ enum AppKeys: String {
 }
 
 // MARK: - AuthManager
-class AuthManager {
+actor AuthManager {
 
     static let shared = AuthManager()
 
@@ -133,34 +133,34 @@ extension AuthManager {
     }
   
     //
-    class func setUid(_ uid: String?) {
-        AuthManager.shared.uid = uid
+    func setUid(_ uid: String?) {
+        self.uid = uid
     }
     
-    class func setEmail(_ email: String?) {
-        AuthManager.shared.email = email
+    func setEmail(_ email: String?) {
+        self.email = email
     }
     
-    class func setPhone(_ phone: String?) {
-        AuthManager.shared.phone = phone
+    func setPhone(_ phone: String?) {
+        self.phone = phone
     }
 
-    class func setPassword(_ password: String?) {
-        AuthManager.shared.password = password
+    func setPassword(_ password: String?) {
+        self.password = password
     }
     
-    class func removeUid() {
-        AuthManager.shared.uid = nil
+    func removeUid() {
+        uid = nil
     }
     
-    class func removePassword() {
-        AuthManager.shared.password = nil
+    func removePassword() {
+        password = nil
     }
     
-    class func removeUserInfo() {
-        AuthManager.shared.uid = nil
-        AuthManager.shared.email = nil
-        AuthManager.shared.phone = nil
-        AuthManager.shared.password = nil
+    func removeUserInfo() {
+        uid = nil
+        email = nil
+        phone = nil
+        password = nil
     }
 }

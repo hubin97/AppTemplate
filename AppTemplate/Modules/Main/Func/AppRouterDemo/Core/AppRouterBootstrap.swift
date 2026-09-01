@@ -5,6 +5,7 @@
 
 import Foundation
 
+@MainActor
 enum AppRouterBootstrap {
 
     private static var didRegister = false

@@ -56,7 +56,7 @@ extension TestListController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.getReusableCell(TableViewCell.self)
+        let cell = tableView.getReusableCell(indexPath, TableViewCell.self)
         cell.textLabel?.text = items[indexPath.row]
         return cell
     }

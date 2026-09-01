@@ -39,6 +39,10 @@ type_body_length:
 file_length:
   warning: 800
   error: 1200
+# 默认 2/3 对带标签的业务返回值过严；4 元允许，再大才告警。
+large_tuple:
+  warning: 4
+  error: 5
 # 命名规则可以设置最小长度和最大程度的警告/错误
 # 此外它们也可以设置排除在外的名字
 #type_name:

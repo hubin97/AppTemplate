@@ -100,7 +100,7 @@ extension BleBoundDeviceListController: UITableViewDataSource, UITableViewDelega
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.getReusableCell(BleBoundDeviceCell.self)
+        let cell = tableView.getReusableCell(indexPath, BleBoundDeviceCell.self)
         cell.configure(vm.devices[indexPath.row])
         return cell
     }

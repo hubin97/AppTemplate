@@ -208,7 +208,7 @@ extension ConnectivityDemoController: UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let action = Action.allCases[indexPath.row]
-        let cell = tableView.getReusableCell(DefaultTableViewCell.self)
+        let cell = tableView.getReusableCell(indexPath, DefaultTableViewCell.self)
         if action == .toggleMonitor {
             cell.titleLabel.text = isMonitoring ? "停止路径监听" : "开始路径监听"
         } else {

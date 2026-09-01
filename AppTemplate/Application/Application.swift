@@ -11,6 +11,7 @@ import Foundation
 let RLocalizable = R.string.localizable
 
 // MARK: - main class
+@MainActor
 final class Application: NSObject {
     
     static let shared = Application()
@@ -96,20 +97,22 @@ extension Application {
         self.setupConfig()
         self.setSemanticLayout()
 
-        Theme.attach(to: window)
-        window.rootViewController = UIViewController()
-        window.makeKeyAndVisible()
-        
-        LogM.debug("app launch")
+        Task { @MainActor in
+            await Theme.attach(to: window)
+            window.rootViewController = UIViewController()
+            window.makeKeyAndVisible()
 
-        // 分域路由 Demo：手动登记 RouteRegister（幂等）
-        AppRouterBootstrap.register([
-            CommunityRouteRegister.self,
-            ProfileRouteRegister.self,
-        ])
-        
-        // 自定义启动页
-        self.initialScreen(in: window)
+            LogM.debug("app launch")
+
+            // 分域路由 Demo：手动登记 RouteRegister（幂等）
+            AppRouterBootstrap.register([
+                CommunityRouteRegister.self,
+                ProfileRouteRegister.self,
+            ])
+
+            // 自定义启动页
+            self.initialScreen(in: window)
+        }
     }
     
     func initialScreen(in window: UIWindow?) {

@@ -15,6 +15,7 @@ import PromiseKit
 // MARK: - Global Variables & Functions (if necessary)
 
 // MARK: - Main Class
+@MainActor
 class Residency {
     
     static let shared = Residency()

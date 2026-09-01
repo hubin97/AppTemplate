@@ -7,6 +7,7 @@
 
 import UIKit
 
+@MainActor
 final class AppRouter {
 
     static let shared = AppRouter()

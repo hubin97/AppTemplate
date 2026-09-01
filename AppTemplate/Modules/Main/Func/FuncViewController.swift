@@ -61,7 +61,7 @@ extension FuncViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = vm.items[indexPath.row]
-        let cell = tableView.getReusableCell(DefaultTableViewCell.self)
+        let cell = tableView.getReusableCell(indexPath, DefaultTableViewCell.self)
         cell.titleLabel.text = item.rawValue
         return cell
     }

@@ -74,7 +74,7 @@ extension MineViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = vm.items.value[indexPath.row]
-        let cell = tableView.getReusableCell(SettingCell.self)
+        let cell = tableView.getReusableCell(indexPath, SettingCell.self)
         cell.bind(to: item)
         return cell
     }
@@ -101,7 +101,9 @@ private extension MineViewController {
         ThemeMode.allCases.forEach { mode in
             let title = mode == vm.displayMode.value ? "✓ \(mode.displayName)" : mode.displayName
             alert.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
-                self?.vm.selectDisplayMode(mode)
+                Task { @MainActor in
+                    self?.vm.selectDisplayMode(mode)
+                }
             })
         }
         alert.addAction(UIAlertAction(title: "取消", style: .cancel))
@@ -114,7 +116,9 @@ private extension MineViewController {
             let color = palette.accentColor(for: Theme.current.appearance)
             let title = palette == vm.themePalette.value ? "✓ \(palette.displayName)" : palette.displayName
             let action = UIAlertAction(title: title, style: .default) { [weak self] _ in
-                self?.vm.selectThemePalette(palette)
+                Task { @MainActor in
+                    self?.vm.selectThemePalette(palette)
+                }
             }
             action.setValue(color, forKey: "titleTextColor")
             alert.addAction(action)
@@ -128,7 +132,9 @@ private extension MineViewController {
         LocalizedUtils.supportedLanguages.forEach { language in
             let title = language == vm.language.value ? "✓ \(language.rawValue)" : language.rawValue
             alert.addAction(UIAlertAction(title: title, style: .default) { [weak self] _ in
-                self?.vm.selectLanguage(language)
+                Task { @MainActor in
+                    self?.vm.selectLanguage(language)
+                }
             })
         }
         alert.addAction(UIAlertAction(title: "取消", style: .cancel))

@@ -10,6 +10,7 @@ import ObjectiveC
 protocol RouteKey {}
 
 /// 业务模块向 `AppRouter` 注册页面工厂。
+@MainActor
 protocol RouteRegistering: AnyObject {
     init()
     func register(into router: AppRouter)
@@ -18,6 +19,7 @@ protocol RouteRegistering: AnyObject {
 /// Feature 继承并 override `register(into:)`，由 `AppRouterBootstrap.register(_:)` 或 `registerAll()` 登记。
 ///
 /// 继承 `NSObject` 仅为可选的运行时扫类（`RouteRegisterDiscovery`）；手动登记不依赖此项。
+@MainActor
 class RouteRegister: NSObject, RouteRegistering {
 
     required override init() {
@@ -38,6 +40,7 @@ enum RouteRegisterDiscovery {
     private static let bundlePath = Bundle.main.bundlePath
 
     /// 收集主 App bundle 内所有 `RouteRegister` 子类并实例化（供 `registerAll()` 使用）。
+    @MainActor
     static func allRegisters() -> [RouteRegister] {
         // 1. 取当前进程已加载类的数量（含系统框架 + 所有 Pod，数量级通常 1~5 万）
         let n = objc_getClassList(nil, 0)

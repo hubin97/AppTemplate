@@ -273,7 +273,7 @@ extension BleDiscoveryListController: UITableViewDataSource, UITableViewDelegate
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = filteredDevices[indexPath.row]
-        let cell = tableView.getReusableCell(BleDiscoveryDeviceCell.self)
+        let cell = tableView.getReusableCell(indexPath, BleDiscoveryDeviceCell.self)
         cell.configure(name: row.name, mac: row.mac, uuid: row.uuid, rssi: row.rssi)
         return cell
     }

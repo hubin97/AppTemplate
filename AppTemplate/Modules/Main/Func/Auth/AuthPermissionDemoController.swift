@@ -134,7 +134,7 @@ extension AuthPermissionDemoController: UITableViewDataSource, UITableViewDelega
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let row = Row.all[indexPath.row]
-        let cell = tableView.getReusableCell(DefaultTableViewCell.self)
+        let cell = tableView.getReusableCell(indexPath, DefaultTableViewCell.self)
         cell.titleLabel.text = row.title
         cell.detailLabel.text = statusTexts[indexPath.row] ?? "—"
         return cell

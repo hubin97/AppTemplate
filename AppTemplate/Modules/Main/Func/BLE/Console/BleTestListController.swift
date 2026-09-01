@@ -99,7 +99,7 @@ extension BleTestListController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = Item.allCases[indexPath.row]
-        let cell = tableView.getReusableCell(DefaultTableViewCell.self)
+        let cell = tableView.getReusableCell(indexPath, DefaultTableViewCell.self)
         cell.titleLabel.text = item.rawValue
         cell.detailLabel.text = nil
         return cell

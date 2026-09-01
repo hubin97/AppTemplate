@@ -57,7 +57,12 @@ post_install do |installer|
       end
       #
       target.build_configurations.each do |config|
-          config.build_settings['SWIFT_VERSION'] = '5.0'
+        # 这段注释掉之后，AppStart 的 Swift 版本不再由宿主 Podfile 决定，而是由AppStart.podspec 的 pod_target_xcconfig单独约束。
+        # 结论： 宿主里注释掉这 4 行是正常且更干净的；前提是 podspec 里那两行还在，并且装过一次 Pod。
+#          if target.name == 'AppStart'
+#            config.build_settings['SWIFT_VERSION'] = '5.0'
+#            config.build_settings['SWIFT_STRICT_CONCURRENCY'] = 'targeted'
+#          end
           # 与 platform :ios, '14.0' 及 AppStart podspec 保持一致，避免 iOS 14+ API 可用性报错
           config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '14.0'
       end

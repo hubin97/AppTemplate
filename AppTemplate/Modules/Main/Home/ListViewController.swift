@@ -55,7 +55,7 @@ extension ListViewController: UITableViewDataSource, UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let model = vm.items[indexPath.row]
-        let cell = tableView.getReusableCell(DefaultTableViewCell.self)
+        let cell = tableView.getReusableCell(indexPath, DefaultTableViewCell.self)
         cell.titleLabel.text = model.title
         return cell
     }
