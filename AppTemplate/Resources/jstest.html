@@ -2,27 +2,34 @@
     <title>Js测试</title>
     <script language="javascript">
 
-        function nullParamCall() {
-            let message = {
-                method: 'nullParamCall',
-            };
+        var NATIVE_BRIDGE = 'LUTE_NATIVE';
 
-            window.location.href = 'LUTE_NATIVE://' + JSON.stringify(message);
-            window.webkit.messageHandlers.LUTE_NATIVE.postMessage(message)
+        // iOS 走 WKWebView postMessage；Android 走自定义 scheme 拦截
+        function callNative(message) {
+            if (window.webkit
+                && window.webkit.messageHandlers
+                && window.webkit.messageHandlers[NATIVE_BRIDGE]) {
+                window.webkit.messageHandlers[NATIVE_BRIDGE].postMessage(message);
+                return;
+            }
+            window.location.href = NATIVE_BRIDGE + '://' + JSON.stringify(message);
+        }
+
+        function nullParamCall() {
+            callNative({
+                method: 'nullParamCall',
+            });
         }
 
         function haveParamCall1() {
-            let message = {
+            callNative({
                 method: 'haveParamCall1',
                 params: '测试分享的内容'
-            };
-
-            window.location.href = 'LUTE_NATIVE://' + JSON.stringify(message);
-            window.webkit.messageHandlers.LUTE_NATIVE.postMessage(message);
+            });
         }
 
         function haveParamCall2() {
-            let message = {
+            callNative({
                 method: 'haveParamCall2',
                 params: {
                     title: '测试分享的标题',
@@ -30,20 +37,14 @@
                     url: 'http://www.baidu.com',
                     img: 'http://www.baidu.com/img.jpg'
                 }
-            };
-
-            window.location.href = 'LUTE_NATIVE://' + JSON.stringify(message);
-            window.webkit.messageHandlers.LUTE_NATIVE.postMessage(message);
+            });
         }
 
         function haveParamCall3() {
-            let message = {
+            callNative({
                 method: 'haveParamCall3',
                 params: [1, 2, 3, 4, 5]
-            };
-
-            window.location.href = 'LUTE_NATIVE://' + JSON.stringify(message);
-            window.webkit.messageHandlers.LUTE_NATIVE.postMessage(message);
+            });
         }
 
         // 定义一个接受字符串参数并显示在 textarea 中的函数

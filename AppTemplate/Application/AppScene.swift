@@ -37,7 +37,7 @@ enum AppScene: SceneProvider {
         case .tabs(let viewModel):
             return DefaultTabBarController(viewModel: viewModel)
         case .jsTest:
-            let vc = DefaultWebController(viewModel: JSWebViewModel(symbol: "LUTE_NATIVE"))
+            let vc = JsTestWebController(viewModel: JSWebViewModel(symbol: "LUTE_NATIVE"))
             //vc.isHideLeftView = true
             vc.loadWeb(urlPath: "jstest.html", isLocal: true)
             return vc

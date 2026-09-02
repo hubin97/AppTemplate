@@ -11,6 +11,15 @@ import Foundation
 
 // MARK: - Main Class
 class DefaultWebController: JSWebController, Themeable {
+
+//    override var bridgeHandlers: [String: WebBridgeHandler] {
+//        [
+//            "nullParamCall": WebBridgeHandler.bridge(nullParamCall),
+//            "haveParamCall1": WebBridgeHandler.bridge(haveParamCall1),
+//            "haveParamCall2": WebBridgeHandler.bridge(haveParamCall2),
+//            "haveParamCall3": WebBridgeHandler.bridge(haveParamCall3)
+//        ]
+//    }
     
     override func bindViewModel() {
         super.bindViewModel()
