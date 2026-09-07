@@ -235,12 +235,15 @@ struct _R {
     let comAppleDeveloperSiri: Bool = true
   }
 
-  /// This `_R.file` struct is generated, and contains static references to 11 resource files.
+  /// This `_R.file` struct is generated, and contains static references to 14 resource files.
   struct file {
     let bundle: Foundation.Bundle
 
     /// Resource file `.swiftlint.yml`.
     var swiftlintYml: RswiftResources.FileResource { .init(name: ".swiftlint", pathExtension: "yml", bundle: bundle, locale: LocaleReference.none) }
+
+    /// Resource file `Architecture.md`.
+    var architectureMd: RswiftResources.FileResource { .init(name: "Architecture", pathExtension: "md", bundle: bundle, locale: LocaleReference.none) }
 
     /// Resource file `BLE_README.md`.
     var ble_READMEMd: RswiftResources.FileResource { .init(name: "BLE_README", pathExtension: "md", bundle: bundle, locale: LocaleReference.none) }
@@ -271,6 +274,12 @@ struct _R {
 
     /// Resource file `swiftgen_pod_setup.sh`.
     var swiftgen_pod_setupSh: RswiftResources.FileResource { .init(name: "swiftgen_pod_setup", pathExtension: "sh", bundle: bundle, locale: LocaleReference.none) }
+
+    /// Resource file `themev3_README.md`.
+    var themev3_READMEMd: RswiftResources.FileResource { .init(name: "themev3_README", pathExtension: "md", bundle: bundle, locale: LocaleReference.none) }
+
+    /// Resource file `theme归档.zip`.
+    var theme归档Zip: RswiftResources.FileResource { .init(name: "theme归档", pathExtension: "zip", bundle: bundle, locale: LocaleReference.none) }
   }
 
   /// This `_R.storyboard` struct is generated, and contains static references to 2 storyboards.
